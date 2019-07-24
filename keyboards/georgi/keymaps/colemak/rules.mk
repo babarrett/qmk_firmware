@@ -10,7 +10,7 @@ CUSTOM_MATRIX			 = yes
 STENO_LAYERS			 = yes
 
 #Firmware reduction options
-MOUSEKEY_ENABLE			 = yes 		# 1500 bytes
+MOUSEKEY_ENABLE			 = no 		# 1500 bytes
 NO_TAPPING				 = no 	    # 2000 bytes
 NO_PRINT				 = yes
 
