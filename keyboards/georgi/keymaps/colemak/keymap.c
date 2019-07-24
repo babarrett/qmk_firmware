@@ -1,6 +1,6 @@
 /*
  * Good on you for modifying your layout, this is the most nonQMK layout you will come across
- * There are three modes, Steno (the default), QWERTY (Toggleable) and a Momentary symbol layer
+ * There are three modes, Steno (the default), Colemak (Toggleable) and a Momentary symbol layer
  *
  * Don't modify the steno layer directly, instead add chords using the keycodes and macros
  * from sten.h to the layout you want to modify.
@@ -18,14 +18,14 @@
 // Steno Layers
 #define FUNCT	( LSD | LK | LP | LH )
 #define MEDIA	( LSD | LK | LW | LR )
-#define MOVE	( LSD | LK )
-#define LNUM		( LNO )
-#define RNUM		( RNO )
-#define SYM		( RZ )
+#define MOVE	( ST3 | ST4 )
+#define LNUM	( LNO )
+#define RNUM	( RNO )
+#define SYM		( PWR )
 
 // Keys and chords that, once they appear, are added to every subsequent partial chord
 // until the whole thing is sent.
-uint32_t stenoLayers[] = {NUM, SYM, MOVE, MEDIA, FUNCT};
+uint32_t stenoLayers[] = {LNUM, RNUM, SYM, MOVE, MEDIA, FUNCT};
 
 // QMK Layers
 #define STENO_LAYER   0
@@ -87,20 +87,23 @@ uint32_t processQwerty(bool lookup) {
 
 /* Movement layer
  * ,-----------------------------------,    ,-----------------------------------,
- * |     |     |     |     |     |     |    |     | <-  |  ↓  |  ↑  | ->  |     |
- * |     +     +     +     +     +     |    |     +     +     +     +     +     |
- * |     | MOVEMOVEM |     |     |     |    |     | Hm  | PgD | PgU | End |     |
+ * |     |     |  ↑  |     | PgU | Hm  |    |  M  |     |     |     |     |     |
+ * |     +     +     +     +     +     |    |  O  +     +     +     +     +     |
+ * |     |  <- |  ↓  | ->  | PgD | End |    |  V  |     |     |     |     |     |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
+ *					   ,---------------,    .---------------.
+ *					   |     |    |    |    |    |    |     |
+ *					   `---------------'    `---------------'
 */
-	P( MOVE | RF,			SEND(KC_LEFT));
-	P( MOVE | RP,			SEND(KC_DOWN));
-	P( MOVE | RL,			SEND(KC_UP));
-	P( MOVE | RT,			SEND(KC_RIGHT));
+	P( MOVE | LSD,			SEND(KC_LEFT));
+	P( MOVE | LK,			SEND(KC_DOWN));
+	P( MOVE | LFT,			SEND(KC_UP));
+	P( MOVE | LW,			SEND(KC_RIGHT));
 
-	P( MOVE | RR,			SEND(KC_HOME));
-	P( MOVE | RB,			SEND(KC_PGDN));
-	P( MOVE | RG,			SEND(KC_PGUP));
-	P( MOVE | RS,			SEND(KC_END));
+	P( MOVE | ST1,			SEND(KC_HOME));
+	P( MOVE | LR,			SEND(KC_PGDN));
+	P( MOVE | LH,			SEND(KC_PGUP));
+	P( MOVE | ST2,			SEND(KC_END));
 
 
 /* Media Layer
@@ -134,11 +137,11 @@ uint32_t processQwerty(bool lookup) {
 
   P( LNUM | LSU,		SEND(KC_1));
   P( LNUM | LFT,		SEND(KC_2));
-	P( LNUM | LP,			SEND(KC_3));
-	P( LNUM | LH,			SEND(KC_4));
+  P( LNUM | LP,			SEND(KC_3));
+  P( LNUM | LH,			SEND(KC_4));
   P( LNUM | ST1,		SEND(KC_5));
   
-  P( LNUM | ST3,		SEND(KC_6));
+    P( LNUM | ST3,		SEND(KC_6));
 	P( LNUM | RF,			SEND(KC_7));
 	P( LNUM | RP,			SEND(KC_8));
 	P( LNUM | RL,			SEND(KC_9));
@@ -156,11 +159,11 @@ uint32_t processQwerty(bool lookup) {
 	
   P( RNUM | LSU,		SEND(KC_1));
   P( RNUM | LFT,		SEND(KC_2));
-	P( RNUM | LP,			SEND(KC_3));
-	P( RNUM | LH,			SEND(KC_4));
+  P( RNUM | LP,			SEND(KC_3));
+  P( RNUM | LH,			SEND(KC_4));
   P( RNUM | ST1,		SEND(KC_5));
   
-  P( RNUM | ST3,		SEND(KC_6));
+    P( RNUM | ST3,		    SEND(KC_6));
 	P( RNUM | RF,			SEND(KC_7));
 	P( RNUM | RP,			SEND(KC_8));
 	P( RNUM | RL,			SEND(KC_9));
@@ -179,7 +182,7 @@ uint32_t processQwerty(bool lookup) {
  * ,-----------------------------------,    ,-----------------------------------,
  * |     |  `  |  [  |  {  |  (  |  <  |    |  >  |  )  |  }  |  ]  |  ?  |     |
  * |     +  ~  +  -  +  '  +  :  +  _  |    |  \  +  =  +  "  +  +  +  ?  +     |
- * |     |  !  |  @  |  #  |  $  |  %  |    |  |  |  ^  |  &  |  *  |  ?  | SYM |
+ * | SYM |  !  |  @  |  #  |  $  |  %  |    |  |  |  ^  |  &  |  *  |  ?  | SFT |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *					   ,---------------,    .---------------.
  *					   |     |    |     |    |    |    |     |
@@ -222,6 +225,8 @@ uint32_t processQwerty(bool lookup) {
 	P( SYM | RB,			SEND_STRING("&"));
 	P( SYM | RG,			SEND_STRING("*"));
 	P( SYM | RS,			SEND_STRING("?"));
+    
+    P( SYM | RZ,			SEND(KC_RSFT));
 
 
 /* Letters
@@ -230,8 +235,9 @@ uint32_t processQwerty(bool lookup) {
  * +-----+- A -+- R -+- S -+- T -+- D -|    |- H -+- N -+- E -+- I -+- O -+-----|
  * | bsp |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  | del |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
+ *                  ALT   GUI   CTL              CTL   GUI   ALT
  *					   ,---------------,    .---------------.
- *					   | alt | ent|shfr|    | spc| gui| alt |
+ *					   | bsp | ent|shfr|    | spc| gui| bsp |
  *					   `---------------'    `---------------'
 */
 	// Left hand
@@ -252,6 +258,11 @@ uint32_t processQwerty(bool lookup) {
 	P( LW,					SEND(KC_C));
 	P( LR,					SEND(KC_V));
 	P( ST2,					SEND(KC_B));
+    
+   	P( ST2 | LR,			SEND(LCTL));
+    P( LR | LW, 			SEND(LGUI));
+    P( LW | LK, 			SEND(LALT));
+
 
 	// Right hand
 	P( ST3,					SEND(KC_J));
@@ -283,13 +294,13 @@ uint32_t processQwerty(bool lookup) {
 	P( RZ | RD,				SEND(KC_LCTL); SEND(KC_DEL));
 
 	PC( LNO | LA | LO,		SEND(KC_LSFT); SEND(KC_ESC));
-	PC( LA | LO,		SEND(KC_ESC));
+	PC( LA | LO,		    SEND(KC_ESC));
 	PC( LNO,				SEND(KC_BSPC));
 	PC( LA,					SEND(KC_ENT));
 	PC( LO,					SEND(KC_LSFT));
 
 	PC( RNO,				SEND(KC_BSPC));
-	PC( RE | RU,		SEND(KC_TAB));
+	PC( RE | RU,		    SEND(KC_TAB));
 	PC( RE,					SEND(KC_SPC));
 	PC( RU,					SEND(KC_LGUI));
    
