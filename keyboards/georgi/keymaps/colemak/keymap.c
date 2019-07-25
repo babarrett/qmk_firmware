@@ -18,7 +18,7 @@
 // Steno Layers
 #define FUNCT	( LSD | LK | LP | LH )
 #define MEDIA	( LSD | LK | LW | LR )
-#define MOVE	( ST3 | ST4 )
+#define MOVE	( LA | LO )
 #define LNUM	( LNO )
 #define RNUM	( RNO )
 #define SYM		( PWR )
@@ -87,13 +87,15 @@ uint32_t processQwerty(bool lookup) {
 
 /* Movement layer
  * ,-----------------------------------,    ,-----------------------------------,
- * |     |     |  ↑  |     | PgU | Hm  |    |  M  |     |     |     |     |     |
- * |     +     +     +     +     +     |    |  O  +     +     +     +     +     |
- * |     |  <- |  ↓  | ->  | PgD | End |    |  V  |     |     |     |     |     |
+ * |     |     |  ↑  |     | PgU | Hm  |    |     |     |     |     |     |     |
+ * |     +     +     +     +     +     |    |     +     +     +     +     +     |
+ * |     |  <- |  ↓  | ->  | PgD | End |    |     |     |     |     |     |     |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
- *					   ,---------------,    .---------------.
- *					   |     |    |    |    |    |    |     |
- *					   `---------------'    `---------------'
+ *
+ *                                MOVE
+ *					   ,-----+-----+---,    .----+----+-----.
+ *					   |     |   |     |    |    |    |     |
+ *					   `-----+-----+---'    `----+----+-----'
 */
 	P( MOVE | LSD,			SEND(KC_LEFT));
 	P( MOVE | LK,			SEND(KC_DOWN));
@@ -236,9 +238,10 @@ uint32_t processQwerty(bool lookup) {
  * | bsp |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  | del |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *                  ALT   GUI   CTL              CTL   GUI   ALT
- *					   ,---------------,    .---------------.
+ *
+ *					   ,-----+----+----,    .----+----+-----.
  *					   | bsp | ent|shfr|    | spc| gui| bsp |
- *					   `---------------'    `---------------'
+ *					   `-----+----+----'    `----+----+-----'
 */
 	// Left hand
 	P( LSU,					SEND(KC_Q));
@@ -294,7 +297,6 @@ uint32_t processQwerty(bool lookup) {
 	P( RZ | RD,				SEND(KC_LCTL); SEND(KC_DEL));
 
 	PC( LNO | LA | LO,		SEND(KC_LSFT); SEND(KC_ESC));
-	PC( LA | LO,		    SEND(KC_ESC));
 	PC( LNO,				SEND(KC_BSPC));
 	PC( LA,					SEND(KC_ENT));
 	PC( LO,					SEND(KC_LSFT));
