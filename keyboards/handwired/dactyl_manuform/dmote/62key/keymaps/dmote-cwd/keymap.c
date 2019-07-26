@@ -17,9 +17,6 @@ enum layer_names {
 #define LAYER_C TG(_COLEMAK)
 #define LAYER_M MO(_MOVE)
 #define PASTE LSFT(KC_INS)  // Terminal-compatible paste.
-#define SLQ RALT(KC_9)  // Single left-side quotation mark (in Colemak).
-#define SRQ RALT(KC_0)
-#define EMDASH RALT(LSFT(KC_MINUS))  // Em dash character (in Colemak).
 #define BK_LCTL CTL_T(KC_LBRACKET)
 #define BK_RCTL RCTL_T(KC_RBRACKET)
 
@@ -29,7 +26,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_VOLD, KC_VOLU, KC_W,    KC_F,    KC_P,    KC_G,
     KC_TAB,  KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
     KC_ESC,  KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
-    SLQ,     KC_Z,    KC_HOME, KC_PGUP, KC_END,
+    KC_LSPO, KC_Z,    KC_HOME, KC_PGUP, KC_END,
                                KC_PGDN,          KC_ENT,  KC_SPC,
                                              KC_LSPO, KC_LGUI, KC_MINS,
                                                  BK_LCTL, KC_LALT,
@@ -37,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  KC_J,    KC_L,    KC_U,    KC_Y,    KC_MPLY, KC_MUTE,
                  KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
                  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
-                          KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, SRQ,
+                          KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, KC_RSPC,
         KC_DEL,  KC_BSPC,           KC_DOWN,
     KC_EQL,  LAYER_N, KC_RSPC,
         KC_RALT, BK_RCTL
@@ -65,43 +62,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     LAYER_C, KC_INS,  KC_F2,   KC_F3,   KC_F4,   KC_F5,
     KC_F12,  KC_F1,   KC_2,    KC_3,    KC_4,    KC_5,
     _______, KC_1,    KC_AT,   KC_HASH, KC_DLR,  KC_PERC,
-    KC_GRV,  KC_EXLM, KC_BTN1, KC_WH_U, KC_BTN2,
-                               KC_WH_D,          RGB_MOD, _______,
-                                             _______, _______, EMDASH,
+    KC_GRV,  KC_EXLM, _______, _______, _______,
+                               _______,          RGB_MOD, _______,
+                                             _______, _______, ______,
                                                  _______, _______,
 
-                 KC_F6,   KC_F7,   KC_F8,   KC_F9,   RESET,   KC_WAKE, // *
+                 KC_F6,   KC_F7,   KC_F8,   KC_F9,   RESET,   ______,
                  KC_6,    KC_7,    KC_8,    KC_9,    KC_F10,  KC_F11,
                  KC_CIRC, KC_AMPR, KC_ASTR, KC_APP,  KC_0,    PASTE,
-                          KC_MS_L, KC_MS_U, KC_MS_R, KC_PSCR, RGB_TOG,
-        KC_ACL1, KC_ACL2,          KC_MS_D,
-    KC_ACL0, _______, _______,
+                          _______, _______, _______, KC_PSCR, RGB_TOG,
+        _______, _______,          _______,
+    _______, _______, _______,
         _______, _______
 ),
 
 [_MOVE] = LAYOUT_62key(
-    KC_VOLD, KC_VOLU, KC_W,       KC_UP,    KC_P,     KC_G,
-    KC_TAB,  KC_Q,    KC_LEFT,    KC_DOWN,  KC_RIGHT, KC_D,
-    KC_ESC,  KC_A,    KC_X,       KC_C,     KC_V,     KC_B,
-    SLQ,     KC_Z,    KC_HOME,    KC_PGUP,   KC_END,
-                                  KC_PGDN,       KC_ENT,  KC_SPC,
-                                             KC_LSPO, KC_LGUI, KC_MINS,
-                                                 BK_LCTL, KC_LALT,
+    ______, _______,  KC_HOME, KC_UP,    KC_PGUP,  ____,
+    ______,  ______,  KC_LEFT, KC_DOWN,  KC_RIGHT, ____,
+    KC_INS,  ______,  KC_END,  _______,  KC_PGDN,  ____,
+    ______,  ______,  ______,  _______,  _______,
+                               _______,          KC_DEL,  KC_BSPC,
+                                             _______, _______, _______,
+                                                 _______, _______,
 
-                 KC_J,    KC_L,    KC_U,    KC_Y,    KC_MPLY, KC_MUTE,
-                 KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
-                 KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
-                          KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, SRQ,
-        KC_DEL,  KC_BSPC,           KC_DOWN,
-    KC_EQL,  LAYER_N, KC_RSPC,
-        KC_RALT, BK_RCTL
+                 ____,  _______, KC_UP,   _______, _______, _______,
+                 ____,  KC_LEFT, KC_DOWN, KC_RGHT, _______, _______,
+                 ____,  _______, _______, _______, _______,    _______,
+                        _______, _______, _______, _______, _______,
+        KC_ENT,  KC_SPC,         _______,
+    ______,  _______, ______,
+        _______, ______
 )
 
 };
-// *KC_WAKE: Used in place of KC_SLEP because X11 with i3 on prerelease
-//  Debian 10 was seeing duplicate keypress and release events for sleep
-//  (regardless of i3 binding), which ruined the function.
-
 
 /*
 The rest is all about lighting control.
