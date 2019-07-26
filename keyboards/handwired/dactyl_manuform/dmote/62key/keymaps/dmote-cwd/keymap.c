@@ -1,6 +1,5 @@
 #include "62key.h"
 #include "rgblight.h"
-#include <keymap_colemak.h>
 #include <sendstring_colemak.h>
 
 extern keymap_config_t keymap_config;
@@ -21,23 +20,21 @@ enum layer_names {
 #define EMDASH RALT(LSFT(KC_MINUS))  // Em dash character (in Colemak).
 #define BK_LCTL CTL_T(KC_LBRACKET)
 #define BK_RCTL RCTL_T(KC_RBRACKET)
-// TODO: Mod-tap ALT with a curvilinear brace.
-// https://github.com/qmk/qmk_firmware/pull/2055
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_COLEMAK] = LAYOUT_62key(
-    KC_VOLD, KC_VOLU, CM_W,    CM_F,    CM_P,    CM_G,
-    KC_TAB,  CM_Q,    CM_R,    CM_S,    CM_T,    CM_D,
-    KC_ESC, CM_A,    CM_X,    CM_C,    CM_V,    CM_B,
-    SLQ,     CM_Z,    KC_HOME, KC_PGUP, KC_END,
+    KC_VOLD, KC_VOLU, KC_W,    KC_F,    KC_P,    KC_G,
+    KC_TAB,  KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
+    KC_ESC, KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
+    SLQ,     KC_Z,    KC_HOME, KC_PGUP, KC_END,
                                KC_PGDN,          KC_ENT,  KC_SPC,
                                              KC_LSPO, KC_LGUI, KC_MINS,
                                                  BK_LCTL, KC_LALT,
 
-                 CM_J,    CM_L,    CM_U,    CM_Y,    KC_MPLY, KC_MUTE,
-                 CM_H,    CM_N,    CM_E,    CM_I,    CM_SCLN, KC_BSLS,
-                 CM_K,    CM_M,    KC_COMM, KC_DOT,  CM_O,    KC_QUOT,
+                 KC_J,    KC_L,    KC_U,    KC_Y,    KC_MPLY, KC_MUTE,
+                 KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
+                 KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
                           KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, SRQ,
         KC_DEL,  KC_BSPC,           KC_DOWN,
     KC_EQL,  LAYER_N, KC_RSPC,
@@ -45,17 +42,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_QWERTY] = LAYOUT_62key(
-    _______, _______, KC_W,    KC_F,    KC_P,    KC_G,
-    _______, KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
+    _______, _______, KC_W,    KC_E,    KC_R,    KC_T,
+    _______, KC_Q,    KC_S,    KC_D,    KC_F,    KC_G,
     _______, KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
     _______, KC_Z,    _______, _______, _______,
                                _______,          _______, _______,
                                              _______, _______, _______,
                                                  _______, _______,
 
-                 KC_J,    KC_L,    KC_U,    KC_Y,    _______, _______,
-                 KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, _______,
-                 KC_K,    KC_M,    _______, _______, KC_O,    _______,
+                 KC_Y,    KC_U,    KC_I,    KC_O,    _______, _______,
+                 KC_H,    KC_J,    KC_K,    KC_L,    KC_P,    _______,
+                 KC_N,    KC_M,    _______, _______, KC_SCLN, _______,
                           _______, _______, _______, _______, _______,
         _______, _______,          _______,
     _______, _______, _______,
