@@ -8,12 +8,14 @@ extern keymap_config_t keymap_config;
 enum layer_names {
     _COLEMAK,   // Hardware Colemak, default.
     _QWERTY,  // Hardware QWERTY, for demoing to others.
-    _NUMERIC // For entering numbers
+    _NUMERIC, // For entering numbers.
+    _MOVE // For movement.
 };
 
 // Shorthand:
 #define LAYER_N MO(_NUMERIC)
 #define LAYER_C TG(_COLEMAK)
+#define LAYER_M MO(_MOVE)
 #define PASTE LSFT(KC_INS)  // Terminal-compatible paste.
 #define SLQ RALT(KC_9)  // Single left-side quotation mark (in Colemak).
 #define SRQ RALT(KC_0)
@@ -26,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_COLEMAK] = LAYOUT_62key(
     KC_VOLD, KC_VOLU, KC_W,    KC_F,    KC_P,    KC_G,
     KC_TAB,  KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
-    KC_ESC, KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
+    KC_ESC,  KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
     SLQ,     KC_Z,    KC_HOME, KC_PGUP, KC_END,
                                KC_PGDN,          KC_ENT,  KC_SPC,
                                              KC_LSPO, KC_LGUI, KC_MINS,
@@ -75,7 +77,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ACL1, KC_ACL2,          KC_MS_D,
     KC_ACL0, _______, _______,
         _______, _______
+),
+
+[_MOVE] = LAYOUT_62key(
+    KC_VOLD, KC_VOLU, KC_W,       KC_UP,    KC_P,     KC_G,
+    KC_TAB,  KC_Q,    KC_LEFT,    KC_DOWN,  KC_RIGHT, KC_D,
+    KC_ESC,  KC_A,    KC_X,       KC_C,     KC_V,     KC_B,
+    SLQ,     KC_Z,    KC_HOME,    KC_PGUP,   KC_END,
+                                  KC_PGDN,       KC_ENT,  KC_SPC,
+                                             KC_LSPO, KC_LGUI, KC_MINS,
+                                                 BK_LCTL, KC_LALT,
+
+                 KC_J,    KC_L,    KC_U,    KC_Y,    KC_MPLY, KC_MUTE,
+                 KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
+                 KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
+                          KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, SRQ,
+        KC_DEL,  KC_BSPC,           KC_DOWN,
+    KC_EQL,  LAYER_N, KC_RSPC,
+        KC_RALT, BK_RCTL
 )
+
 };
 // *KC_WAKE: Used in place of KC_SLEP because X11 with i3 on prerelease
 //  Debian 10 was seeing duplicate keypress and release events for sleep
