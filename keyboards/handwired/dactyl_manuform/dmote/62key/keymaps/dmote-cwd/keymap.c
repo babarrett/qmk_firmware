@@ -12,6 +12,10 @@ enum layer_names {
     _MOVE // For movement.
 };
 
+// Define Leader Rules
+#define LEADER_TIMEOUT 250
+#define LEADER_PER_KEY_TIMING
+
 // Shorthand:
 #define LAYER_N TT(_NUMERIC)
 #define LAYER_G TG(_GAME)
@@ -21,17 +25,18 @@ enum layer_names {
 #define BK_RCTL RCTL_T(KC_RBRACKET)
 #define CB_LALT LALT_T(KC_LCBR)
 #define CB_RALT RALT_T(KC_RCBR)
-#define RSF_SPC RSFT_T(KC_SPC)
-#define LSF_BSPC LSFT_T(KC_BSPC)
+#define LSF_ENT LSFT_T(KC_ENT)
+#define RSF_DEL RSFT_T(KC_DEL)
+#define HY_ESC HYPER_T(KC_ESC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_COLEMAK] = LAYOUT_62key(
     KC_GRV,  KC_MINS, KC_W,    KC_F,    KC_P,    KC_G,
     KC_TAB,  KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
-    KC_ESC,  KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
+    HY_ESC,  KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
     KC_LSPO, KC_Z,    KC_HOME, KC_PGUP, KC_END,
-                               KC_PGDN,          LSF_SPC,  KC_ENT,
+                               KC_PGDN,          KC_SPC,  LSF_ENT,
                                              LAYER_M, LAYER_N, KC_LGUI,
                                                  BK_LCTL, CB_LALT,
 
@@ -39,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
                  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
                           KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, KC_RSPC,
-        KC_DEL,  LSF_BSPC,          KC_DOWN,
+        RSF_DEL,  KC_BSPC,          KC_DOWN,
     KC_RGUI, LAYER_N, LAYER_M,
         CB_RALT, BK_RCTL
 ),
@@ -99,6 +104,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 
 };
+
+/*
+This section defines leader key macros
+*/
+
+LEADER_EXTERNS();
+
+void matrix_scan_user(void) {
+  LEADER_DICTIONARY() {
+    leading = false;
+    leader_end();
+
+    SEQ_TWO_KEYS(KC_W, KC_Q) {
+      SEND_STRING(SS_LGUI("Q"));
+    }
+  }
+}
 
 /*
 The rest is all about lighting control.
