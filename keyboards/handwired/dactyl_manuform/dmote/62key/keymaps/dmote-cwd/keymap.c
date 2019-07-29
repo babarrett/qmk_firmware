@@ -7,7 +7,6 @@ extern keymap_config_t keymap_config;
 // Automatic Layer ID:
 enum layer_names {
     _COLEMAK,   // Hardware Colemak, default.
-    _QWERTY,  // Hardware QWERTY, for demoing to others.
     _GAME, //Gaming layer, for disabling game breaking mods.
     _NUMERIC, // For entering numbers.
     _MOVE // For movement.
@@ -15,12 +14,15 @@ enum layer_names {
 
 // Shorthand:
 #define LAYER_N TT(_NUMERIC)
-#define LAYER_Q TG(_QWERTY)
 #define LAYER_G TG(_GAME)
 #define LAYER_M MO(_MOVE)
 #define PASTE LSFT(KC_INS)  // Terminal-compatible paste.
 #define BK_LCTL CTL_T(KC_LBRACKET)
 #define BK_RCTL RCTL_T(KC_RBRACKET)
+#define CB_LALT LALT_T(KC_LCBR)
+#define CB_RALT RALT_T(KC_RCBR)
+#define RSF_SPC RSFT_T(KC_SPC)
+#define LSF_BSPC LSFT_T(KC_BSPC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -29,35 +31,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
     KC_ESC,  KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
     KC_LSPO, KC_Z,    KC_HOME, KC_PGUP, KC_END,
-                               KC_PGDN,          KC_ENT,  KC_SPC,
-                                             KC_LSPO, KC_LGUI, KC_MINS,
-                                                 BK_LCTL, KC_LALT,
+                               KC_PGDN,          LSF_SPC,  KC_ENT,
+                                             LAYER_M, LAYER_N, KC_LGUI,
+                                                 BK_LCTL, CB_LALT,
 
                  KC_J,    KC_L,    KC_U,    KC_Y,    KC_EQL,  KC_LEAD,
                  KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
                  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
                           KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, KC_RSPC,
-        KC_DEL,  KC_BSPC,          KC_DOWN,
-    KC_EQL,  LAYER_N, KC_RSPC,
-        KC_RALT, BK_RCTL
-),
-
-[_QWERTY] = LAYOUT_62key(
-    _______, _______, KC_W,    KC_E,    KC_R,    KC_T,
-    _______, KC_Q,    KC_S,    KC_D,    KC_F,    KC_G,
-    _______, KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
-    _______, KC_Z,    _______, _______, _______,
-                               _______,          _______, _______,
-                                             _______, _______, _______,
-                                                 _______, _______,
-
-                 KC_Y,    KC_U,    KC_I,    KC_O,    _______, _______,
-                 KC_H,    KC_J,    KC_K,    KC_L,    KC_P,    _______,
-                 KC_N,    KC_M,    _______, _______, KC_SCLN, _______,
-                          _______, _______, _______, _______, _______,
-        _______, _______,          _______,
-    _______, _______, _______,
-        _______, _______
+        KC_DEL,  LSF_BSPC,          KC_DOWN,
+    KC_RGUI, LAYER_N, LAYER_M,
+        CB_RALT, BK_RCTL
 ),
     
 [_GAME] = LAYOUT_62key(
@@ -79,18 +63,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_NUMERIC] = LAYOUT_62key(
-    LAYER_Q, KC_INS,  KC_F2,   KC_F3,   KC_F4,   KC_F5,
+    LAYER_G, RESET,   KC_F2,   KC_F3,   KC_F4,   KC_F5,
     KC_F12,  KC_F1,   KC_2,    KC_3,    KC_4,    KC_5,
     _______, KC_1,    KC_AT,   KC_HASH, KC_DLR,  KC_PERC,
-    KC_GRV,  KC_EXLM, _______, _______, _______,
-                               _______,          RGB_MOD, _______,
+    ______,  KC_EXLM, _______, _______, _______,
+                               _______,          ______, _______,
                                              _______, _______, ______,
                                                  _______, _______,
 
-                 KC_F6,   KC_F7,   KC_F8,   KC_F9,   RESET,   LAYER_G,
+                 KC_F6,   KC_F7,   KC_F8,   KC_F9,   RGB_MOD, RGB_TOG,
                  KC_6,    KC_7,    KC_8,    KC_9,    KC_F10,  KC_F11,
                  KC_CIRC, KC_AMPR, KC_ASTR, KC_APP,  KC_0,    PASTE,
-                          _______, _______, _______, KC_PSCR, RGB_TOG,
+                          _______, _______, _______, KC_PSCR, ______,
         _______, _______,          _______,
     _______, _______, _______,
         _______, _______
