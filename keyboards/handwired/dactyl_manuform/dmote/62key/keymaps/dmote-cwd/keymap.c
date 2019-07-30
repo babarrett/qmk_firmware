@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_GAME] = LAYOUT_62key(
     _______, _______, ______, ______,  ______, ____,
     _______, _______, ______, ______,  ______, ____,
-    _______, _______, ______, ______,  ______, ____,
+    KC_ESC,  _______, ______, ______,  ______, ____,
     KC_LSFT, _______, ______, ______,  ______,
                               ______,           KC_ENT,  KC_SPC,
                                              _______, _______, ______,
@@ -92,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______,  KC_LEFT, KC_DOWN,  KC_RIGHT, ____,
     KC_INS,  _______,  KC_END,  _______,  KC_PGDN,  ____,
     _______, _______,  ______,  _______,  _______,
-                               _______,          KC_BSPC,  KC_DEL,
+                                _______,          KC_BSPC,  KC_DEL,
                                              _______, _______, _______,
                                                  _______, _______,
 
@@ -163,14 +163,15 @@ bool _leds_dirty = false;
 
 void modal_leds(void) {
     uint8_t mods = get_mods();
-    uint16_t hue = 355;  // Rough match to printed case.
-    uint8_t saturation = 255;
+    uint16_t hue = 45;  // Rough match to printed yellow caps.
+    uint8_t saturation = 100;
     uint8_t value = 0;
-    if (layer_state_is(_COLEMAK)) { hue -= 50; saturation -= 20; value += 20; };
+    if (layer_state_is(_GAME)) { hue += 300; saturation -= 20; value += 20; };
     if (layer_state_is(_NUMERIC)) { value += 30; };
+    if (layer_state_is(_MOVE)) { hue += 200; value += 30; };
     if (mods & MOD_MASK_SHIFT) { saturation -= 20; value += 30; };
-    if (mods & MOD_MASK_ALT) { hue -= 100; saturation -= 20; value += 30; };
-    if (mods & MOD_MASK_CTRL) { hue -= 200; saturation -= 20; value += 30; };
+    if (mods & MOD_MASK_ALT) { hue += 100; saturation -= 20; value += 30; };
+    if (mods & MOD_MASK_CTRL) { hue += 255; saturation -= 20; value += 30; };
     // rgblight_sethsv_eeprom_helper is not a great API function but it does
     // affect both halves of a split keyboard.
     rgblight_sethsv_eeprom_helper(hue, saturation, value, false);
