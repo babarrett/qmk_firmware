@@ -1,6 +1,5 @@
 #include "62key.h"
 #include "rgblight.h"
-#include <sendstring_colemak.h>
 
 extern keymap_config_t keymap_config;
 
@@ -15,6 +14,9 @@ enum layer_names {
 // Define Leader Rules
 #define LEADER_TIMEOUT 250
 #define LEADER_PER_KEY_TIMING
+
+// Define Auto Shift Rules
+#define AUTO_SHIFT_TIMEOUT 150
 
 // Shorthand:
 #define LAYER_N TT(_NUMERIC)
@@ -36,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_R,    KC_S,    KC_T,    KC_D,
     HY_ESC,  KC_A,    KC_X,    KC_C,    KC_V,    KC_B,
     KC_LSPO, KC_Z,    KC_HOME, KC_PGUP, KC_END,
-                               KC_PGDN,          KC_SPC,  LSF_ENT,
+                               KC_PGDN,          LSF_ENT,  KC_SPC,
                                              LAYER_M, LAYER_N, KC_LGUI,
                                                  BK_LCTL, CB_LALT,
 
@@ -44,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  KC_H,    KC_N,    KC_E,    KC_I,    KC_SCLN, KC_BSLS,
                  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_O,    KC_QUOT,
                           KC_LEFT, KC_UP,   KC_RGHT, KC_SLSH, KC_RSPC,
-        RSF_DEL,  KC_BSPC,          KC_DOWN,
+        KC_BSPC,  RSF_DEL,          KC_DOWN,
     KC_RGUI, LAYER_N, LAYER_M,
         CB_RALT, BK_RCTL
 ),
@@ -90,15 +92,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______,  KC_LEFT, KC_DOWN,  KC_RIGHT, ____,
     KC_INS,  _______,  KC_END,  _______,  KC_PGDN,  ____,
     _______, _______,  ______,  _______,  _______,
-                               _______,          KC_DEL,  KC_BSPC,
+                               _______,          KC_BSPC,  KC_DEL,
                                              _______, _______, _______,
                                                  _______, _______,
 
                  ____,  _______, KC_UP,   _______, KC_MPLY, KC_MUTE,
                  ____,  KC_LEFT, KC_DOWN, KC_RGHT, _______, _______,
                  ____,  _______, _______, _______, _______, _______,
-                        _______, _______, _______, _______, _______,
-        KC_ENT,  KC_SPC,         _______,
+                        _______, _______, _______, _______, KC_ASTG,
+        KC_SPC,  KC_ENT,         _______,
     ______,  _______, ______,
         _______, ______
 )
@@ -120,6 +122,21 @@ void matrix_scan_user(void) {
       SEND_STRING(SS_LGUI("Q"));
     }
   }
+}
+
+/*
+This bit enables autoshift on the base colemak layer, but no others
+*/
+uint32_t layer_state_set_user(uint32_t state) {
+    switch (biton32(state)) {
+      case _COLEMAK:
+          autoshift_enable();
+          break;
+      default:
+          autoshift_disable();
+          break;
+      }
+  return state;
 }
 
 /*
