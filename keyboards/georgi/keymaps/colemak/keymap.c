@@ -94,7 +94,7 @@ uint32_t processQwerty(bool lookup) {
  *
  *                                MOVE
  *					   ,-----+-----+---,    .----+----+-----.
- *					   |     |   |     |    |    |    |     |
+ *					   |     |     |   |    |    |    |     |
  *					   `-----+-----+---'    `----+----+-----'
 */
 	P( MOVE | LSD,			SEND(KC_LEFT));
@@ -143,7 +143,7 @@ uint32_t processQwerty(bool lookup) {
   P( LNUM | LH,			SEND(KC_4));
   P( LNUM | ST1,		SEND(KC_5));
   
-    P( LNUM | ST3,		SEND(KC_6));
+    P( LNUM | ST3,		    SEND(KC_6));
 	P( LNUM | RF,			SEND(KC_7));
 	P( LNUM | RP,			SEND(KC_8));
 	P( LNUM | RL,			SEND(KC_9));
