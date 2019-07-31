@@ -87,9 +87,9 @@ uint32_t processQwerty(bool lookup) {
 
 /* Movement layer
  * ,-----------------------------------,    ,-----------------------------------,
- * |     |     |  ↑  |     | PgU | Hm  |    |     |     |     |     |     |     |
+ * |     | PgU |     |  ↑  |     | Hm  |    |     |     |     |     |     |     |
  * |     +     +     +     +     +     |    |     +     +     +     +     +     |
- * |     |  <- |  ↓  | ->  | PgD | End |    |     |     |     |     |     |     |
+ * |     | PgD |  <- |  ↓  |  -> | End |    |     |     |     |     |     |     |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *
  *                                MOVE
@@ -97,14 +97,14 @@ uint32_t processQwerty(bool lookup) {
  *					   |     |     |   |    |    |    |     |
  *					   `-----+-----+---'    `----+----+-----'
 */
-	P( MOVE | LSD,			SEND(KC_LEFT));
-	P( MOVE | LK,			SEND(KC_DOWN));
-	P( MOVE | LFT,			SEND(KC_UP));
-	P( MOVE | LW,			SEND(KC_RIGHT));
+	P( MOVE | LK,			SEND(KC_LEFT));
+	P( MOVE | LW,			SEND(KC_DOWN));
+	P( MOVE | LP,			SEND(KC_UP));
+	P( MOVE | LR,			SEND(KC_RIGHT));
 
 	P( MOVE | ST1,			SEND(KC_HOME));
-	P( MOVE | LR,			SEND(KC_PGDN));
-	P( MOVE | LH,			SEND(KC_PGUP));
+	P( MOVE | LSD,			SEND(KC_PGDN));
+	P( MOVE | LSU,			SEND(KC_PGUP));
 	P( MOVE | ST2,			SEND(KC_END));
 
 
@@ -142,12 +142,12 @@ uint32_t processQwerty(bool lookup) {
   P( LNUM | LP,			SEND(KC_3));
   P( LNUM | LH,			SEND(KC_4));
   P( LNUM | ST1,		SEND(KC_5));
-  
+
     P( LNUM | ST3,		    SEND(KC_6));
 	P( LNUM | RF,			SEND(KC_7));
 	P( LNUM | RP,			SEND(KC_8));
 	P( LNUM | RL,			SEND(KC_9));
-	P( NUM | RT,			SEND(KC_0));
+	P( LNUM | RT,			SEND(KC_0));
 
 	P( LNUM | RF  | RR,		SEND(KC_4));
 	P( LNUM | RP  | RB,		SEND(KC_5));
@@ -158,13 +158,13 @@ uint32_t processQwerty(bool lookup) {
 	P( LNUM | RG,			SEND(KC_3));
 
 	// Right hand
-	
+
   P( RNUM | LSU,		SEND(KC_1));
   P( RNUM | LFT,		SEND(KC_2));
   P( RNUM | LP,			SEND(KC_3));
   P( RNUM | LH,			SEND(KC_4));
   P( RNUM | ST1,		SEND(KC_5));
-  
+
     P( RNUM | ST3,		    SEND(KC_6));
 	P( RNUM | RF,			SEND(KC_7));
 	P( RNUM | RP,			SEND(KC_8));
@@ -227,7 +227,7 @@ uint32_t processQwerty(bool lookup) {
 	P( SYM | RB,			SEND_STRING("&"));
 	P( SYM | RG,			SEND_STRING("*"));
 	P( SYM | RS,			SEND_STRING("?"));
-    
+
     P( SYM | RZ,			SEND(KC_RSFT));
 
 
@@ -240,7 +240,7 @@ uint32_t processQwerty(bool lookup) {
  *                  ALT   GUI   CTL              CTL   GUI   ALT
  *
  *					   ,-----+----+----,    .----+----+-----.
- *					   | bsp | ent|shfr|    | spc| gui| bsp |
+ *					   | bsp | spc|shfr|    | ent| gui| bsp |
  *					   `-----+----+----'    `----+----+-----'
 */
 	// Left hand
@@ -261,10 +261,10 @@ uint32_t processQwerty(bool lookup) {
 	P( LW,					SEND(KC_C));
 	P( LR,					SEND(KC_V));
 	P( ST2,					SEND(KC_B));
-    
-   	P( ST2 | LR,			SEND(LCTL));
-    P( LR | LW, 			SEND(LGUI));
-    P( LW | LK, 			SEND(LALT));
+
+   	P( ST2 | LR,			SEND(KC_LCTL));
+    P( LR | LW, 			SEND(KC_LGUI));
+    P( LW | LK, 			SEND(KC_LALT));
 
 
 	// Right hand
@@ -298,14 +298,14 @@ uint32_t processQwerty(bool lookup) {
 
 	PC( LNO | LA | LO,		SEND(KC_LSFT); SEND(KC_ESC));
 	PC( LNO,				SEND(KC_BSPC));
-	PC( LA,					SEND(KC_ENT));
+	PC( LA,					SEND(KC_SPC));
 	PC( LO,					SEND(KC_LSFT));
 
 	PC( RNO,				SEND(KC_BSPC));
 	PC( RE | RU,		    SEND(KC_TAB));
-	PC( RE,					SEND(KC_SPC));
+	PC( RE,					SEND(KC_ENT));
 	PC( RU,					SEND(KC_LGUI));
-   
+
 	PC( PWR,				SEND(KC_BSPC));
 	PC( RD,					SEND(KC_LCTL));
 	P( RZ,					SEND(KC_DEL));
