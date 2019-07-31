@@ -103,7 +103,7 @@ uint32_t processQwerty(bool lookup) {
 	P( MOVE | LR,			SEND(KC_RIGHT));
 
 	P( MOVE | ST1,			SEND(KC_HOME));
-	P( MOVE | LSD,			SEND(KC_PGDN));
+	P( MOVE | LSD,			SEND(KC_PGDN))
 	P( MOVE | LSU,			SEND(KC_PGUP));
 	P( MOVE | ST2,			SEND(KC_END));
 
@@ -235,14 +235,16 @@ uint32_t processQwerty(bool lookup) {
  * ,-----------------------------------,    ,-----------------------------------,
  * |     |  Q  |  W  |  F  |  P  |  G  |    |  J  |  L  |  U  |  Y  |  ;  | ctl |
  * +-----+- A -+- R -+- S -+- T -+- D -|    |- H -+- N -+- E -+- I -+- O -+-----|
- * | bsp |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  | del |
+ * | esc |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  | del |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *                  ALT   GUI   CTL              CTL   GUI   ALT
  *
  *					   ,-----+----+----,    .----+----+-----.
- *					   | bsp | spc|shfr|    | ent| gui| bsp |
+ *					   | bsp | spc|shfr|    | ent| spc| bsp |
  *					   `-----+----+----'    `----+----+-----'
-*/
+ *                               MVE            TAB
+ */
+
 	// Left hand
 	P( LSU,					SEND(KC_Q));
 	P( LFT,					SEND(KC_W));
@@ -286,6 +288,9 @@ uint32_t processQwerty(bool lookup) {
 	P( RG,					SEND(KC_DOT));
 	P( RS,					SEND(KC_SLSH));
 
+   	P( ST4 | RR,			SEND(KC_RCTL));
+    P( RR | RB, 			SEND(KC_RGUI));
+    P( RB | RG, 			SEND(KC_RALT));
 	// Thumb Chords and modifiers
 	//
 	PC( LNO | RNO | LA | RU,		SEND(KC_LCTL); SEND(KC_LSFT));
@@ -304,12 +309,13 @@ uint32_t processQwerty(bool lookup) {
 	PC( RNO,				SEND(KC_BSPC));
 	PC( RE | RU,		    SEND(KC_TAB));
 	PC( RE,					SEND(KC_ENT));
-	PC( RU,					SEND(KC_LGUI));
+	PC( RU,					SEND(KC_SPC));
 
-	PC( PWR,				SEND(KC_BSPC));
+	PC( PWR,				SEND(KC_ESC));
 	PC( RD,					SEND(KC_LCTL));
 	P( RZ,					SEND(KC_DEL));
 
+	P( LA | RU,				SEND(KC_ESC));
 	return 0;
 }
 
