@@ -233,9 +233,9 @@ uint32_t processQwerty(bool lookup) {
  * | esc |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  |     |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *                  ALT   GUI   CTL              CTL   GUI   ALT
- *
+ *                         CTL+GUI                CTL+GUI
  *					           ,-----+----+----,    .----+----+-----.
- *			        		   |     |    |    |    |    |    |     |
+ *			        		   |     |SPC |    |    |    | SPC|     |
  *			        		   `-----+----+----'    `----+----+-----'
  *                               MVE               
  */
@@ -259,9 +259,14 @@ uint32_t processQwerty(bool lookup) {
 	P( LR,					SEND(KC_V));
 	P( ST2,					SEND(KC_B));
 
-  PC( ST2 | LR,		SEND(KC_LCTL));
-  PC( LR | LW, 		SEND(KC_LGUI));
-  PC( LW | LK, 		SEND(KC_LALT));
+  PC( ST2 | LR,		        SEND(KC_LCTL));
+  PC( LR | LW, 		        SEND(KC_LGUI));
+  PC( LW | LK, 		        SEND(KC_LALT));
+  PC( ST2 | LR | LW,        SEND(KC_LCTL); SEND(KC_LGUI));
+    
+    //Left Thumbs
+    
+  P( LA,                    SEND(KC_SPC));
 
 
 	// Right hand
@@ -283,9 +288,14 @@ uint32_t processQwerty(bool lookup) {
 	P( RG,					SEND(KC_DOT));
 	P( RS,					SEND(KC_SLSH));
 
-  PC( ST4 | RR,		SEND(KC_RCTL));
-  PC( RR | RB, 		SEND(KC_RGUI));
-  PC( RB | RG, 		SEND(KC_RALT));
+  PC( ST4 | RR,		        SEND(KC_RCTL));
+  PC( RR | RB, 		        SEND(KC_RGUI));
+  PC( RB | RG, 		        SEND(KC_RALT));
+  PC( ST4 | RR | RB,		SEND(KC_RCTL); SEND(KC_RGUI));
+    
+    // Right Thumbs
+    
+  P( RU,                    SEND(KC_SPC));
 
 // Thumb Chords and modifiers
 //
@@ -305,6 +315,9 @@ uint32_t processQwerty(bool lookup) {
   
   //[X][][] [][][X] Gui
   PC( LNO | RNO,     SEND(KC_LGUI));
+    
+  //[X][][X] [X][][X] Control+Gui
+  PC( LNO | RNO | LO | RE,     SEND(KC_LCTL); SEND(KC_LGUI));
   
 	return 0;
 }
