@@ -33,14 +33,14 @@ uint32_t stenoLayers[] = {LNUM, RNUM, SYM, MOVE, MEDIA, FUNCT};
 #define GAMING_2	  2
 
 /* Keyboard Layout
- * ,---------------------------------.	  ,------------------------------.
- * | FN  | LSU | LFT | LP | LH | ST1 |	  | ST3 | RF | RP | RL | RT | RD |
- * |-----+-----+-----+----+----|-----|	  |-----|----+----+----+----+----|
- * | PWR | LSD | LK  | LW | LR | ST2 |	  | ST4 | RR | RB | RG | RS | RZ |
- * `---------------------------------'	  `------------------------------'
- *        					 ,---------------,	  .---------------.
- *				        	 | LNO | LA | LO |	  | RE | RU | RNO |
- *			        		 `---------------'	  `---------------'
+ * ,---------------------------------.    ,------------------------------.
+ * | FN  | LSU | LFT | LP | LH | ST1 |    | ST3 | RF | RP | RL | RT | RD |
+ * |-----+-----+-----+----+----|-----|    |-----|----+----+----+----+----|
+ * | PWR | LSD | LK  | LW | LR | ST2 |    | ST4 | RR | RB | RG | RS | RZ |
+ * `---------------------------------'    `------------------------------'
+ *                   ,---------------,    .---------------.
+ *                   | LNO | LA | LO |    | RE | RU | RNO |
+ *                   `---------------'    `---------------'
  */
 
 // Note: You can only use basic keycodes here!
@@ -84,13 +84,13 @@ uint32_t processQwerty(bool lookup) {
  * ,-----------------------------------,    ,-----------------------------------,
  * |     | PgU |     |  ↑  |     | Hm  |    |     |     |     |     |     |     |
  * |     +     +     +     +     +     |    |     +     +     +     +     +     |
- * |     | PgD |  <- |  ↓  |  -> | End |    |     |     |     |     |     |     |
+ * | SFT | PgD |  <- |  ↓  |  -> | End |    |     |     |     |     |     | SFT |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *
  *                               MOVE
- *					           ,-----+----+----,    .----+----+-----.
- *					           |     |    |    |    |    |    |     |
- *				        	   `-----+----+----'    `----+----+-----'
+ *                     ,-----+----+----,    .----+----+-----.
+ *                     |     |    |    |    |    |    |     |
+ *                     `-----+----+----'    `----+----+-----'
 */
 	P( MOVE | LK,			SEND(KC_LEFT));
 	P( MOVE | LW,			SEND(KC_DOWN));
@@ -102,6 +102,8 @@ uint32_t processQwerty(bool lookup) {
 	P( MOVE | LSU,			SEND(KC_PGUP));
 	P( MOVE | ST2,			SEND(KC_END));
 
+    PC( MOVE | PWR,			SEND(KC_RSFT));
+	PC( MOVE | RZ,			SEND(KC_RSFT));
 
 /* Media Layer
  * ,-----------------------------------,    ,-----------------------------------,
@@ -126,53 +128,52 @@ uint32_t processQwerty(bool lookup) {
  * |     +     +     +     +     +     |    |     +  4  +  5  +  6  +     +     |
  * |     |     |     |     |     |     |    |     |  1  |  2  |  3  |     |     |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
- *					   ,---------------,    .---------------.
- *					   | num |    |    |    |    |    | num |
- *					   `---------------'    `---------------'
+ *                     ,---------------,    .---------------.
+ *                     | num |    |    |    |    |    | num |
+ *                     `---------------'    `---------------'
 */
 	// Left hand
+    P( LNUM | LSU,		SEND(KC_1));
+    P( LNUM | LFT,		SEND(KC_2));
+    P( LNUM | LP,			SEND(KC_3));
+    P( LNUM | LH,			SEND(KC_4));
+    P( LNUM | ST1,		SEND(KC_5));
 
-  P( LNUM | LSU,		SEND(KC_1));
-  P( LNUM | LFT,		SEND(KC_2));
-  P( LNUM | LP,			SEND(KC_3));
-  P( LNUM | LH,			SEND(KC_4));
-  P( LNUM | ST1,		SEND(KC_5));
+    P( LNUM | ST3,          SEND(KC_6));
+    P( LNUM | RF,			SEND(KC_7));
+    P( LNUM | RP,			SEND(KC_8));
+    P( LNUM | RL,			SEND(KC_9));
+    P( LNUM | RT,			SEND(KC_0));
 
-  P( LNUM | ST3,    SEND(KC_6));
-	P( LNUM | RF,			SEND(KC_7));
-	P( LNUM | RP,			SEND(KC_8));
-	P( LNUM | RL,			SEND(KC_9));
-	P( LNUM | RT,			SEND(KC_0));
+    P( LNUM | RF  | RR,		SEND(KC_4));
+    P( LNUM | RP  | RB,		SEND(KC_5));
+    P( LNUM | RG  | RL,		SEND(KC_6));
 
-	P( LNUM | RF  | RR,		SEND(KC_4));
-	P( LNUM | RP  | RB,		SEND(KC_5));
-	P( LNUM | RG  | RL,		SEND(KC_6));
-
-	P( LNUM | RR,			SEND(KC_1));
-	P( LNUM | RB,			SEND(KC_2));
-	P( LNUM | RG,			SEND(KC_3));
+    P( LNUM | RR,			SEND(KC_1));
+    P( LNUM | RB,			SEND(KC_2));
+    P( LNUM | RG,			SEND(KC_3));
 
 	// Right hand
 
-  P( RNUM | LSU,		SEND(KC_1));
-  P( RNUM | LFT,		SEND(KC_2));
-  P( RNUM | LP,			SEND(KC_3));
-  P( RNUM | LH,			SEND(KC_4));
-  P( RNUM | ST1,		SEND(KC_5));
+    P( RNUM | LSU,		SEND(KC_1));
+    P( RNUM | LFT,		SEND(KC_2));
+    P( RNUM | LP,			SEND(KC_3));
+    P( RNUM | LH,			SEND(KC_4));
+    P( RNUM | ST1,		SEND(KC_5));
 
-  P( RNUM | ST3,	  SEND(KC_6));
-	P( RNUM | RF,			SEND(KC_7));
-	P( RNUM | RP,			SEND(KC_8));
-	P( RNUM | RL,			SEND(KC_9));
-	P( RNUM | RT,			SEND(KC_0));
+    P( RNUM | ST3,	  SEND(KC_6));
+    P( RNUM | RF,			SEND(KC_7));
+    P( RNUM | RP,			SEND(KC_8));
+    P( RNUM | RL,			SEND(KC_9));
+    P( RNUM | RT,			SEND(KC_0));
 
-	P( RNUM | RF  | RR,		SEND(KC_4));
-	P( RNUM | RP  | RB,		SEND(KC_5));
-	P( RNUM | RG  | RL,		SEND(KC_6));
+    P( RNUM | RF  | RR,		SEND(KC_4));
+    P( RNUM | RP  | RB,		SEND(KC_5));
+    P( RNUM | RG  | RL,		SEND(KC_6));
 
-	P( RNUM | RR,			SEND(KC_1));
-	P( RNUM | RB,			SEND(KC_2));
-	P( RNUM | RG,			SEND(KC_3));
+    P( RNUM | RR,			SEND(KC_1));
+    P( RNUM | RB,			SEND(KC_2));
+    P( RNUM | RG,			SEND(KC_3));
 
 
 /* Symbols
@@ -181,63 +182,64 @@ uint32_t processQwerty(bool lookup) {
  * |     +  ~  +  -  +  '  +  :  +  _  |    |  \  +  =  +  "  +  +  +  ?  +     |
  * | SYM |  !  |  @  |  #  |  $  |  %  |    |  |  |  ^  |  &  |  *  |  ?  | SFT |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
- *			        		   ,---------------,    .---------------.
- *			        		   |     |    |    |    |    |    |     |
- *			        		   `---------------'    `---------------'
+ *                     ,---------------,    .---------------.
+ *                     |     |    |    |    |    |    |     |
+ *                     `---------------'    `---------------'
 */
 	// Left hand
-	P( SYM | LSU,			SEND(KC_GRV));
-	P( SYM | LFT,			SEND(KC_LBRC));
-	P( SYM | LP,			SEND_STRING("{"));
-	P( SYM | LH,			SEND_STRING("("));
-	P( SYM | ST1,			SEND_STRING("<"));
+    P( SYM | LSU,			SEND(KC_GRV));
+    P( SYM | LFT,			SEND(KC_LBRC));
+    P( SYM | LP,			SEND_STRING("{"));
+    P( SYM | LH,			SEND_STRING("("));
+    P( SYM | ST1,			SEND_STRING("<"));
 
-	P( SYM | LSU | LSD,		SEND_STRING("~"));
-	P( SYM | LFT | LK,		SEND(KC_MINS));
-	P( SYM | LP  | LW,		SEND(KC_QUOTE));
-	P( SYM | LH  | LR,		SEND_STRING(":"));
-	P( SYM | ST1 | ST2,		SEND_STRING("_"));
+    P( SYM | LSU | LSD,		SEND_STRING("~"));
+    P( SYM | LFT | LK,		SEND(KC_MINS));
+    P( SYM | LP  | LW,		SEND(KC_QUOTE));
+    P( SYM | LH  | LR,		SEND_STRING(":"));
+    P( SYM | ST1 | ST2,		SEND_STRING("_"));
 
-	P( SYM | LSD,			SEND_STRING("!"));
-	P( SYM | LK,			SEND_STRING("@"));
-	P( SYM | LW,			SEND_STRING("#"));
-	P( SYM | LR,			SEND_STRING("$"));
-	P( SYM | ST2,			SEND_STRING("%"));
+    P( SYM | LSD,			SEND_STRING("!"));
+    P( SYM | LK,			SEND_STRING("@"));
+    P( SYM | LW,			SEND_STRING("#"));
+    P( SYM | LR,			SEND_STRING("$"));
+    P( SYM | ST2,			SEND_STRING("%"));
 
 	// Right hand
-	P( SYM | ST3,			SEND_STRING(">"));
-	P( SYM | RF,			SEND_STRING(")"));
-	P( SYM | RP,			SEND_STRING("}"));
-	P( SYM | RL,			SEND_STRING("]"));
-	P( SYM | RT,			SEND_STRING("?"));
+    P( SYM | ST3,			SEND_STRING(">"));
+    P( SYM | RF,			SEND_STRING(")"));
+    P( SYM | RP,			SEND_STRING("}"));
+    P( SYM | RL,			SEND_STRING("]"));
+    P( SYM | RT,			SEND_STRING("?"));
 
-	P( SYM | ST3 | ST4,		SEND(KC_BSLASH));
-	P( SYM | RF  | RR,		SEND(KC_EQUAL));
-	P( SYM | RP  | RB,		SEND_STRING("\""));
-	P( SYM | RG  | RL,		SEND_STRING("+"));
-	P( SYM | RT  | RS,		SEND_STRING("?"));
+    P( SYM | ST3 | ST4,		SEND(KC_BSLASH));
+    P( SYM | RF  | RR,		SEND(KC_EQUAL));
+    P( SYM | RP  | RB,		SEND_STRING("\""));
+    P( SYM | RG  | RL,		SEND_STRING("+"));
+    P( SYM | RT  | RS,		SEND_STRING("?"));
 
-	P( SYM | ST4,			SEND_STRING("|"));
-	P( SYM | RR,			SEND_STRING("^"));
-	P( SYM | RB,			SEND_STRING("&"));
-	P( SYM | RG,			SEND_STRING("*"));
-	P( SYM | RS,			SEND_STRING("?"));
+    P( SYM | ST4,			SEND_STRING("|"));
+    P( SYM | RR,			SEND_STRING("^"));
+    P( SYM | RB,			SEND_STRING("&"));
+    P( SYM | RG,			SEND_STRING("*"));
+    P( SYM | RS,			SEND_STRING("?"));
 
-  P( SYM | RZ,			SEND(KC_RSFT));
+    P( SYM | RZ,			SEND(KC_RSFT));
 
 
 /* Letters
+ *            TAB
  * ,-----------------------------------,    ,-----------------------------------,
- * |     |  Q  |  W  |  F  |  P  |  G  |    |  J  |  L  |  U  |  Y  |  ;  |     |
+ * |     |  Q  |  W  |  F  |  P  |  G  |    |  J  |  L  |  U  |  Y  |  ;  | ctl |
  * +-----+- A -+- R -+- S -+- T -+- D -|    |- H -+- N -+- E -+- I -+- O -+-----|
- * | esc |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  |     |
+ * | esc |  Z  |  X  |  C  |  V  |  B  |    |  K  |  M  |  ,  |  .  |  /  | del |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
  *                  ALT   GUI   CTL              CTL   GUI   ALT
  *                         CTL+GUI                CTL+GUI
- *					           ,-----+----+----,    .----+----+-----.
- *			        		   |     |SPC |    |    |    | SPC|     |
- *			        		   `-----+----+----'    `----+----+-----'
- *                               MVE               
+ *                     ,-----+----+----,    .----+----+-----.
+ *                     | BSP |SPC |SFT |    |    | SPC| BSP |
+ *                     `-----+----+----'    `----+----+-----'
+ *                               MVE
  */
 
 	// Left hand
@@ -259,15 +261,23 @@ uint32_t processQwerty(bool lookup) {
 	P( LR,					SEND(KC_V));
 	P( ST2,					SEND(KC_B));
 
+  PC( LSU | LFT,		        SEND(KC_TAB));
+
   PC( ST2 | LR,		        SEND(KC_LCTL));
   PC( LR | LW, 		        SEND(KC_LGUI));
   PC( LW | LK, 		        SEND(KC_LALT));
   PC( ST2 | LR | LW,        SEND(KC_LCTL); SEND(KC_LGUI));
-    
-    //Left Thumbs
-    
-  P( LA,                    SEND(KC_SPC));
 
+    //Left Thumbs
+
+  //[][X][] [][][] Space
+  PC( LA,                    SEND(KC_SPC));
+
+  //[X][][] [][][] BackSpace
+  PC( LNO,                    SEND(KC_BSPC));
+
+  //[][][X] [][][] Shift
+  PC( LO,                    SEND(KC_LSFT));
 
 	// Right hand
 	P( ST3,					SEND(KC_J));
@@ -288,14 +298,24 @@ uint32_t processQwerty(bool lookup) {
 	P( RG,					SEND(KC_DOT));
 	P( RS,					SEND(KC_SLSH));
 
+	PC( RD,					SEND(KC_RCTL));
+	P( RZ,					SEND(KC_DEL));
+
   PC( ST4 | RR,		        SEND(KC_RCTL));
   PC( RR | RB, 		        SEND(KC_RGUI));
   PC( RB | RG, 		        SEND(KC_RALT));
   PC( ST4 | RR | RB,		SEND(KC_RCTL); SEND(KC_RGUI));
-    
+
     // Right Thumbs
-    
-  P( RU,                    SEND(KC_SPC));
+
+  //[][][] [][X][] Space
+  PC( RU,                    SEND(KC_SPC));
+
+  //[][][] [][][X] BackSpace
+  PC( RNO,                    SEND(KC_BSPC));
+
+  //[][][] [][][X] Enter
+  P( RE,                    SEND(KC_ENT));
 
 // Thumb Chords and modifiers
 //
@@ -303,22 +323,25 @@ uint32_t processQwerty(bool lookup) {
 	// overrides
 
 	P( PWR,			  	SEND(KC_ESC));
-  
+
   //[][X][] [][X][] Escape
-	P( LA | RU,			SEND(KC_ESC));
-  
+  P( LA | RU,			SEND(KC_ESC));
+
+  //[][][] [X][X][] Tab
+  P( RE | RU,			SEND(KC_TAB));
+
   //[][][X] [X][][] Control
   PC( LO | RE,			SEND(KC_LCTL));
-  
+
   //[][X][X] [X][X][] Control+Shift
   PC( LO | RE | LA | RU,     SEND(KC_LCTL); SEND(KC_LSFT));
-  
+
   //[X][][] [][][X] Gui
   PC( LNO | RNO,     SEND(KC_LGUI));
-    
+
   //[X][][X] [X][][X] Control+Gui
   PC( LNO | RNO | LO | RE,     SEND(KC_LCTL); SEND(KC_LGUI));
-  
+
 	return 0;
 }
 
@@ -345,7 +368,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[GAMING_2] = LAYOUT_georgi(
 		KC_LCTL, KC_1,	  KC_2,    KC_3,	KC_4,	 KC_5,			KC_6,	 KC_7,	  KC_8,    KC_9,	KC_0,	 KC_MINS,
 		KC_LSFT, KC_Z,	  KC_X,    KC_C,	KC_V,	 KC_B,			KC_N,	 KC_M,	  KC_LT,   KC_GT,	KC_QUES, KC_RSFT,
-								   KC_LALT, KC_SPC,  KC_ENT,		KC_DEL,  KC_ASTR, TO(STENO_LAYER)
+								   KC_LALT, KC_SPC,  KC_ENT,		KC_DEL,  RESET, TO(STENO_LAYER)
 	)
 };
 
