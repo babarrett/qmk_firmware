@@ -25,7 +25,7 @@
 
 // Keys and chords that, once they appear, are added to every subsequent partial chord
 // until the whole thing is sent.
-uint32_t stenoLayers[] = {LNUM, RNUM, SYM, MOVE, MEDIA, FUNCT};
+//uint32_t stenoLayers[] = {LNUM, RNUM, SYM, MOVE, MEDIA, FUNCT};
 
 // QMK Layers
 #define STENO_LAYER   0
@@ -178,7 +178,7 @@ uint32_t processQwerty(bool lookup) {
 
 /* Symbols
  * ,-----------------------------------,    ,-----------------------------------,
- * |     |  `  |  [  |  {  |  (  |  <  |    |  >  |  )  |  }  |  ]  |  ?  |     |
+ * |     |  `  |  [  |  {  |  (  |  <  |    |  >  |  )  |  }  |  ]  |  ?  | GUI |
  * |     +  ~  +  -  +  '  +  :  +  _  |    |  \  +  =  +  "  +  +  +  ?  +     |
  * | SYM |  !  |  @  |  #  |  $  |  %  |    |  |  |  ^  |  &  |  *  |  ?  | SFT |
  * `-----+-----+-----+-----+-----+-----'    `-----+-----+-----+-----+-----+-----'
@@ -237,7 +237,7 @@ uint32_t processQwerty(bool lookup) {
  *                  ALT   GUI   CTL              CTL   GUI   ALT
  *                         CTL+GUI                CTL+GUI
  *                     ,-----+----+----,    .----+----+-----.
- *                     | BSP |SPC |SFT |    |    | SPC| BSP |
+ *                     | BSP |SPC |SFT |    | ENT| SPC| BSP |
  *                     `-----+----+----'    `----+----+-----'
  *                               MVE
  */
@@ -263,10 +263,10 @@ uint32_t processQwerty(bool lookup) {
 
   PC( LSU | LFT,		        SEND(KC_TAB));
 
-  PC( ST2 | LR,		        SEND(KC_LCTL));
-  PC( LR | LW, 		        SEND(KC_LGUI));
-  PC( LW | LK, 		        SEND(KC_LALT));
-  PC( ST2 | LR | LW,        SEND(KC_LCTL); SEND(KC_LGUI));
+  P( ST2 | LR,		        SEND(KC_LCTL));
+  P( LR | LW, 		        SEND(KC_LGUI));
+  P( LW | LK, 		        SEND(KC_LALT));
+  P( ST2 | LR | LW,        SEND(KC_LCTL); SEND(KC_LGUI));
 
     //Left Thumbs
 
@@ -301,10 +301,10 @@ uint32_t processQwerty(bool lookup) {
 	PC( RD,					SEND(KC_RCTL));
 	P( RZ,					SEND(KC_DEL));
 
-  PC( ST4 | RR,		        SEND(KC_RCTL));
-  PC( RR | RB, 		        SEND(KC_RGUI));
-  PC( RB | RG, 		        SEND(KC_RALT));
-  PC( ST4 | RR | RB,		SEND(KC_RCTL); SEND(KC_RGUI));
+  P( ST4 | RR,		        SEND(KC_RCTL));
+  P( RR | RB, 		        SEND(KC_RGUI));
+  P( RB | RG, 		        SEND(KC_RALT));
+  P( ST4 | RR | RB,		SEND(KC_RCTL); SEND(KC_RGUI));
 
     // Right Thumbs
 
@@ -323,6 +323,8 @@ uint32_t processQwerty(bool lookup) {
 	// overrides
 
 	P( PWR,			  	SEND(KC_ESC));
+
+    P( RR | RB | LSU | LSD,  SEND(KC_RGUI); SEND(KC_GRV));
 
   //[][X][] [][X][] Escape
   P( LA | RU,			SEND(KC_ESC));
@@ -374,4 +376,4 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // Don't fuck with this, thanks.
 size_t keymapsCount  = sizeof(keymaps)/sizeof(keymaps[0]);
-size_t stenoLayerCount = sizeof(stenoLayers)/sizeof(stenoLayers[0]);
+//size_t stenoLayerCount = sizeof(stenoLayers)/sizeof(stenoLayers[0]);
