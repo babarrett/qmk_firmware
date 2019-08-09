@@ -73,3 +73,7 @@ id_rsa_*
 
 # python things
 __pycache__
+keyboards/butterstick/keymaps/tomas/pyexpander/parser.py
+keyboards/butterstick/keymaps/tomas/pyexpander/lib.py
+keyboards/butterstick/keymaps/tomas/pyexpander/__init__.py
+keyboards/butterstick/keymaps/tomas/expander3.py
