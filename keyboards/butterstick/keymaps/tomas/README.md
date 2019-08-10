@@ -2,11 +2,11 @@
 
 ## About
 
-This keymap is using a custom chording engine and general purpose preprocessor pyexpander.
+This keymap is using a custom chording engine and general purpose preprocessor [pyexpander](http://pyexpander.sourceforge.net/).
 
-Pure QMK combos were not sufficient as they do not support subcombos. If you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
+Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
-The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. Furthermore, the general purpose preprocessor makes it easy to define advanced macros for simple addition of functions like a tap dance calling advanced keycodes not just basic ones.
+The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. Furthermore, the general purpose preprocessor makes it easy to define advanced macros for simple addition of functions like a tap dance calling advanced keycodes not just the basic ones.
 
 ## Features
 
@@ -14,35 +14,35 @@ The chording engine completely sidesteps QMK's key event processing. Most of QMK
 
 ### Chords
 
-Once again, *everything* on this keymap is a chord. Even sending `KC_Q` is done by pressing a single key chord. Chord gets activated after all it's keys get pressed. Only the longest chord gets activated (after each key gets pressed, a timer is updated and the engine wait to see if more keys will be pressed in case a longer chord should be activated). The order in which the keys get pressed *does not matter*. An active chord gets deactivated if any of it's keys gets depressed. To activate the same single chord again, *all* it's keys have to be depressed and pressed again. With a few exceptions chords are independent of each other, while some chords are currently active and some not, others can be activated or deactivated without affecting each other's state.
+Once again, *everything* on this keymap is a chord. Even sending `KC_Q` is done by pressing a single key chord. Chord gets activated after all it's keys get pressed. Only the longest chord gets activated. The order of the pressed keys *does not matter*, only the fact they have been pressed within the same time frame. An active chord gets deactivated if *any* of it's keys gets depressed. To activate the same single chord again, *all* it's keys have to be depressed and pressed again. With a few exceptions chords are independent of each other. No matter if some chords are currently active and some not, others can be activated or deactivated without affecting each other's state.
 
 ### Tap-Dance
 
-All chords are implemented in the same manner. They are relatively simple state machines that execute a specific function every time they change state. For simplicity and optimization purposes, there are a few prewritten functions that implement common features like 'send a single key' or 'lock'. Any number of chords can be "in dance" at any given moment without affecting each other's state. Custom dances can be easily added.
+To make it even stranger, all chords are tap-dance chords. They are relatively simple state machines that execute a specific function every time they change state. For simplicity and optimization purposes, there are a few prewritten functions that implement common features like "send a single key" or "lock". Any number of chords can be "in dance" at any given moment without affecting each other's state. Custom dances can be easily added.
 
 ### Pseudolayers
 
-Only one QMK layer is used. Following the default keymap's example, the chording engine is using pseudolayers. The main difference to QMK's layers is that only one pseudolayer can be active at each time. Chords can be activated only if they are on the currently active pseudolayer. Chords that are currently active do not get deactivated if the pseudolayer changes. Locked chords (see below) and chords on the `ALWAYS_ON` pseudolayer can be activated anytime.
+Only one QMK layer is used. Following the butterstick's default keymap's example, the chording engine is using pseudolayers. The main difference to QMK's layers is that only one pseudolayer can be active at each time (no `KC_TRANS`). Chords can be activated only if they are on the currently active pseudolayer. Chords that are currently active do not get deactivated if the pseudolayer changes and will deactivate if any of their keys gets depressed even no matter the current pseudolayer. Locked chords (see below) and chords on the `ALWAYS_ON` pseudolayer can be activated anytime.
 
 ### Lock
 
-Similarly to QMK's lock, the next chord activated after the Lock chord will not deactivated on release but on the next activation. Any number of chords can be locked at the same time. To make sure a locked chord can be unlocked, it can activate no matter the current pseudolayer.
+Similarly to QMK's lock, the next chord activated after the Lock chord will not deactivate on release of any of its keys, it will deactivate when all its keys get pressed again. Any number of chords can be locked at the same time. To make sure a locked chord can be unlocked, it can activate no matter the current pseudolayer. A chord can be locked mid dance.
 
 ### One shots
 
-Chords that send keycodes and chords that turn on pseudolayers can be one shots. If tapped, they will lock (stay active) until the *next keycode gets sent*. If held, they will deactivate on release *even if no keycode got sent*.
+Chords that send keycodes and chords that turn on pseudolayers can be one shots. If tapped, they will lock (stay active) until the next keycode gets sent, *not necessarily when the next chord gets activated*. If held, they will deactivate on release *even if no keycode got sent*.
 
 ### Tap-Hold
 
-Either sends a defined keycode on tap, temporarily switches pseudolayer on hold *or* sends two different keycodes on tap and hold.
+Also called key-layer dance and key-key dance. Either sends a defined keycode on tap and temporarily switches pseudolayer on hold *or* sends two different keycodes on tap and hold. 
 
 ### Command mode
 
-Works the similarly as default keymap's. After getting activated for the first time, the keyboard switches to command mode. All keycodes that would get registered get buffered instead. After activating the Command mode chord for the second time, all buffered keycodes get released at the same time allowing for key combination that would be hard or impossible to register. The Command mode only affects keycodes. It is therefore possible to change pseudolayers or activate / deactivate other chords while in Command mode. While multiple Command mode chords can be defined, they would not be independent of each other.
+Works similar to the default keymap's. After getting activated for the first time, the keyboard switches to command mode. All *keycodes* that would get registered get buffered instead. After activating the Command mode chord for the second time, all buffered keycodes get released at the same time allowing for key combination that would be hard or impossible to press. The Command mode only affects keycodes. It is therefore possible to change pseudolayers or activate / deactivate other chords while in Command mode. While multiple Command mode chords can be defined, they would not be independent. The keyboard either is or is not in command mode and there is only one buffer.
 
 ### Leader key
 
-Just like pure QMK's Leader key, this allows you to add functions that execute if the Leader key gets pressed and then in a short time a specific sequence of keycodes gets registered, for example `:wq` can send `Ctrl+S` and `Ctrl+W` in a quick succession. While multiple Leader keys can be defined, they all would access the same list of sequences.
+Just like pure QMK's Leader key, this allows you to add functions that get executed if the Leader key and a specific sequence of keycodes gets registered in a predefined order in a short timeframe. For example `:wq` can send `Ctrl+S` and `Ctrl+W` in a quick succession. While multiple Leader keys can be defined, they all would access the same list of sequences.
 
 ### Dynamic macro
 
@@ -50,9 +50,11 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 ## Examples and Details
 
-I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0. To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits.  *If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash.*
+## Keycodes
 
-Each chord is defined by a constant structure, a function and two `int`s keeping the track of the chord's state:
+I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0. To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits.  *If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
+
+Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
 ```c
 struct Chord {
@@ -88,16 +90,20 @@ void function_0(struct Chord* self) {
 const struct Chord chord_0 PROGMEM = {H_TOP1, QWERTY, &state_0, &counter_0, KC_Q, 0, function_0};
 ```
 
-All chords have to be added to `list_of_chord` array that gets regularly scanned and processed. The file `macros.inc` contains pyexpander macros that simplify adding the chords. The same chord can be added using this line: `$KC("QWERTY", "H_TOP1", "KC_Q")`.
+All chords have to be added to `list_of_chord` array that gets regularly scanned and processed. 
 
-Macros `vertical_ortho_layer` and `horizontal_ortho_layer` (in process of getting cleaned up) allow to add all standard butterstick combos in a syntax similar to QMK's layer syntax:
+## Macros
+
+The file `macros.inc` contains pyexpander macros that simplify adding the chords. The same chord can be added using this line: `$KC("QWERTY", "H_TOP1", "KC_Q")`.
+
+Macros `butterstick_rows` and `butterstick_cols` (in process of getting cleaned up) allow to add all standard butterstick combos in a syntax similar to QMK's layer syntax:
 
 ```c
-$vertical_ortho_layer("QWERTY",
+$butterstick_rows("QWERTY",
     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
     "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
     "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
-$horizontal_ortho_layer("QWERTY",
+$butterstick_cols("QWERTY",
     "KC_ESC", "MO(MOV)", "KC_TAB", "", "O(KC_RGUI)", "", "KC_INS", "KC_DEL", "KC_BSPC",
     'STR("HELLO")', "", "", "", "CMD", "", "", "", "KC_ENTER",
     "O(KC_LSFT)", "O(KC_LCTL)", "O(KC_LALT)", "MO(NUM)", "O(KC_LGUI)", "MO(NUM)", "O(KC_RALT)", "O(KC_RCTL)", "O(KC_RSFT)")
@@ -122,14 +128,18 @@ The complete list of strings that these two macros can accept is:
 * `STR("X")`: Send string "x" on each activation of the chord.
 * `MO(X)`: Temporary switch to pseudolayer `X`.
 * `DF(X)`: Permanent switch to pseudolayer `X`.
-* `O(X)`: One-shot key `X` (if `X` starts with "KC_") or one-shot layer `X` (otherwise) .
+* `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) .
+* `KK(X,Y)`: Send code `X` on tap and code `Y` on hold.
+* `KL(X,Y)`: Send code `X` on tap and switch to layer `Y` on hold.
 * `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
 * `CMD`: The command mode. The number of keycodes that can be buffered is defined in `keyboard.inc` in `COMMAND_MAX_LENGTH` (works but needs cleanup).
 * `LEAD`: The leader key. The number of leader combos and their max length need to be defined in macros (works but needs cleanup).
 * `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`.
-* `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Advanced keycodes are not *yet* supported.
+* `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Just like the `butterstick_rows` and `butterstick_cols` macros, it will try to expand shortened keycodes. Advanced keycodes are not *yet* supported.
 * `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace.
 
-Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn't allocate `counter`. However it still has to store it's `state` and sometimes the `counter` in RAM. If you keep adding more chords, at one point you will run out. If your firmware fits in the memory and your keyboard crashes, try removing some chords.
+## Caveats
+
+Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn't allocate `counter`. However it still has to store it's `state` and sometimes the `counter` in RAM. If you keep adding more chords, at one point you will run out. If your firmware fits in the memory and your keyboard crashes, try optimizing your RAM usage.
 
 Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times. 

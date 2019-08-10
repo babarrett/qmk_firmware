@@ -15,6 +15,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Sorry, it has been fucked with.
 size_t keymapsCount = 1;
 
+// Bit masks for hashing
 #define H_TOP1 ((uint32_t) 1 << 0)
 #define H_TOP2 ((uint32_t) 1 << 1)
 #define H_TOP3 ((uint32_t) 1 << 2)

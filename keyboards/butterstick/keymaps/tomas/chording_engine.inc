@@ -1,6 +1,5 @@
-#define NUM_OF_CHORDS $(x)
 const struct Chord* const list_of_chords[] PROGMEM = {
-$for(i in range(0, x))\
+$for(i in range(0, NUM_OF_CHORDS))\
     &chord_$(i),
 $endfor
 };
@@ -27,7 +26,7 @@ void kill_one_shots(struct Chord* caller) {
         return;
     }
     
-    for (int i = 0; i < NUM_OF_CHORDS; i++) {
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -47,7 +46,7 @@ void kill_one_shots(struct Chord* caller) {
 }
 
 void process_finished_dances(void) {
-    for (int i = 0; i < NUM_OF_CHORDS; i++) {
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -72,7 +71,7 @@ void process_finished_dances(void) {
 
 void process_ready_chords(void) {
     // find ready chords
-    for (int i = 0; i < NUM_OF_CHORDS; i++) {
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -103,7 +102,7 @@ void process_ready_chords(void) {
     }
     
     // remove subchords
-    for (int i = 0; i < NUM_OF_CHORDS; i++) {
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -113,7 +112,7 @@ void process_ready_chords(void) {
             continue;
         }
         
-        for (int j = 0; j < NUM_OF_CHORDS; j++) {
+        for (int j = 0; j < $(NUM_OF_CHORDS); j++) {
             if (i == j) {continue;}
             
             struct Chord* chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
@@ -136,7 +135,7 @@ void process_ready_chords(void) {
     }
     
     // execute logic
-    for (int i = 0; i < NUM_OF_CHORDS; i++) {
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -175,7 +174,7 @@ void process_ready_chords(void) {
 void deactivate_active_chords(uint16_t keycode) {
     uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
     bool broken;
-    for (int i = 0; i < NUM_OF_CHORDS; i++) {
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -215,20 +214,20 @@ void deactivate_active_chords(uint16_t keycode) {
 
 void process_command(void) {
     command_mode = 0;
-    for (int i = 0; i < COMMAND_MAX_LENGTH; i++) {
+    for (int i = 0; i < $(COMMAND_MAX_LENGTH); i++) {
         if (command_buffer[i]) {
             register_code(command_buffer[i]);
         }
         send_keyboard_report();
     }
     wait_ms(TAP_TIMEOUT);
-    for (int i = 0; i < COMMAND_MAX_LENGTH; i++) {
+    for (int i = 0; i < $(COMMAND_MAX_LENGTH); i++) {
         if (command_buffer[i]) {
             unregister_code(command_buffer[i]);
         }
         send_keyboard_report();
     }
-    for (int i = 0; i < COMMAND_MAX_LENGTH; i++) {
+    for (int i = 0; i < $(COMMAND_MAX_LENGTH); i++) {
         command_buffer[i] = 0;
     }
     command_ind = 0;
@@ -243,14 +242,14 @@ void process_leader(void) {
     in_leader_mode = false;
     for (int i = 0; i < NUM_OF_LEADER_COMBOS; i++) {
         uint16_t trigger[5];
-        memcpy_P(trigger, leader_triggers[i], LEADER_MAX_LENGTH * sizeof(uint16_t));
+        memcpy_P(trigger, leader_triggers[i], $(LEADER_MAX_LENGTH) * sizeof(uint16_t));
         
         if (identical(leader_buffer, trigger)) {
             (*leader_functions[i])();
             break;
         }
     }
-    for (int i = 0; i < LEADER_MAX_LENGTH; i++) {
+    for (int i = 0; i < $(LEADER_MAX_LENGTH); i++) {
         leader_buffer[i] = 0;
     }
 }

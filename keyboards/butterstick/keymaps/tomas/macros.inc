@@ -1,246 +1,300 @@
-$py(x = 0)
-
-
+$py(NUM_OF_CHORDS = 0)
 
 $macro(KC, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(KEYCODE), 0, single_dance};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE), 0, single_dance};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(KL, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE, TO_PSEUDOLAYER)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(KEYCODE), $(TO_PSEUDOLAYER), key_layer_dance};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE), $(TO_PSEUDOLAYER), key_layer_dance};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(KK, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE1, KEYCODE2)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(KEYCODE1), $(KEYCODE2), key_key_dance};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE1), $(KEYCODE2), key_key_dance};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(MO, ON_PSEUDOLAYER, KEYCODES_HASH, TO_PSEUDOLAYER)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(TO_PSEUDOLAYER), 0, temp_pseudolayer};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(TO_PSEUDOLAYER), 0, temp_pseudolayer};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(KC_LOCK, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, lock};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, lock};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(DF, ON_PSEUDOLAYER, KEYCODES_HASH, TO_PSEUDOLAYER)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(TO_PSEUDOLAYER), 0, perm_pseudolayer};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(TO_PSEUDOLAYER), 0, perm_pseudolayer};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(OSK, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(KEYCODE), 0, one_shot_key};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE), 0, one_shot_key};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(OSL, ON_PSEUDOLAYER, KEYCODES_HASH, PSEUDOLAYER)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, $(PSEUDOLAYER), 0, one_shot_layer};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(PSEUDOLAYER), 0, one_shot_layer};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(CMD, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, command};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, command};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(DM_RECORD, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, dynamic_macro_record};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, dynamic_macro_record};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(DM_NEXT, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, dynamic_macro_next};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, dynamic_macro_next};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(DM_END, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, dynamic_macro_end};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, dynamic_macro_end};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(DM_PLAY, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, dynamic_macro_play};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, dynamic_macro_play};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(LEAD, ON_PSEUDOLAYER, KEYCODES_HASH)
-    $nonlocal(x)
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, leader};
-    $py(x += 1)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, leader};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
 $macro(STR, ON_PSEUDOLAYER, KEYCODES_HASH, STRING)
-    $nonlocal(x)
-    void str_$(x)(const struct Chord* self) {
+    $nonlocal(NUM_OF_CHORDS)
+    void str_$(NUM_OF_CHORDS)(const struct Chord* self) {
         if (*self->state == ACTIVATED) {
             SEND_STRING($(STRING));
         }
     }
-    uint8_t state_$(x) = IDLE;
-    const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(x), NULL, 0, 0, str_$(x)};
-    $py(x += 1)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, str_$(NUM_OF_CHORDS)};
+    $py(NUM_OF_CHORDS += 1)
 $endmacro
 
-$macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
-    $nonlocal(x)
-    $if(len(DEFINITION) == 0)
-    $elif(len(DEFINITION) == 1)
-        $if(DEFINITION == ",")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_COMMA")
-        $elif(DEFINITION == ".")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_DOT")
-        $elif(DEFINITION == "/")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_SLASH")
-        $elif(DEFINITION == ";")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_SCOLON")
-        $elif(DEFINITION == "'")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_QUOTE")
-        $elif(DEFINITION == "[")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_LBRACKET")
-        $elif(DEFINITION == "]")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_RBRACKET")
-        $elif(DEFINITION == "\\")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_BSLASH")
-        $elif(DEFINITION == "-")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_MINUS")
-        $elif(DEFINITION == "=")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_EQUAL")
-        $elif(DEFINITION == "`")
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_GRAVE")
-        $else
-            $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_" + DEFINITION)
-        $endif
-    $else
-        $if(DEFINITION[0:2] == "T(")
-        $elif(DEFINITION[0:2] == "O(")
-            $if(DEFINITION[2:5] == "KC_")
-                $OSK(PSEUDOLAYER, KEYCODES_HASH, DEFINITION[2:-1])
-            $else
-                $OSL(PSEUDOLAYER, KEYCODES_HASH, DEFINITION[2:-1])
-            $endif
-        $elif(DEFINITION[0:3] == "TH(")
-        $elif(DEFINITION[0:2] == "D(")
-            $py(l = len(DEFINITION[2:-1].split(', ')))
-            void function_$(x)(const struct Chord* self) {
-                switch (*self->state) {
-                    case ACTIVATED:
-                        *self->counter = *self->counter + 1;
+$macro(M, ON_PSEUDOLAYER, KEYCODES_HASH, VALUE1, VALUE2, FNC)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    uint8_t counter_$(NUM_OF_CHORDS) = 0;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), &counter_$(NUM_OF_CHORDS), $(VALUE1), $(VALUE2), $(FNC)};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
+$py(
+def expand_keycode_fnc(DEFINITION):
+    if DEFINITION == ",":
+        return "KC_COMMA"
+    elif DEFINITION == ".":
+        return "KC_DOT"
+    elif DEFINITION == "/":
+        return "KC_SLASH"
+    elif DEFINITION == ";":
+        return "KC_SCOLON"
+    elif DEFINITION == "'":
+        return "KC_QUOTE"
+    elif DEFINITION == "[":
+        return "KC_LBRACKET"
+    elif DEFINITION == "]":
+        return "KC_RBRACKET"
+    elif DEFINITION == "\\":
+        return "KC_BSLASH"
+    elif DEFINITION == "-":
+        return "KC_MINUS"
+    elif DEFINITION == "=":
+        return "KC_EQUAL"
+    elif DEFINITION == "`":
+        return "KC_GRAVE"
+    elif DEFINITION[0:3] == "KC_":
+        return DEFINITION
+    else:
+        return "KC_" + DEFINITION
+)
+
+$macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $nonlocal(NUM_OF_CHORDS)
+    $py(l = len(DEFINITION.split(', ')))
+    void function_$(NUM_OF_CHORDS)(const struct Chord* self) {
+        switch (*self->state) {
+            case ACTIVATED:
+                *self->counter = *self->counter + 1;
+                break;
+            case DEACTIVATED:
+                break;
+            case FINISHED:
+            case FINISHED_FROM_ACTIVE:
+                switch (*self->counter) {
+                    $for(i in range(0, l))
+                    $py(val = DEFINITION.split(', ')[i])
+                    case $(i+1):
+                        $py(code = expand_keycode_fnc(val))
+                        register_code($(code));
                         break;
-                    case DEACTIVATED:
-                        break;
-                    case FINISHED:
-                    case FINISHED_FROM_ACTIVE:
-                        switch (*self->counter) {
-                            $for(i in range(0, l))
-                            $py(val = DEFINITION[2:-1].split(', ')[i])
-                            case $(i+1):
-                                register_code($(val));
-                                break;
-                            $endfor
-                            default:
-                                break;
-                        }
-                        send_keyboard_report();
-                        break;
-                    case RESTART:
-                        switch (*self->counter) {
-                            $for(i in range(0, l))
-                            $py(val = DEFINITION[2:-1].split(', ')[i])
-                            case $(i+1):
-                                unregister_code($(val));
-                                break;
-                            $endfor
-                            default:
-                                break;
-                        }
-                        send_keyboard_report();
-                        *self->counter = 0;
-                        break;
+                    $endfor
                     default:
                         break;
                 }
-            }
-            uint8_t state_$(x) = IDLE;
-            uint8_t counter_$(x) = 0;
-            const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(PSEUDOLAYER), &state_$(x), &counter_$(x), 0, 0, function_$(x)};
-            $py(x += 1)
-        $elif(DEFINITION[0:2] == "M(")
-            $py(val1 = DEFINITION[2:-1].split(', ')[1])
-            $py(val2 = DEFINITION[2:-1].split(', ')[2])
-            $py(fnc = DEFINITION[2:-1].split(', ')[0])
-            uint8_t state_$(x) = IDLE;
-            uint8_t counter_$(x) = 0;
-            const struct Chord chord_$(x) PROGMEM = {$(KEYCODES_HASH), $(PSEUDOLAYER), &state_$(x), &counter_$(x), $(val1), $(val2), $(fnc)});
-            $py(x += 1)
-        $elif(DEFINITION == "LOCK")
-            $KC_LOCK(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION == "CMD")
-            $CMD(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION == "LEAD")
-            $LEAD(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION == "DM_RECORD")
-            $LEAD(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION == "DM_NEXT")
-            $LEAD(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION == "DM_END")
-            $LEAD(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION == "DM_PLAY")
-            $LEAD(PSEUDOLAYER, KEYCODES_HASH)
-        $elif(DEFINITION[0:3] == "KL(")
-            $py(val1 = DEFINITION[3:-1].split(', ')[0])
-            $py(val2 = DEFINITION[3:-1].split(', ')[1])
-            $KL(PSEUDOLAYER, KEYCODES_HASH, $(val1), $(val2))
-        $elif(DEFINITION[0:3] == "KL(")
-            $py(val1 = DEFINITION[3:-1].split(', ')[0])
-            $py(val2 = DEFINITION[3:-1].split(', ')[1])
-            $KK(PSEUDOLAYER, KEYCODES_HASH, $(val1), $(val2))
+                send_keyboard_report();
+                break;
+            case RESTART:
+                switch (*self->counter) {
+                    $for(i in range(0, l))
+                    $py(val = DEFINITION.split(', ')[i])
+                    case $(i+1):
+                        $py(code = expand_keycode_fnc(val))
+                        unregister_code($(code));
+                        break;
+                    $endfor
+                    default:
+                        break;
+                }
+                send_keyboard_report();
+                *self->counter = 0;
+                break;
+            default:
+                break;
+        }
+    }
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    uint8_t counter_$(NUM_OF_CHORDS) = 0;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(PSEUDOLAYER), &state_$(NUM_OF_CHORDS), &counter_$(NUM_OF_CHORDS), 0, 0, function_$(NUM_OF_CHORDS)};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
+$macro(O, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $if(DEFINITION[0:3] == "KC_")
+        $OSK(PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $else
+        $OSL(PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $endif
+$endmacro
+
+$macro(expand_keycode, DEFINITION)
+    $nonlocal(NUM_OF_CHORDS)
+    $if(DEFINITION == ",")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_COMMA")
+    $elif(DEFINITION == ".")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_DOT")
+    $elif(DEFINITION == "/")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_SLASH")
+    $elif(DEFINITION == ";")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_SCOLON")
+    $elif(DEFINITION == "'")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_QUOTE")
+    $elif(DEFINITION == "[")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_LBRACKET")
+    $elif(DEFINITION == "]")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_RBRACKET")
+    $elif(DEFINITION == "\\")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_BSLASH")
+    $elif(DEFINITION == "-")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_MINUS")
+    $elif(DEFINITION == "=")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_EQUAL")
+    $elif(DEFINITION == "`")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_GRAVE")
+    $elif(DEFINITION[0:3] == "KC_")
+        $KC(PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $else
+        $KC(PSEUDOLAYER, KEYCODES_HASH, "KC_" + DEFINITION)
+    $endif
+$endmacro
+
+$macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $nonlocal(NUM_OF_CHORDS)
+    
+    $if(DEFINITION == "")
+    $else
+        $py(split = DEFINITION.split("("))
+        $py(type = split[0])
+        $if(len(split) == 1)
+            $if(type == "LOCK")
+                $KC_LOCK(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "CMD")
+                $CMD(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "LEAD")
+                $LEAD(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "DM_RECORD")
+                $DM_RECORD(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "DM_NEXT")
+                $DM_NEXT(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "DM_END")
+                $DM_END(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "DM_PLAY")
+                $DM_PLAY(PSEUDOLAYER, KEYCODES_HASH)
+            $else
+                $py(code = expand_keycode_fnc(type))
+                $KC(PSEUDOLAYER, KEYCODES_HASH, code)
+            $endif
         $else
-            $if(DEFINITION[0:3] == "KC_")
-                $KC(PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
-            $elif(DEFINITION[0:3] == "MO(")
-                $MO(PSEUDOLAYER, KEYCODES_HASH, DEFINITION[3:-1])
-            $elif(DEFINITION[0:3] == "DF(")
-                $DF(PSEUDOLAYER, KEYCODES_HASH, DEFINITION[3:-1])
-            $elif(DEFINITION[0:4] == "STR(")
-                $STR(PSEUDOLAYER, KEYCODES_HASH, DEFINITION[4:-1])
+            $py(val = split[1][:-1])
+            $if(type == "O")
+                $O(PSEUDOLAYER, KEYCODES_HASH, val)
+            $elif(type == "D")
+                $D(PSEUDOLAYER, KEYCODES_HASH, val)
+            $elif(type == "M")
+                $py(fnc = val.split(', ')[0])
+                $py(val1 = val.split(', ')[1])
+                $py(val2 = val.split(', ')[2])
+                $M(PSEUDOLAYER, KEYCODES_HASH, val1, val2, fnc)
+            $elif(type == "KK")
+                $py(val1 = val.split(', ')[0])
+                $py(val2 = val.split(', ')[1])
+                $KK(PSEUDOLAYER, KEYCODES_HASH, $(val1), $(val2))
+            $elif(type == "KL")
+                $py(val1 = val.split(', ')[0])
+                $py(val2 = val.split(', ')[1])
+                $KL(PSEUDOLAYER, KEYCODES_HASH, $(val1), $(val2))
+            $elif(type == "MO")
+                $MO(PSEUDOLAYER, KEYCODES_HASH, val)
+            $elif(type == "DF")
+                $DF(PSEUDOLAYER, KEYCODES_HASH, val)
+            $elif(type == "STR")
+                $STR(PSEUDOLAYER, KEYCODES_HASH, val)
             $endif
         $endif
     $endif
 $endmacro
 
-$macro(vertical_ortho_layer, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30)
-    $nonlocal(x)
+$macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30)
+    $nonlocal(NUM_OF_CHORDS)
     $add_key(PSEUDOLAYER, "H_TOP1", K1)
     $add_key(PSEUDOLAYER, "H_TOP2", K2)
     $add_key(PSEUDOLAYER, "H_TOP3", K3)
@@ -273,8 +327,8 @@ $macro(vertical_ortho_layer, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K1
     $add_key(PSEUDOLAYER, "H_BOT0", K30)
 $endmacro
 
-$macro(horizontal_ortho_layer, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K11, K12, K13, K14, K15, K16, K17, K18, K19, K21, K22, K23, K24, K25, K26, K27, K28, K29)
-    $nonlocal(x)
+$macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K11, K12, K13, K14, K15, K16, K17, K18, K19, K21, K22, K23, K24, K25, K26, K27, K28, K29)
+    $nonlocal(NUM_OF_CHORDS)
     $add_key(PSEUDOLAYER, "H_TOP1 + H_TOP2", K1)
     $add_key(PSEUDOLAYER, "H_TOP2 + H_TOP3", K2)
     $add_key(PSEUDOLAYER, "H_TOP3 + H_TOP4", K3)
@@ -305,7 +359,7 @@ $macro(horizontal_ortho_layer, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, 
 $endmacro
 
 $macro(asetniop_layer, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36)
-    $nonlocal(x)
+    $nonlocal(NUM_OF_CHORDS)
     $add_key(PSEUDOLAYER,  "H_TOP1", K1)
     $add_key(PSEUDOLAYER,  "H_TOP2", K2)
     $add_key(PSEUDOLAYER,  "H_TOP3", K3)

@@ -4,21 +4,6 @@
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
-/* ideas
-    - KeyCast to show modifiers on screen? https://github.com/colinta/keycastr
-
-    combo to spit out help?
-    combo to write which layer are you on
-    combo to visualize the layout
-    
-    app specific layers
-    numpad layer instead of mimicking number bar, brackets layer, etc
-    dance for accents
-    tap/hold for mods on home row (hold a --> lsft)
-    multifunction keys? shift -> enter
-    vim layer (needs leader?) https://github.com/qmk/qmk_firmware/blob/master/users/xtonhasvim/xtonhasvim.c
-*/
-
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
 };
@@ -27,112 +12,61 @@ enum pseudolayers {
 $include("keyboard.inc")
 
 // Definitions of internal keycodes and the actual QMK layer
-$include("t_layer.inc")
+$include("layer.inc")
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 $include("chord.inc")
 
-$# // Macros to simplify chord definitions
+// Macros to simplify chord definitions
 $include("macros.inc")
 
 // Add all chords
 $KC_LOCK("ALWAYS_ON", "H_TOP5 + H_TOP6 + H_BOT5 + H_BOT6")
 
-$# $vertical_ortho_layer("EMPTY",
-$#     "", "", "", "", "", "", "", "", "", "",
-$#     "", "", "", "", "", "", "", "", "", "",
-$#     "", "", "", "", "", "", "", "", "", "")
-$#
-$# $vertical_ortho_layer("EMPTY",
-$#     "", "", "", "", "", "", "F1", "F2",  "F3",  "F4",
-$#     "", "", "", "", "", "", "F5", "F6",  "F7",  "F8",
-$#     "", "", "", "", "", "", "F9", "F10", "F11", "F12")
-$#
-$# $vertical_ortho_layer("EMPTY",
-$#     "", "", "", "", "", "`", "~",  "!", "@", "#",
-$#     "", "", "", "", "", "",  "\$", "%", "^", "&",
-$#     "", "", "", "", "", "",  "_",  "=", "|", ":")
-$#
-$# $vertical_ortho_layer("EMPTY",
-$#     "", "", "", "", "", "", "(", ")", "<",  ">",
-$#     "", "", "", "", "", "", "[", "]", "\\", "/",
-$#     "", "", "", "", "", "", "{", "}", "\'", "\"")
-$#
-$# $vertical_ortho_layer("EMPTY",
-$#     "", "", "", "", "", "/", "7", "8", "9", "-",
-$#     "", "", "", "", "", "*", "4", "5", "6", "+",
-$#     "", "", "", "", "", "0", "1", "2", "3", ".")
-$#
-$# $vertical_ortho_layer("WORKMAN",
-$#     "Q", "D", "R", "W", "B", "J", "F", "U",     "P",   "SCOLON",
-$#     "A", "S", "H", "T", "G", "Y", "N", "E",     "O",   "L",
-$#     "Z", "X", "M", "C", "V", "K", "L", "COMMA", "DOT", "SLASH")
-$# 
-$# $vertical_ortho_layer("COLEMAC",
-$#     "Q", "W", "F", "P", "G", "J", "L", "U",     "Y",   "SCOLON",
-$#     "A", "R", "S", "T", "D", "H", "N", "E",     "I",   "O",
-$#     "Z", "X", "M", "C", "V", "B", "K", "COMMA", "DOT", "SLASH")
-$# 
-$# $vertical_ortho_layer("DVORAK",
-$#     "QUOTE",  "COMMA", "DOT", "P", "Y", "F", "G", "C", "R", "L",
-$#     "A",      "O",     "E",   "U", "I", "D", "H", "T", "N", "S",
-$#     "SCOLON", "Q",     "J",   "K", "X", "B", "M", "W", "V", "Z")
-$# // instead of '-' '=' '[' ']' '\' ''' has '[' ']' '/' '=' '-'
-$# 
-$# $vertical_ortho_layer("QGMLWY",
-$#     "Q", "G", "M", "L", "W", "Y", "F", "U",     "B",   "SCOLON",
-$#     "D", "S", "T", "N", "R", "I", "A", "E",     "O",   "H",
-$#     "Z", "X", "C", "V", "J", "K", "P", "COMMA", "DOT", "SLASH")
-
-$vertical_ortho_layer("QWERTY",
-    "D(KC_Q, KC_A)", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
+$butterstick_rows("QWERTY",
+    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
     "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
     "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
 
-$horizontal_ortho_layer("QWERTY",
-    "KC_ESC", "MO(MOV)", "KC_TAB", "", "KC_RGUI", "", "KC_INS", "KC_DEL", "KC_BSPC",
-    'STR("HELLO")', "", "", "", "", "", "", "", "KC_ENTER",
-    "KC_LSFT", "KC_LCTL", "KC_LALT", "MO(NUM)", "KC_LGUI", "MO(NUM)", "KC_RALT", "KC_RCTL", "KC_RSFT")
-
+$butterstick_cols("QWERTY",
+    "ESC", "MO(MOV)", "TAB", "", "RGUI", "", "INS", "DEL", "BSPC",
+    "", "", "", "", "", "", "", "", "KC_ENTER",
+    "O(KC_LSFT)", "LCTL", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "RCTL", "RSFT")
 
 #define NUM_OF_LEADER_COMBOS 0
 // void test(void) {
 //     SEND_STRING("Hello!");
 // }
-const uint16_t leader_triggers[NUM_OF_LEADER_COMBOS][LEADER_MAX_LENGTH] PROGMEM = {};//{KC_Q, 0, 0, 0, 0}};
+const uint16_t leader_triggers[NUM_OF_LEADER_COMBOS][$(LEADER_MAX_LENGTH)] PROGMEM = {};//{KC_Q, 0, 0, 0, 0}};
 void (*leader_functions[]) (void) = {};
-
 
 $KC("QWERTY", "H_BOT1 + H_BOT0", "KC_SPACE")
 $MO("QWERTY", "H_TOP1 + H_TOP2 + H_TOP3 + H_TOP4", "MOUSE")
 
-$vertical_ortho_layer("NUM",
-    "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",   "0",
-    "KC_F1", "KC_F2", "KC_F3", "KC_F4", "KC_F5", "KC_F6", "KC_F7", "KC_F8", "KC_F9",  "KC_F10",
-    "`",  "-",  "=",  "[",  "]",  "\\", "\'", "",   "KC_F11", "KC_F12")
+$butterstick_rows("NUM",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+    "KC_F1", "KC_F2", "KC_F3", "KC_F4", "KC_F5", "KC_F6", "KC_F7", "KC_F8", "KC_F9", "KC_F10",
+    "`", "-", "=", "[", "]", "\\", "\'", "", "KC_F11", "KC_F12")
 
-$horizontal_ortho_layer("NUM",
-    "KC_ESC",  "",     "KC_TAB",  "", "KC_RGUI", "", "KC_INS",  "KC_DEL",  "KC_BSPC",
-    "",     "",     "",     "", "",     "", "",     "",     "KC_ENTER",
+$butterstick_cols("NUM",
+    "KC_ESC", "", "KC_TAB", "", "KC_RGUI", "", "KC_INS", "KC_DEL", "KC_BSPC",
+    "", "", "", "", "", "", "", "", "KC_ENTER",
     "KC_LSFT", "KC_LCTL", "KC_LALT", "", "KC_LGUI", "", "KC_RALT", "KC_RCTL", "KC_RSFT")
 
 $KC("NUM", "H_BOT1 + H_BOT0", "KC_SPACE");
 
-$vertical_ortho_layer("MOV",
-    "", "", "",   "",   "",   "",   "KC_HOME", "KC_UP",   "KC_END",   "KC_PGUP",
-    "", "", "",   "",   "",   "",   "",   "",   "",    "",
+$butterstick_rows("MOV",
+    "", "", "", "", "", "", "KC_HOME", "KC_UP", "KC_END", "KC_PGUP",
+    "", "", "", "", "", "", "", "", "", "",
     "", "", "KC_LSFT", "KC_LCTL", "KC_LALT", "KC_LGUI", "KC_LEFT", "KC_DOWN", "KC_RIGHT", "KC_PGDN")
 
-$vertical_ortho_layer("MOUSE",
-    "", "", "",   "",   "",   "",   "KC_MS_BTN1", "KC_MS_UP",   "KC_MS_BTN2",  "KC_MS_WH_DOWN",
-    "", "", "",   "",   "",   "",   "",      "",      "",       "",
+$butterstick_rows("MOUSE",
+    "", "", "", "", "", "", "KC_MS_BTN1", "KC_MS_UP", "KC_MS_BTN2", "KC_MS_WH_DOWN",
+    "", "", "", "", "", "", "", "", "", "",
     "", "", "KC_LSFT", "KC_LCTL", "KC_LALT", "KC_LGUI", "KC_MS_LEFT", "KC_MS_DOWN", "KC_MS_RIGHT", "KC_MS_WH_DOWN")
 
 $DF("QWERTY", "H_TOP1 + H_TOP0 + H_BOT1 + H_BOT0", "ASETNIOP")
 $DF("ASETNIOP", "H_TOP1 + H_TOP0 + H_BOT1 + H_BOT0", "QWERTY")
-$# $MO("ASETNIOP", "H_BOT3", "ASETNIOP_FN");
-$# $KC("ASETNIOP", "H_BOT7", "KC_SPACE");
-$# $MO("ASETNIOP", "H_BOT8", "ASETNIOP_123");
 $MO("ASETNIOP", "H_BOT4 + H_BOT7", "ASETNIOP_FN")
 $KL("ASETNIOP", "H_BOT7", "KC_SPACE", "ASETNIOP_123")
 
@@ -146,6 +80,13 @@ $asetniop_layer("ASETNIOP",
                 "LBRACKET", "RBRACKET",
                   "SLASH")
 
+$KC("ASETNIOP", "H_BOT5 + H_BOT6", "KC_LGUI")
+$KC("ASETNIOP", "H_TOP5", "KC_ESC")
+$KC("ASETNIOP", "H_TOP6", "KC_DEL")
+$KC("ASETNIOP", "H_BOT4", "KC_LSFT")
+$KC("ASETNIOP", "H_BOT5", "KC_LCTL")
+$KC("ASETNIOP", "H_BOT6", "KC_LALT")
+
 $asetniop_layer("ASETNIOP_123",
     "1", "2", "3", "4", "7", "8", "9", "0",
       "", "", "5", "EQUAL", "6", "BSLASH", "SCOLON",
@@ -156,6 +97,13 @@ $asetniop_layer("ASETNIOP_123",
                 "", "",
                   "")
 
+$KC("ASETNIOP_123", "H_BOT5 + H_BOT6", "KC_LGUI")
+$KC("ASETNIOP_123", "H_TOP5", "KC_ESC")
+$KC("ASETNIOP_123", "H_TOP6", "KC_DEL")
+$KC("ASETNIOP_123", "H_BOT4", "KC_LSFT")
+$KC("ASETNIOP_123", "H_BOT5", "KC_LCTL")
+$KC("ASETNIOP_123", "H_BOT6", "KC_LALT")
+
 $asetniop_layer("ASETNIOP_FN",
     "HOME", "PGDN", "PGUP", "END", "LEFT", "DOWN", "UP", "RIGHT",
       "F1", "F2", "F3", "F4", "F5", "F6", "F7",
@@ -165,20 +113,6 @@ $asetniop_layer("ASETNIOP_FN",
               "", "", "",
                 "", "",
                   "")
-
-$KC("ASETNIOP", "H_BOT5 + H_BOT6", "KC_LGUI")
-$KC("ASETNIOP", "H_TOP5", "KC_ESC")
-$KC("ASETNIOP", "H_TOP6", "KC_DEL")
-$KC("ASETNIOP", "H_BOT4", "KC_LSFT")
-$KC("ASETNIOP", "H_BOT5", "KC_LCTL")
-$KC("ASETNIOP", "H_BOT6", "KC_LALT")
-
-$KC("ASETNIOP_123", "H_BOT5 + H_BOT6", "KC_LGUI")
-$KC("ASETNIOP_123", "H_TOP5", "KC_ESC")
-$KC("ASETNIOP_123", "H_TOP6", "KC_DEL")
-$KC("ASETNIOP_123", "H_BOT4", "KC_LSFT")
-$KC("ASETNIOP_123", "H_BOT5", "KC_LCTL")
-$KC("ASETNIOP_123", "H_BOT6", "KC_LALT")
 
 $KC("ASETNIOP_FN", "H_BOT5 + H_BOT6", "KC_LGUI")
 $KC("ASETNIOP_FN", "H_TOP5", "KC_ESC")
