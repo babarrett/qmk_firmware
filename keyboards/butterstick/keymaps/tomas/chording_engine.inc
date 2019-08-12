@@ -1,7 +1,19 @@
 const struct Chord* const list_of_chords[] PROGMEM = {
-$for(i in range(0, NUM_OF_CHORDS))\
-    &chord_$(i),
-$endfor
+    $for(i in range(0, NUM_OF_CHORDS))
+        &chord_$(i),
+    $endfor
+};
+
+const uint16_t leader_triggers[$(len(list_of_leader_combos))][$(LEADER_MAX_LENGTH)] PROGMEM = {
+    $for(i in range(0, len(list_of_leader_combos)))
+        $(list_of_leader_combos[i][0]),
+    $endfor
+};
+
+void (*leader_functions[]) (void) = {
+    $for(i in range(0, len(list_of_leader_combos)))
+        $(list_of_leader_combos[i][1]),
+    $endfor
 };
 
 struct Chord* last_chord = NULL;
@@ -240,7 +252,7 @@ void process_leader(void) {
     // struct Chord* chord = &chord_storage;
     
     in_leader_mode = false;
-    for (int i = 0; i < NUM_OF_LEADER_COMBOS; i++) {
+    for (int i = 0; i < $(len(list_of_leader_combos)); i++) {
         uint16_t trigger[5];
         memcpy_P(trigger, leader_triggers[i], $(LEADER_MAX_LENGTH) * sizeof(uint16_t));
         

@@ -49,13 +49,6 @@ $#         "",        "",        "",        "",        "",        "",        "",
 $#     "Z",       "X",       "C",       "V",       "B",       "N",       "M",       ",",       ".",       "/",
 $#         "LSFT",    "LCTL",    "LALT",    "MO(NUM)", "LGUI",    "MO(NUM)", "RALT",    "RCTL",    "RSFT")
 
-#define NUM_OF_LEADER_COMBOS 0
-// void test(void) {
-//     SEND_STRING("Hello!");
-// }
-const uint16_t leader_triggers[NUM_OF_LEADER_COMBOS][$(LEADER_MAX_LENGTH)] PROGMEM = {}; //{KC_Q, 0, 0, 0, 0}};
-void (*leader_functions[]) (void) = {}; // test};
-
 $secret_chord("QWERTY", "SPACE",
     "" , "", "", "", "", "", "", "", "", "",
     "X", "", "", "", "", "", "", "", "", "X")

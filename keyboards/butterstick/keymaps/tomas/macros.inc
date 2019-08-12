@@ -1,4 +1,5 @@
 $py(NUM_OF_CHORDS = 0)
+$py(list_of_leader_combos = [])
 
 $macro(KC, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
     $nonlocal(NUM_OF_CHORDS)
@@ -438,4 +439,9 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T0
     $if(hash != "")
         $add_key(PSEUDOLAYER, hash, ACTION)
     $endif
+$endmacro
+
+$macro(add_leader_combo, DEFINITION, FUNCTION)
+    $nonlocal(list_of_leader_combos)
+    $py(list_of_leader_combos.append([DEFINITION, FUNCTION]))
 $endmacro
