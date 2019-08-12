@@ -56,7 +56,7 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 ## Examples and Details
 
-## Keycodes
+### Keycodes
 
 I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0. To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits.  *If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
 
@@ -98,7 +98,7 @@ const struct Chord chord_0 PROGMEM = {H_TOP1, QWERTY, &state_0, &counter_0, KC_Q
 
 All chords have to be added to `list_of_chord` array that gets regularly scanned and processed. 
 
-## Macros
+### Macros
 
 The file `macros.inc` contains pyexpander macros that simplify adding the chords. The same chord can be added using this line: `$KC("QWERTY", "H_TOP1", "KC_Q")`.
 
@@ -154,7 +154,7 @@ $secret_chord("QWERTY", "DF(ASETNIOP)",
 
 adds chord on the `QWERTY` pseudolayer that gets activated with `TOP1 + TOP0 + BOT1 + BOT0` and on activation permanently switches to the `ASETNIOP` layer.
 
-I also have `asetniop_layer` macro to define chorded input on the 4 top-left and 4 top-right keys:
+I also have `asetniop_layer` (see [http://asetniop.com](asetniop.com)) macro to define chorded input on the 4 top-left and 4 top-right keys:
 
 ```c
 $asetniop_layer("ASETNIOP",
@@ -169,6 +169,26 @@ $asetniop_layer("ASETNIOP",
 ```
 
 This macro can also parse strings like `butterstick_rows`.
+
+### Leader Key
+
+Macros for this one are in progress. For now you have to write it manually similarly to pure QMK:
+
+```c
+$py(LEADER_MAX_LENGTH = 5) // this one is in keyboard.inc
+#define NUM_OF_LEADER_COMBOS 2
+void fnc1(void) {
+     SEND_STRING("Hello!");
+}
+void fnc2(void) {
+     SEND_STRING("World!");
+}
+const uint16_t leader_triggers[NUM_OF_LEADER_COMBOS][$(LEADER_MAX_LENGTH)] PROGMEM = {
+    {KC_Q, 0, 0, 0, 0}, // if the sequence is short, pad with zeros
+    {KC_Q, KC_Z, 0, 0, 0}
+};
+void (*leader_functions[]) (void) = {fnc1, fnc2}; // this should go to PROGMEM
+```
 
 ## Caveats
 
