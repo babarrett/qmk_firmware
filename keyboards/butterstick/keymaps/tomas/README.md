@@ -12,7 +12,7 @@ The reason behind general purpose preprocessor is abstraction when defining the 
 python3 expander3.py -f keymap.c.in > keymap.c
 ```
 
-
+Thanks to the provided macros, you should have to modify any file except `keymap.c.in`.
 
 ## Features
 
@@ -174,23 +174,18 @@ This macro can also parse strings like `butterstick_rows`.
 
 ### Leader Key
 
-Macros for this one are in progress. For now you have to write it manually similarly to pure QMK:
+To add a new sequence, use the macro `add_leader_combo`:
 
 ```c
-$py(LEADER_MAX_LENGTH = 5) // this one is in keyboard.inc
-#define NUM_OF_LEADER_COMBOS 2
-void fnc1(void) {
-     SEND_STRING("Hello!");
+void test(void) {
+    SEND_STRING("Hello!");
 }
-void fnc2(void) {
-     SEND_STRING("World!");
-}
-const uint16_t leader_triggers[NUM_OF_LEADER_COMBOS][$(LEADER_MAX_LENGTH)] PROGMEM = {
-    {KC_Q, 0, 0, 0, 0}, // if the sequence is short, pad with zeros
-    {KC_Q, KC_Z, 0, 0, 0}
-};
-void (*leader_functions[]) (void) = {fnc1, fnc2}; // this should go to PROGMEM
+$add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "test")
 ```
+
+
+
+Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter, pad with zeros. Currently the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
 
 ## Caveats
 
@@ -198,4 +193,4 @@ Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn
 
 Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times.
 
-The use of `pyexpander` is a bit double-edged sword. It shortens the code *dramatically*, I can not imagine writing the keymap without it. Defining just the alphas would be 72 lines of code instead of the current 4. On the other hand, the code `pyexpander` produces is functional but ugly. It preserves too much whitespace (that is technically avoidable but then the code for preprocessor becomes ugly). It also introduces another language and another tool to the project. Worst of all, it can be difficult to debug as the lines in the error log have lost their meaning and you don't get to see the source code that produced the error. I *tried* keeping it in pure C with the help of some boost preprocessor magic but even that quickly ran into issues. Soon I was `#include`-ing dozens of files just to simulate functions and the error messages were just as cryptic.
+The use of `pyexpander` is a bit double-edged sword. It shortens the code *dramatically*, I can not imagine writing the keymap without it. Defining just the alphas would be 72 lines of code instead of the current 4. On the other hand, the code `pyexpander` produces is functional but ugly. It preserves too much whitespace (that is technically avoidable but then the code for preprocessor becomes ugly). It also introduces another language and another tool to the project. Macros rarely offer autocompletion, so you have to rely on documentation and existing code. But worst of all, it can be difficult to debug as the lines in the error log have lost their meaning and you don't get to see the source code that produced the error. I *tried* keeping it in pure C with the help of some boost preprocessor magic but even that quickly ran into issues. Soon I was `#include`-ing dozens of files just to simulate functions and the error messages were just as cryptic.
