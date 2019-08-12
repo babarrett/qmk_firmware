@@ -6,7 +6,13 @@ This keymap is using a custom chording engine and general purpose preprocessor [
 
 Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
-The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. Furthermore, the general purpose preprocessor makes it easy to define advanced macros for simple addition of functions like a tap dance calling advanced keycodes not just the basic ones.
+The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. The general preprocessor makes it relatively easy. Since I use it heavily and since you will be modifying the code for the preprocessor and not the C code, the code is written to be well formatted in the file `keymap.c.in` and *not to produce pretty C code* in `keymap.c`. To produce C code from the `keymap.c.in` file, run
+
+```sh
+python3 expander3.py -f keymap.c.in > keymap.c
+```
+
+
 
 ## Features
 
@@ -137,6 +143,32 @@ The complete list of strings that these two macros can accept is:
 * `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`.
 * `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Just like the `butterstick_rows` and `butterstick_cols` macros, it will try to expand shortened keycodes. Advanced keycodes are not *yet* supported.
 * `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace.
+
+Macro `secret_chord` allows you to add a single chord while utilize the smart string parsing and defining the chord's keys visually. For example
+
+```c
+$secret_chord("QWERTY", "DF(ASETNIOP)",
+    "X", "", "", "", "", "", "", "", "", "X",
+    "X", "", "", "", "", "", "", "", "", "X")
+```
+
+adds chord on the `QWERTY` pseudolayer that gets activated with `TOP1 + TOP0 + BOT1 + BOT0` and on activation permanently switches to the `ASETNIOP` layer.
+
+I also have `asetniop_layer` macro to define chorded input on the 4 top-left and 4 top-right keys:
+
+```c
+$asetniop_layer("ASETNIOP",
+    "A", "S", "E", "T", "N", "I", "O", "P",
+      "W", "D", "R", "B", "H", "L", ";",
+        "X", "C", "Y", "V", "U", "",
+          "F", "J", ",", "G", "M",
+            "Q", "K", "-", "BSPC",
+              "Z", ".", "'",
+                "[", "]",
+                  "/")
+```
+
+This macro can also parse strings like `butterstick_rows`.
 
 ## Caveats
 
