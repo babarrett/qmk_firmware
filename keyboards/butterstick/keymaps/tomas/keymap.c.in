@@ -97,7 +97,7 @@ $secret_chord("ASETNIOP", "DF(QWERTY)",
     "X", "", "", "", "", "", "", "", "", "X")
 
 $secret_chord("ASETNIOP", "MO(ASETNIOP_FN)",
-    "", "", "", "" , "", "", "" , "", "", "",
+    "", "", "", "",  "", "", "",  "", "", "",
     "", "", "", "X", "", "", "X", "", "", "")
 
 $asetniop_layer("ASETNIOP",

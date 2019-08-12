@@ -117,6 +117,8 @@ $butterstick_cols("QWERTY",
 
 The first macro defines single key chords and the logical middle row. The second one defines the logical columns (`TOP1 + TOP2 = KC_ESC`, `TOP9 + TOP0 + BOT9 + BOT0 = KC_ENTER` ).
 
+I *might* improve these to take in a single long string instead of having each key in a separate chord.
+
 You might notice that the macros try to do a few clever things:
 
 * If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`. `,` will get replaced with `KC_COMMA`. This really works only for alphas, numbers and punctuation. `KC_ESC` still has to be fully spelled out.
@@ -194,4 +196,6 @@ void (*leader_functions[]) (void) = {fnc1, fnc2}; // this should go to PROGMEM
 
 Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn't allocate `counter`. However it still has to store it's `state` and sometimes the `counter` in RAM. If you keep adding more chords, at one point you will run out. If your firmware fits in the memory and your keyboard crashes, try optimizing your RAM usage.
 
-Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times. 
+Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times.
+
+The use of `pyexpander` is a bit double-edged sword. It shortens the code *dramatically*, I can not imagine writing the keymap without it. Defining just the alphas would be 72 lines of code instead of the current 4. On the other hand, the code `pyexpander` produces is functional but ugly. It preserves too much whitespace (that is technically avoidable but then the code for preprocessor becomes ugly). It also introduces another language and another tool to the project. Worst of all, it can be difficult to debug as the lines in the error log have lost their meaning and you don't get to see the source code that produced the error. I *tried* keeping it in pure C with the help of some boost preprocessor magic but even that quickly ran into issues. Soon I was `#include`-ing dozens of files just to simulate functions and the error messages were just as cryptic.
