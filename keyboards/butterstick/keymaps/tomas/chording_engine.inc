@@ -297,3 +297,29 @@ void matrix_scan_user(void) {
     }
     
 }
+
+// for now here
+void clear(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        // kill all chords
+        for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
+            // const struct Chord* chord = list_of_chords[i];
+            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
+            struct Chord chord_storage;
+            memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
+            struct Chord* chord = &chord_storage;
+            
+            *chord->state = IDLE;
+        }
+        
+        // clear keyboard
+        clear_keyboard();
+        send_keyboard_report();
+        
+        // switch to default pseudolayer
+        current_pseudolayer = 1;
+        
+        // clear all keyboard states
+        lock_next = false;
+    }
+}

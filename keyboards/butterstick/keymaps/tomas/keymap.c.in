@@ -26,6 +26,10 @@ $butterstick_cols("ALWAYS_ON",
     "LOCK", "", "", "", "CMD", "", "", "", "",
     "", "", "", "", "", "", "", "", "")
 
+$secret_chord("ALWAYS_ON", "CLEAR",
+    "X", "X", "", "", "", "", "", "", "X", "X",
+    "X", "X", "", "", "", "", "", "", "X", "X")
+
 $butterstick_rows("QWERTY",
     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
     "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",

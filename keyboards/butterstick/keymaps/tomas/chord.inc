@@ -241,3 +241,20 @@ void dynamic_macro_play(const struct Chord* self) {
         }
     }
 }
+
+void clear(const struct Chord* self);
+
+void reset_keyboard_kb(void){
+#ifdef WATCHDOG_ENABLE
+    MCUSR = 0;
+    wdt_disable();
+    wdt_reset();
+#endif
+    reset_keyboard();
+}
+
+void reset(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        reset_keyboard_kb();
+    }
+}

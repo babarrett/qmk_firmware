@@ -99,6 +99,20 @@ $macro(LEAD, ON_PSEUDOLAYER, KEYCODES_HASH)
     $py(NUM_OF_CHORDS += 1)
 $endmacro
 
+$macro(CLEAR, ON_PSEUDOLAYER, KEYCODES_HASH)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, clear};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
+$macro(RESET, ON_PSEUDOLAYER, KEYCODES_HASH)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, reset};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
 $macro(STR, ON_PSEUDOLAYER, KEYCODES_HASH, STRING)
     $nonlocal(NUM_OF_CHORDS)
     void str_$(NUM_OF_CHORDS)(const struct Chord* self) {
@@ -230,6 +244,12 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $DM_END(PSEUDOLAYER, KEYCODES_HASH)
             $elif(type == "DM_PLAY")
                 $DM_PLAY(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "CLEAR")
+                $CLEAR(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "RESET")
+                $RESET(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "RESET")
+                $KC(PSEUDOLAYER, KEYCODES_HASH, "RESET")
             $else
                 $py(code = expand_keycode_fnc(type))
                 $KC(PSEUDOLAYER, KEYCODES_HASH, code)
