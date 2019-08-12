@@ -21,6 +21,11 @@ $include("chord.inc")
 $include("macros.inc")
 
 // Add all chords
+$butterstick_cols("ALWAYS_ON",
+    "", "", "", "", "", "", "", "", "",
+    "LOCK", "", "", "", "CMD", "", "", "", "",
+    "", "", "", "", "", "", "", "", "")
+
 $butterstick_rows("QWERTY",
     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
     "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
@@ -28,8 +33,13 @@ $butterstick_rows("QWERTY",
 
 $butterstick_cols("QWERTY",
     "ESC", "MO(MOV)", "TAB", "", "RGUI", "", "INS", "DEL", "BSPC",
-    "LOCK", "", "", "", "CMD", "", "", "", "KC_ENTER",
+    "", "", "", "", "", "", "", "", "ENTER",
     "LSFT", "LCTL", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "RCTL", "RSFT")
+
+$# $butterstick("QWERTY",
+$#     "Q", "ESC",  "W", "MO(MOV)", "E", "TAB",  "R", "",        "T", "RGUI", "Y", "",        "U", "INS",  "I", "DEL",  "O", "BSPC",  "P",
+$#     "A", "",     "S", "",        "D", "",     "F", "",        "G", "CMD",  "H", "",        "J", "",     "K", "",     "L", "ENTER", ";",
+$#     "Z", "LSFT", "X", "LCTL",    "C", "LALT", "V", "MO(NUM)", "B", "LGUI", "N", "MO(NUM)", "M", "RALT", ",", "RCTL", ".", "RSFT",  "/")
 
 #define NUM_OF_LEADER_COMBOS 0
 // void test(void) {
