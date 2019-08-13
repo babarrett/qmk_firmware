@@ -656,6 +656,12 @@ void reset(const struct Chord* self) {
 
     
     
+
+    
+    
+
+    
+    
     
         
     

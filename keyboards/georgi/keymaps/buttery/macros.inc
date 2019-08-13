@@ -333,7 +333,7 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_THU6", K42)
 $endmacro
 
-$macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37)
+$macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38)
     $nonlocal(NUM_OF_CHORDS)
     $add_key(PSEUDOLAYER, "H_TOP1 + H_TOP2", K1)
     $add_key(PSEUDOLAYER, "H_TOP2 + H_TOP3", K2)
@@ -370,8 +370,9 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_BOT11 + H_BOT12", K33)
     $add_key(PSEUDOLAYER, "H_THU1 + H_THU2", K34)
     $add_key(PSEUDOLAYER, "H_THU2 + H_THU3", K35)
-    $add_key(PSEUDOLAYER, "H_THU4 + H_THU5", K36)
-    $add_key(PSEUDOLAYER, "H_THU5 + H_THU6", K37)
+    $add_key(PSEUDOLAYER, "H_THU3 + H_THU4", K36)
+    $add_key(PSEUDOLAYER, "H_THU4 + H_THU5", K37)
+    $add_key(PSEUDOLAYER, "H_THU5 + H_THU6", K38)
 $endmacro
 
 $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12, TH1, TH2, TH3, TH4, TH5, TH6)
