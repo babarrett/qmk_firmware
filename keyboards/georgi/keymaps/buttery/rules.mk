@@ -3,6 +3,8 @@
 # Make sure you have dfu-programmer installed!
 #----------------------------------------------------------------------------
 
+SRC += matrix.c i2c_master.c
+
 NO_REPEAT				 = yes
 VERBOSE					 = yes
 KEYBOARD_SHARED_EP       = yes
