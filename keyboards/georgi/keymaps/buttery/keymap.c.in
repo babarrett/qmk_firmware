@@ -6,6 +6,7 @@
 
 enum pseudolayers {
     ALWAYS_ON, QWERTY
+
 };
 
 // Keyboard states and settings
@@ -21,28 +22,18 @@ $include("chord.inc")
 $include("macros.inc")
 
 // Add all chords
-$butterstick_cols("ALWAYS_ON",
-    "", "", "", "", "", "", "", "", "", "", "",
-    "LOCK", "", "", "", "CMD", "", "", "", "", "", "",
-    "", "", "", "", "", "", "", "", "", "", "",
-    "", "", "", "")
 
-$secret_chord("ALWAYS_ON", "CLEAR",
-    "X", "X", "", "", "", "", "", "", "X", "X", "", "",
-    "X", "X", "", "", "", "", "", "", "X", "X", "", "",
-    "", "", "", "", "", "")
+$butterstick_cols("ALWAYS_ON",
+    "", "", "", "", "",       "",       "", "", "", "", "",
+    "", "", "", "", "",       "",       "", "", "", "", "",
+    "", "", "", "", "",       "",       "", "", "", "", "",
+                "", "",                 "", "")
 
 $butterstick_rows("QWERTY",
-    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P","","",
-    "A", "S", "D", "F", "G", "H", "J", "K", "L", ";","","",
-    "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/","","",
-    "","","","","","")
-
-$butterstick_cols("QWERTY",
-    "ESC", "MO(MOV)", "TAB", "", "O(KC_RGUI)", "", "INS", "DEL", "BSPC", "", "",
-    "", "", "", "", "", "", "", "", "ENTER", "", "",
-    "O(KC_LSFT)", "O(KC_LCTL)", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "O(KC_RCTL)", "O(KC_RSFT)", "", "",
-    "", "", "", "")
+    "", "Q", "W", "F", "P", "G",         "J", "L", "U", "Y", ";", "",
+    "", "A", "R", "S", "T", "D",         "H", "N", "E", "I", "O", "",
+    "", "Z", "X", "C", "V", "B",         "K", "M", ",", ".", "/", "",
+                  "",  "",  "",          "",  "",  "")
 
 // Register all chords, load chording logic
 $include("chording_engine.inc")

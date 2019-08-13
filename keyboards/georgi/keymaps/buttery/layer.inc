@@ -1,15 +1,15 @@
 enum internal_keycodes {
-    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
-    THU1, THU2, THU3, THU4, THU5, THU6
+    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6,             TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6,                          BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
+                      THU1, THU2, THU3,                          THU4, THU5, THU6
 };
 
 // No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_georgi(
-    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
-    THU1, THU2, THU3, THU4, THU5, THU6
+    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6,             TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6,             BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
+                      THU1, THU2, THU3,             THU4, THU5, THU6
   )
 };
 
@@ -45,6 +45,6 @@ size_t keymapsCount = 1;
 #define H_THU1 ((uint32_t) 1 << 24)
 #define H_THU2 ((uint32_t) 1 << 25)
 #define H_THU3 ((uint32_t) 1 << 26)
-#define H_THU4 ((uint32_t) 1 << 28)
-#define H_THU5 ((uint32_t) 1 << 29)
-#define H_THU6 ((uint32_t) 1 << 30)
+#define H_THU4 ((uint32_t) 1 << 27)
+#define H_THU5 ((uint32_t) 1 << 28)
+#define H_THU6 ((uint32_t) 1 << 29)
