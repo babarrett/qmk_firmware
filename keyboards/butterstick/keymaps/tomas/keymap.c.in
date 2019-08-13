@@ -81,7 +81,7 @@ $butterstick_rows("MOV",
     "", "", "LSFT", "LCTL", "LALT", "LGUI", "LEFT", "DOWN", "RIGHT", "PGDN")
 
 $butterstick_rows("MOUSE",
-    "", "", "", "", "", "", "MS_BTN1", "MS_UP", "MS_BTN2", "MS_WH_DOWN",
+    "", "", "", "", "", "", "MS_BTN1", "MS_UP", "MS_BTN2", "MS_WH_UP",
     "", "", "", "", "", "", "", "", "", "",
     "", "", "LSFT", "LCTL", "LALT", "LGUI", "MS_LEFT", "MS_DOWN", "MS_RIGHT", "MS_WH_DOWN")
 
@@ -156,7 +156,6 @@ $butterstick_cols("ASETNIOP_FN",
     "", "", "", "", "LGUI", "", "", "", "",
     "", "", "", "", "",     "", "", "", "",
     "", "", "", "", "",     "", "", "", "")
-
 
 // Register all chords, load chording logic
 $include("chording_engine.inc")
