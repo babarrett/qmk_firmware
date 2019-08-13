@@ -58,7 +58,34 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 ### Keycodes
 
-I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0. To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits.  *If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
+I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0.
+
+```c
+enum internal_keycodes {
+    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
+};
+
+// No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [0] = LAYOUT_butter(
+    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
+  )
+};
+
+```
+
+To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits. 
+
+```c
+#define H_TOP1 ((uint32_t) 1 << 0)
+#define H_TOP2 ((uint32_t) 1 << 1)
+#define H_TOP3 ((uint32_t) 1 << 2)
+...
+```
+
+*If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
@@ -173,6 +200,24 @@ $asetniop_layer("ASETNIOP",
 ```
 
 This macro can also parse strings like `butterstick_rows`.
+
+All these macros are defined in `macros.inc` and look something like this:
+
+```c
+$macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30)
+    $nonlocal(NUM_OF_CHORDS)
+    $add_key(PSEUDOLAYER, "H_TOP1", K1)
+...
+    $add_key(PSEUDOLAYER, "H_TOP0", K10)
+    $add_key(PSEUDOLAYER, "H_TOP1 + H_BOT1", K11)
+    $add_key(PSEUDOLAYER, "H_TOP2 + H_BOT2", K12)
+...
+    $add_key(PSEUDOLAYER, "H_BOT9", K29)
+    $add_key(PSEUDOLAYER, "H_BOT0", K30)
+$endmacro
+```
+
+On the input are all the actions (`K1` to `K30`) and each line runs the `$add_key` macro (parses the action string and adds a new `$KC` chord). If you want the macro to create more chords, add more arguments and a new `$add_key` chord for each of them.
 
 ### Leader Key
 
