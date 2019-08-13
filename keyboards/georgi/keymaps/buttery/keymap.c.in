@@ -55,10 +55,10 @@ $butterstick_rows("QWERTY",
     "KL(BSPC,SYM)",  "KL(SPACE,NUM)",  "LSFT",         "KK(ENTER,RSFT)",  "KL(SPACE,NUM)",  "KL(BSPC,SYM)")
                   
 $butterstick_cols("QWERTY",
-    "", "", "",     "",     "",           "",       "",     "",     "",     "", "",
-    "", "", "",     "",     "",           "",       "",     "",     "",     "", "",
-    "", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
-                    "",     "MO(MOVE)",   "",       "",     "")
+    "",    "", "",     "",     "",           "",       "",     "",     "",     "", "",
+    "",    "", "",     "",     "",           "",       "",     "",     "",     "", "",
+    "INS", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
+                       "",     "MO(MOVE)",   "",       "TAB",  "")
                    
 $butterstick_rows("NUM",
     "",     "1",  "2",  "3",  "4",  "5",               "6",  "7",  "8",  "9",  "0",   "",
@@ -85,10 +85,16 @@ $butterstick_cols("SYM",
                     "",     "",           "",       "",     "")
                                 
 $butterstick_rows("MOVE",
-    "", "", "HOME", "UP",   "PGUP",  "",              "", "", "", "", "", "",
-    "", "", "END",  "",     "PGDN",  "",              "", "", "", "", "", "",
-    "", "", "LEFT", "DOWN", "RIGHT", "",              "", "", "", "", "", "",
-                    "",     "",      "",              "", "", "")
+    "",        "", "HOME", "UP",   "PGUP",  "",              "", "", "", "", "", "",
+    "INS",     "", "END",  "",     "PGDN",  "",              "", "", "", "", "", "",
+    "LSFT",    "", "LEFT", "DOWN", "RIGHT", "",              "", "", "", "", "", "RSFT",
+                           "",     "",      "",              "", "", "")
+                       
+$butterstick_cols("MOVE",
+    "", "", "",     "",     "",           "",       "",     "",     "",     "", "",
+    "", "", "",     "",     "",           "",       "",     "",     "",     "", "",
+    "", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
+                    "",     "",           "",       "",     "")
 
 // Register all chords, load chording logic
 $include("chording_engine.inc")
