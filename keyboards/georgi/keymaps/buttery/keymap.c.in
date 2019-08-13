@@ -6,7 +6,6 @@
 
 enum pseudolayers {
     ALWAYS_ON, QWERTY
-
 };
 
 // Keyboard states and settings
@@ -25,15 +24,20 @@ $include("macros.inc")
 
 $butterstick_cols("ALWAYS_ON",
     "", "", "", "", "",       "",       "", "", "", "", "",
-    "", "", "", "", "",       "",       "", "", "", "", "",
+    "", "", "", "", "",       "CMD",       "", "", "", "", "",
     "", "", "", "", "",       "",       "", "", "", "", "",
                 "", "",                 "", "")
 
+$secret_chord("ALWAYS_ON", "CLEAR",
+    "X", "X", "", "", "", "",             "", "", "", "", "X", "X",
+    "X", "X", "", "", "", "",             "", "", "", "", "X", "X",
+                  "", "", "",             "", "", "")
+
 $butterstick_rows("QWERTY",
-    "", "Q", "W", "F", "P", "G",         "J", "L", "U", "Y", ";", "",
-    "", "A", "R", "S", "T", "D",         "H", "N", "E", "I", "O", "",
-    "", "Z", "X", "C", "V", "B",         "K", "M", ",", ".", "/", "",
-                  "",  "",  "",          "",  "",  "")
+    "TAB", "Q", "W", "F", "P", "G",         "J", "L", "U", "Y", ";", "RCTL",
+    "ESC", "A", "R", "S", "T", "D",         "H", "N", "E", "I", "O", "RGUI",
+    "LSFT", "Z", "X", "C", "V", "B",         "K", "M", ",", ".", "/", "DEL",
+                  "BSPC",  "SPACE",  "LSFT",          "ENTER",  "SPACE",  "BSPC")
 
 // Register all chords, load chording logic
 $include("chording_engine.inc")
