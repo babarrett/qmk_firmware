@@ -77,3 +77,9 @@ keyboards/butterstick/keymaps/tomas/pyexpander/parser.py
 keyboards/butterstick/keymaps/tomas/pyexpander/lib.py
 keyboards/butterstick/keymaps/tomas/pyexpander/__init__.py
 keyboards/butterstick/keymaps/tomas/expander3.py
+keyboards/georgi/keymaps/buttery/pyexpander/parser.py
+keyboards/georgi/keymaps/buttery/pyexpander/lib.py
+keyboards/georgi/keymaps/buttery/pyexpander/__init__.py
+keyboards/georgi/keymaps/buttery/expander3.py
+keyboards/butterstick/keymaps/tomas/keymap2.c
+_tomas.sh
