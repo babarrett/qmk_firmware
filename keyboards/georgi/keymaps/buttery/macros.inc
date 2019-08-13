@@ -374,7 +374,7 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K11, K
     $add_key(PSEUDOLAYER, "H_THU5 + H_THU6", K38)
 $endmacro
 
-$macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12)
+$macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12, TH1, TH2, TH3, TH4, TH5, TH6)
     $nonlocal(NUM_OF_CHORDS)
     $py(hash = "")
     $if(T1 != "")

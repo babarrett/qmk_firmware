@@ -33,7 +33,7 @@ size_t keymapsCount = 1;
 #define H_BOT1 ((uint32_t) 1 << 12)
 #define H_BOT2 ((uint32_t) 1 << 13)
 #define H_BOT3 ((uint32_t) 1 << 14)
-#define H_BOT4 ((uint32_t) 1 << 15
+#define H_BOT4 ((uint32_t) 1 << 15)
 #define H_BOT5 ((uint32_t) 1 << 16)
 #define H_BOT6 ((uint32_t) 1 << 17)
 #define H_BOT7 ((uint32_t) 1 << 18)
