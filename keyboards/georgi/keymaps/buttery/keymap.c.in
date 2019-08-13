@@ -49,10 +49,10 @@ $secret_chord("ALWAYS_ON", "ESC",
                 "", "X", "",             "", "X", "")
 
 $butterstick_rows("QWERTY",
-              "TAB",  "Q", "W", "F", "P", "G",         "J", "L", "U", "Y", ";", "RCTL",
-              "ESC",  "A", "R", "S", "T", "D",         "H", "N", "E", "I", "O", "RGUI",
-              "LSFT", "Z", "X", "C", "V", "B",         "K", "M", ",", ".", "/", "DEL",
-    "KL(BSPC,SYM)",  "KL(SPACE,NUM)",  "LSFT",         "KK(ENTER,RSFT)",  "KL(SPACE,NUM)",  "KL(BSPC,SYM)")
+                "TAB",  "Q", "W", "F", "P", "G",         "J", "L", "U", "Y", ";", "RCTL",
+                "ESC",  "A", "R", "S", "T", "D",         "H", "N", "E", "I", "O", "RGUI",
+                "LSFT", "Z", "X", "C", "V", "B",         "K", "M", ",", ".", "/", "DEL",
+"KL(KC_BSPC,SYM)",  "KL(KC_SPACE,NUM)",  "LSFT",         "KK(ENTER,KC_RSFT)",  "KL(KC_SPACE,NUM)",  "KL(KC_BSPC,SYM)")
                   
 $butterstick_cols("QWERTY",
     "",    "", "",     "",     "",           "",       "",     "",     "",     "", "",
