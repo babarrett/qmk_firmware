@@ -364,7 +364,8 @@ uint32_t processQwerty(bool lookup) {
 
 	P( PWR,			  	SEND(KC_ESC));
 
-    P( PWR | RR | RB | LSU | LSD,  SEND(KC_RGUI); SEND(KC_GRV));
+    P( LNO | RR | RB | LSU | LSD,  SEND(KC_RGUI); SEND(KC_GRV));
+    P( RNO | RR | RB | LSU | LSD,  SEND(KC_RGUI); SEND(KC_GRV));
 
   //[][X][] [][X][] Escape
   P( LA | RU,			SEND(KC_ESC));
