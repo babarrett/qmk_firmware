@@ -59,7 +59,6 @@ void kill_one_shots(struct Chord* caller) {
 
 void process_finished_dances(void) {
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -84,7 +83,6 @@ void process_finished_dances(void) {
 void process_ready_chords(void) {
     // find ready chords
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -187,7 +185,6 @@ void deactivate_active_chords(uint16_t keycode) {
     uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
     bool broken;
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -246,11 +243,6 @@ void process_command(void) {
 }
 
 void process_leader(void) {
-    // struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-    // struct Chord chord_storage;
-    // memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-    // struct Chord* chord = &chord_storage;
-    
     in_leader_mode = false;
     for (int i = 0; i < $(len(list_of_leader_combos)); i++) {
         uint16_t trigger[5];
@@ -303,7 +295,6 @@ void clear(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
         for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-            // const struct Chord* chord = list_of_chords[i];
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
