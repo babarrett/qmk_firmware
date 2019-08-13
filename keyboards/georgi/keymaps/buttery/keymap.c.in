@@ -5,7 +5,7 @@
 // the preprocessor code is written to be readable not to produce nice output
 
 enum pseudolayers {
-    ALWAYS_ON, QWERTY, NUM, MOV
+    ALWAYS_ON, QWERTY
 };
 
 // Keyboard states and settings
@@ -22,50 +22,27 @@ $include("macros.inc")
 
 // Add all chords
 $butterstick_cols("ALWAYS_ON",
-    "", "", "", "", "", "", "", "", "",
-    "LOCK", "", "", "", "CMD", "", "", "", "",
-    "", "", "", "", "", "", "", "", "")
+    "", "", "", "", "", "", "", "", "", "", "",
+    "LOCK", "", "", "", "CMD", "", "", "", "", "", "",
+    "", "", "", "", "", "", "", "", "", "", "",
+    "", "", "", "")
 
 $secret_chord("ALWAYS_ON", "CLEAR",
-    "X", "X", "", "", "", "", "", "", "X", "X",
-    "X", "X", "", "", "", "", "", "", "X", "X")
+    "X", "X", "", "", "", "", "", "", "X", "X", "", "",
+    "X", "X", "", "", "", "", "", "", "X", "X", "", "",
+    "", "", "", "", "", "")
 
 $butterstick_rows("QWERTY",
-    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
-    "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
-    "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P","","",
+    "A", "S", "D", "F", "G", "H", "J", "K", "L", ";","","",
+    "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/","","",
+    "","","","","","")
 
 $butterstick_cols("QWERTY",
-    "ESC", "MO(MOV)", "TAB", "", "O(KC_RGUI)", "", "INS", "DEL", "BSPC",
-    "", "", "", "", "", "", "", "", "ENTER",
-    "O(KC_LSFT)", "O(KC_LCTL)", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "O(KC_RCTL)", "O(KC_RSFT)")
-
-$secret_chord("QWERTY", "SPACE",
-    "" , "", "", "", "", "", "", "", "", "",
-    "X", "", "", "", "", "", "", "", "", "X")
-
-$secret_chord("QWERTY", "MO(MOUSE)",
-    "X", "X", "X", "X", "", "", "", "", "", "",
-    "" , "" , "" , "" , "", "", "", "", "", "")
-
-$butterstick_rows("NUM",
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-    "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
-    "`", "-", "=", "[", "]", "\\", "\'", "", "F11", "F12")
-
-$butterstick_cols("NUM",
-    "ESC", "", "TAB", "", "RGUI", "", "INS", "DEL", "BSPC",
-    "", "", "", "", "", "", "", "", "ENTER",
-    "LSFT", "LCTL", "LALT", "", "LGUI", "", "RALT", "RCTL", "RSFT")
-
-$secret_chord("NUM", "SPACE",
-    "" , "", "", "", "", "", "", "", "", "",
-    "X", "", "", "", "", "", "", "", "", "X")
-
-$butterstick_rows("MOV",
-    "", "", "", "", "", "", "HOME", "UP", "END", "PGUP",
-    "", "", "", "", "", "", "", "", "", "",
-    "", "", "LSFT", "LCTL", "LALT", "LGUI", "LEFT", "DOWN", "RIGHT", "PGDN")
+    "ESC", "MO(MOV)", "TAB", "", "O(KC_RGUI)", "", "INS", "DEL", "BSPC", "", "",
+    "", "", "", "", "", "", "", "", "ENTER", "", "",
+    "O(KC_LSFT)", "O(KC_LCTL)", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "O(KC_RCTL)", "O(KC_RSFT)", "", "",
+    "", "", "", "")
 
 // Register all chords, load chording logic
 $include("chording_engine.inc")
