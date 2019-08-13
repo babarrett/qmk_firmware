@@ -19,9 +19,10 @@
 #define FUNCT	( LSD | LK | LP | LH )
 #define MEDIA	( LSD | LK | LW | LR )
 #define MOVE	( LA | LO )
-#define LNUM	( LNO )
-#define RNUM	( RNO )
-#define SYM		( PWR )
+#define LNUM	( LA )
+#define RNUM	( RU )
+#define SYM		( LNO )
+#define RSYM	( RNO )
 
 // Keys and chords that, once they appear, are added to every subsequent partial chord
 // until the whole thing is sent.
@@ -226,6 +227,45 @@ uint32_t processQwerty(bool lookup) {
 
     P( SYM | RZ,			SEND(KC_RSFT));
 
+	// Left hand
+    P( RSYM | LSU,			SEND(KC_GRV));
+    P( RSYM | LFT,			SEND(KC_LBRC));
+    P( RSYM | LP,			SEND_STRING("{"));
+    P( RSYM | LH,			SEND_STRING("("));
+    P( RSYM | ST1,			SEND_STRING("<"));
+
+    P( RSYM | LSU | LSD,		SEND_STRING("~"));
+    P( RSYM | LFT | LK,		SEND(KC_MINS));
+    P( RSYM | LP  | LW,		SEND(KC_QUOTE));
+    P( RSYM | LH  | LR,		SEND_STRING(":"));
+    P( RSYM | ST1 | ST2,		SEND_STRING("_"));
+
+    P( RSYM | LSD,			SEND_STRING("!"));
+    P( RSYM | LK,			SEND_STRING("@"));
+    P( RSYM | LW,			SEND_STRING("#"));
+    P( RSYM | LR,			SEND_STRING("$"));
+    P( RSYM | ST2,			SEND_STRING("%"));
+
+	// Right hand
+    P( RSYM | ST3,			SEND_STRING(">"));
+    P( RSYM | RF,			SEND_STRING(")"));
+    P( RSYM | RP,			SEND_STRING("}"));
+    P( RSYM | RL,			SEND_STRING("]"));
+    P( RSYM | RT,			SEND_STRING("?"));
+
+    P( RSYM | ST3 | ST4,		SEND(KC_BSLASH));
+    P( RSYM | RF  | RR,		SEND(KC_EQUAL));
+    P( RSYM | RP  | RB,		SEND_STRING("\""));
+    P( RSYM | RG  | RL,		SEND_STRING("+"));
+    P( RSYM | RT  | RS,		SEND_STRING("?"));
+
+    P( RSYM | ST4,			SEND_STRING("|"));
+    P( RSYM | RR,			SEND_STRING("^"));
+    P( RSYM | RB,			SEND_STRING("&"));
+    P( RSYM | RG,			SEND_STRING("*"));
+    P( RSYM | RS,			SEND_STRING("?"));
+
+    P( RSYM | RZ,			SEND(KC_RSFT));
 
 /* Letters
  *            TAB
@@ -324,7 +364,7 @@ uint32_t processQwerty(bool lookup) {
 
 	P( PWR,			  	SEND(KC_ESC));
 
-    P( RR | RB | LSU | LSD,  SEND(KC_RGUI); SEND(KC_GRV));
+    P( PWR | RR | RB | LSU | LSD,  SEND(KC_RGUI); SEND(KC_GRV));
 
   //[][X][] [][X][] Escape
   P( LA | RU,			SEND(KC_ESC));
