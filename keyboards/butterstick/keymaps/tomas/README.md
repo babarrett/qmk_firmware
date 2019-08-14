@@ -190,9 +190,11 @@ The complete list of strings that these macros can accept is:
 
 * `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) .
 
-* `KK(X, Y)`: Send code `X` on tap and code `Y` on hold.
+* Tap-holds
 
-* `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold.
+  * `KK(X, Y)`: Send code `X` on tap and code `Y` on hold.
+  * `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold.
+  * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires.
 
 * `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
 
