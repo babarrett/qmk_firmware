@@ -180,13 +180,11 @@ These two macros take care of most chords, you need to manually add only chords 
 
 The complete list of strings that these macros can accept is:
 
-* `X`: Send code `KC_X` or expanded version of it (`KC_SCOLON` from `;`, etc) just like a normal keyboard would (including repetition).
+* `KC_X`: Send code `KC_X` just like a normal keyboard. Often the parser will be able to deal even without the `KC_` at the beginning. Basic keycodes and US ANSI shifted keycodes are supported. Most quantum and advanced keycodes *do not*. I will be adding these as needed.
 
-* `KC_X`: Send code `KC_X` just like a normal keyboard.
+* `STR("X")`: Send string "x" on each activation of the chord. Once again, watch out for quoting and escaping characters. If you want special characters (especially quotes) in your string, look up Python reference for string literals and experiment. Also, because of how the string gets parsed, it is not possible to use `(` in the string. 
 
-* `STR("X")`: Send string "x" on each activation of the chord. Once again, watch out for quoting and escaping characters. If you want special characters (especially quotes) in your string, look up Python reference for string literals and experiment. Also, because of how the string gets parsed, for now it is impossible to use `(` in the string.
-
-* `MO(X)`: Temporary switch to pseudolayer `X`. Because only one pseudolayer can be active at any moment, this works by switching back to the pseudolayer the chord lives on on deactivation. If you chain `MO()`s on multiple pseudolayers and deactivate them in a random order, you might end up stranded on a pseudolayer.
+* `MO(X)`: Temporary switch to pseudolayer `X`. Because only one pseudolayer can be active at any moment, this works by switching back to the pseudolayer the chord lives on on deactivation. If you chain `MO()`s on multiple pseudolayers and deactivate them in a random order, you might end up stranded on a pseudolayer. I recommend adding `CLEAR` somewhere on `ALWAYS_ON` pseudolayer just in case.
 
 * `DF(X)`: Permanent switch to pseudolayer `X`.
 
@@ -324,17 +322,3 @@ Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn
 Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times.
 
 The use of `pyexpander` is a bit double-edged sword. It shortens the code *dramatically*, I can not imagine writing the keymap without it. Defining just the alphas would be 72 lines of code instead of the current 4. On the other hand, the code `pyexpander` produces is functional but ugly. It preserves too much whitespace (that is technically avoidable but then the code for preprocessor becomes ugly). It also introduces another language and another tool to the project. Macros rarely offer autocompletion, so you have to rely on documentation and existing code. But worst of all, it can be difficult to debug as the lines in the error log have lost their meaning and you don't get to see the source code that produced the error. I *tried* keeping it in pure C with the help of some boost preprocessor magic but even that quickly ran into issues. Soon I was `#include`-ing dozens of files just to simulate functions and the error messages were just as cryptic.
-
-
-
-## TODO
-
-* *Maybe* change key layout macros to accept one long string instead of many short ones.
-* `STR()` can deal with `(`
-* `MO()` can't leave you stranded. *Not sure how to solve this one, for now just use* `CLEAR`.
-* Clean up `CMD`.
-* Premade `M()` chord to send multiple keys at once.
-* `D()` supports advanced functions.
-* Strings are no longer split by comma and a space next to each other.
-* `KK()` and `KL()` reported to have issues if tapped repeatedly.
-* `OSK()` has issue if the key has a function and is not just a modifier, Alt and Gui for example.
