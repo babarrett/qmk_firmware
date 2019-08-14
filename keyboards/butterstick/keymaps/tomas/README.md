@@ -211,7 +211,7 @@ The complete list of strings that these macros can accept is:
 
   This is the only instance the function called is not associated to a chord. That is why the function `fnc_L1` does not accept any inputs.
 
-* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. The only constraint is that the function has to follow the same syntax as in the previous example of adding a chord manually. The following example will register a macro that acts exactly like `KC_MEH` (the chording engine supports `KC_MEH`, this is just an example):
+* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. The only constraint is that the function has to follow the same syntax as in the previous example of adding a chord manually. The following example will register a macro that acts exactly like `KC_MEH` (the chording engine *should* support `KC_MEH`, this is just an example):
 
   ```c
   void fn_M1(const struct Chord* self) {
@@ -244,7 +244,9 @@ The complete list of strings that these macros can accept is:
       "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
   ```
 
-  This feels like it would be the most common way to use this feature, I will write a macro for this.
+  Since this feels like it would be the most common way to use this feature, I wrote a macro for this:
+
+* `MK(X1, X2, ...)`: Acts like `KC()` except it registers / unregisters all `X1`, `X2`, ... codes at the same time.
 
 * `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Just like the `butterstick_rows` and `butterstick_cols` macros, it will try to expand shortened keycodes. Advanced keycodes are not *yet* supported.
 
