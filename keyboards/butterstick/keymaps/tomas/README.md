@@ -156,11 +156,24 @@ I *might* improve these to take in a single long string instead of having each k
 
 You might notice that the macros try to do a few clever things:
 
-* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,`  will get replaced with `KC_COMMA`. This really works only for alphas, numbers and punctuation. `KC_ESC` still has to be fully spelled out. However, because of the order of preprocessors you can not use strings defined using `#define` in these strings. Pyexpander macros like `$define` will work.
+* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,`  will get replaced with `KC_COMMA`. This really works only for alphas, numbers and punctuation. `KC_ESC` still has to be fully spelled out. However, because of the order of preprocessors you can not use strings defined using `#define` in these strings. Pyexpander substitutions and macros will work:
+
+  ```c
+  $py(KEY1 = "KC_Q")
+  $butterstick_rows("QWERTY",
+      $(KEY1), "W", "E", "R", "T", "Y", "U", "I", "O", "P",
+      "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
+      "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+  ```
+
 * `MO()` and `DF()` macros work the same way for pseudolayers as they would for layers in pure QMK.
+
 * `O()` define a one shot key but it also supports pseudolayers!
+
 * `STR("...")` sends a string. Careful with quoting.
+
 * Special chords like Command mode have their own codes like `CMD`.
+
 * The empty strings `""` get ignored.
 
 These two macros take care of most chords, you need to manually add only chords with non-standard (from butterstick's point of view) keys like `$KC("QWERTY", "H_BOT1 + H_BOT0", "KC_SPACE")`. And that can be done with the `secret_chord` macro (see bellow). I also have a macro for ASETNIOP style layout but that one is much more WIP. Follow it's example to make any more complex chorded input macros.
@@ -171,17 +184,17 @@ The complete list of strings that these macros can accept is:
 
 * `KC_X`: Send code `KC_X` just like a normal keyboard.
 
-* `STR("X")`: Send string "x" on each activation of the chord.
+* `STR("X")`: Send string "x" on each activation of the chord. Once again, watch out for quoting and escaping characters. If you want special characters (especially quotes) in your string, look up Python reference for string literals and experiment. Also, because of how the string gets parsed, for now it is impossible to use `(` in the string.
 
-* `MO(X)`: Temporary switch to pseudolayer `X`.
+* `MO(X)`: Temporary switch to pseudolayer `X`. Because only one pseudolayer can be active at any moment, this works by switching back to the pseudolayer the chord lives on on deactivation. If you chain `MO()`s on multiple pseudolayers and deactivate them in a random order, you might end up stranded on a pseudolayer.
 
 * `DF(X)`: Permanent switch to pseudolayer `X`.
 
 * `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) .
 
-* `KK(X,Y)`: Send code `X` on tap and code `Y` on hold.
+* `KK(X, Y)`: Send code `X` on tap and code `Y` on hold.
 
-* `KL(X,Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold.
+* `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold.
 
 * `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
 
@@ -200,14 +213,31 @@ The complete list of strings that these macros can accept is:
 
   This is the only instance the function called is not associated to a chord. That is why the function `fnc_L1` does not accept any inputs.
 
-* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. The only constraint is that the function has to follow the same syntax as in the previous example of adding a chord manually. *I might change this later so it is not so confusing*. The simplest example would be to send a sequence of keypresses like this:
+* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. The only constraint is that the function has to follow the same syntax as in the previous example of adding a chord manually. The following example will register a macro that acts exactly like `KC_MEH` (the chording engine supports `KC_MEH`, this is just an example):
 
   ```c
-  void fnc_M1(struct Chord* self) {
-      if (*self->state == ACTIVATED) {
-      	SEND(KC_LCTL);
-      	SEND(KC_LALT);
-      	SEND(KC_DEL);
+  void fn_M1(const struct Chord* self) {
+      switch (*self->state) {
+          case ACTIVATED:
+              key_in(KC_LCTL);
+              key_in(KC_LSFT);
+              key_in(KC_LALT);
+              break;
+          case DEACTIVATED:
+              key_out(KC_LCTL);
+              key_out(KC_LSFT);
+              key_out(KC_LALT);
+              break;
+          case FINISHED:
+          case FINISHED_FROM_ACTIVE:
+              break;
+          case RESTART:
+              key_out(KC_LCTL);
+              key_out(KC_LSFT);
+              key_out(KC_LALT);
+              break;
+          default:
+              break;
       }
   }
   $butterstick_rows("QWERTY",
@@ -216,6 +246,8 @@ The complete list of strings that these macros can accept is:
       "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
   ```
 
+  This feels like it would be the most common way to use this feature, I will write a macro for this.
+
 * `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Just like the `butterstick_rows` and `butterstick_cols` macros, it will try to expand shortened keycodes. Advanced keycodes are not *yet* supported.
 
 * `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace. In `keyboard.inc` is defined macro `DYNAMIC_MACRO_MAX_LENGTH` that defines the maximum length of the macro to be recorded. You can increase it for the price of RAM. The example above requires 4 units of length to be saved (Ctrl, A, next, Backspace).
@@ -223,6 +255,8 @@ The complete list of strings that these macros can accept is:
 * `CLEAR`: clears keyboard, sets all chords to the default state and switches the pseudolayer to the default one. Basically the emergency stop button.
 
 * `RESET`: Go to the DFU flashing mode.
+
+If the string has multiple elements, they have to be separated by a comma AND a space. I'll fix that soon.
 
 Macro `secret_chord` allows you to add a single chord while utilize the smart string parsing and defining the chord's keys visually. For example
 
@@ -290,3 +324,17 @@ Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn
 Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times.
 
 The use of `pyexpander` is a bit double-edged sword. It shortens the code *dramatically*, I can not imagine writing the keymap without it. Defining just the alphas would be 72 lines of code instead of the current 4. On the other hand, the code `pyexpander` produces is functional but ugly. It preserves too much whitespace (that is technically avoidable but then the code for preprocessor becomes ugly). It also introduces another language and another tool to the project. Macros rarely offer autocompletion, so you have to rely on documentation and existing code. But worst of all, it can be difficult to debug as the lines in the error log have lost their meaning and you don't get to see the source code that produced the error. I *tried* keeping it in pure C with the help of some boost preprocessor magic but even that quickly ran into issues. Soon I was `#include`-ing dozens of files just to simulate functions and the error messages were just as cryptic.
+
+
+
+## TODO
+
+* *Maybe* change key layout macros to accept one long string instead of many short ones.
+* `STR()` can deal with `(`
+* `MO()` can't leave you stranded. *Not sure how to solve this one, for now just use* `CLEAR`.
+* Clean up `CMD`.
+* Premade `M()` chord to send multiple keys at once.
+* `D()` supports advanced functions.
+* Strings are no longer split by comma and a space next to each other.
+* `KK()` and `KL()` reported to have issues if tapped repeatedly.
+* `OSK()` has issue if the key has a function and is not just a modifier, Alt and Gui for example.
