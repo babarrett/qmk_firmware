@@ -280,6 +280,10 @@ void process_leader(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode < FIRST_INTERNAL_KEYCODE || keycode > LAST_INTERNAL_KEYCODE) {
+        return true;
+    }
+    
     if (record->event.pressed) {
         sound_keycode(keycode, &keycodes_buffer);
     } else {
