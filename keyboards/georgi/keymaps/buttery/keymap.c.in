@@ -73,10 +73,10 @@ $butterstick_cols("NUM",
                        "",     "",       "",       "",     "")
 
 $butterstick_rows("SYM",
-    "", "KC_GRV",   "KC_LBRC",  "", "",  "",             "", "", "",  "KC_RBRC",  "", "",
-    "", "KC_TILD", "KC_MINS",  "KC_QUOT",  "",  "",             "KC_BSLS",  "KC_EQL",   "", "", "", "",
-    "", "KC_EXLM", "", "", "", "",             "", "", "",  "", "", "",
-                                "",         "",          "",                     "",         "",         "")
+    "", "KC_GRV",   "KC_LBRC", "KC_LCBR", "KC_LPRN", "KC_LABK",             "KC_RABK", "KC_RPRN", "KC_RCBR", "KC_RBRC", "KC_QUES", "RCTL",
+    "", "KC_TILDE", "KC_MINS", "KC_QUOT", "KC_COLN", "KC_UNDS",             "KC_BSLS", "KC_EQL",  "KC_DQUO", "KC_PLUS", "KC_QUES", "RGUI",
+    "", "KC_EXLM",  "KC_AT",   "KC_HASH", "KC_DLR",  "KC_PERC",             "KC_PIPE", "KC_CIRC", "KC_AMPR", "KC_ASTR", "KC_QUES", "RALT",
+                                "",       "",        "",                     "",       "",        "")
 
 $butterstick_cols("SYM",
     "", "", "",     "",     "",           "",       "",     "",     "",     "", "",

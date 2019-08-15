@@ -3,24 +3,22 @@
 # Make sure you have dfu-programmer installed!
 #----------------------------------------------------------------------------
 
-SRC += matrix.c i2c_master.c
-
-NO_REPEAT				 = yes
-VERBOSE					 = yes
+NO_REPEAT		 = no
+VERBOSE			 = yes
 KEYBOARD_SHARED_EP       = yes
-CUSTOM_MATRIX			 = yes
-STENO_LAYERS			 = no
+CUSTOM_MATRIX		 = yes
+STENO_LAYERS		 = no
 
 #Firmware reduction options
 MOUSEKEY_ENABLE			 = no 		# 1500 bytes
-NO_TAPPING				 = no 	    # 2000 bytes
-NO_PRINT				 = yes
+NO_TAPPING			 = no 	    # 2000 bytes
+NO_PRINT			 = yes
 
 #Debug options
-CONSOLE_ENABLE			 = no
+CONSOLE_ENABLE		 = no
 DEBUG_MATRIX_SCAN_RATE   = no
-DEBUG_MATRIX			 = no
-ONLY_QWERTY				 = yes
+DEBUG_MATRIX		 = no
+ONLY_QWERTY		= yes
 
 # A bunch of stuff that you shouldn't touch unless you
 # know what you're doing.

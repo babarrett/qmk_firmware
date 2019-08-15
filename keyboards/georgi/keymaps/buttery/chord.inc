@@ -23,6 +23,88 @@ struct Chord {
     void (*function) (const struct Chord*);
 };
 
+bool handle_US_ANSI_shifted_keys(int16_t keycode, bool in) {
+    bool is_US_ANSI_shifted = true;
+    int16_t regular_keycode = KC_NO;
+    switch (keycode) {
+        case KC_TILDE:
+            regular_keycode = KC_GRAVE;
+            break;
+        case KC_EXCLAIM:
+            regular_keycode = KC_1;
+            break;
+        case KC_AT:
+            regular_keycode = KC_2;
+            break;
+        case KC_HASH:
+            regular_keycode = KC_3;
+            break;
+        case KC_DOLLAR:
+            regular_keycode = KC_4;
+            break;
+        case KC_PERCENT:
+            regular_keycode = KC_5;
+            break;
+        case KC_CIRCUMFLEX:
+            regular_keycode = KC_6;
+            break;
+        case KC_AMPERSAND:
+            regular_keycode = KC_7;
+            break;
+        case KC_ASTERISK:
+            regular_keycode = KC_8;
+            break;
+        case KC_LEFT_PAREN:
+            regular_keycode = KC_9;
+            break;
+        case KC_RIGHT_PAREN:
+            regular_keycode = KC_0;
+            break;
+        case KC_UNDERSCORE:
+            regular_keycode = KC_MINUS;
+            break;
+        case KC_PLUS:
+            regular_keycode = KC_EQUAL;
+            break;
+        case KC_LEFT_CURLY_BRACE:
+            regular_keycode = KC_LBRACKET;
+            break;
+        case KC_RIGHT_CURLY_BRACE:
+            regular_keycode = KC_RBRACKET;
+            break;
+        case KC_PIPE:
+            regular_keycode = KC_BSLASH;
+            break;
+        case KC_COLON:
+            regular_keycode = KC_SCOLON;
+            break;
+        case KC_DOUBLE_QUOTE:
+            regular_keycode = KC_QUOTE;
+            break;
+        case KC_LEFT_ANGLE_BRACKET:
+            regular_keycode = KC_COMMA;
+            break;
+        case KC_RIGHT_ANGLE_BRACKET:
+            regular_keycode = KC_DOT;
+            break;
+        case KC_QUESTION:
+            regular_keycode = KC_SLASH;
+            break;
+        default:
+            is_US_ANSI_shifted = false;
+    }
+    if (is_US_ANSI_shifted) {
+        if (in) {
+            register_code(KC_LSFT);
+            register_code(regular_keycode);
+        } else {
+            unregister_code(regular_keycode);
+            unregister_code(KC_LSFT);
+        }
+    }
+    return is_US_ANSI_shifted;
+}
+
 void key_in(int16_t keycode) {
     if (command_mode == 1 && command_ind < $(COMMAND_MAX_LENGTH)) {
         command_buffer[command_ind] = keycode;
@@ -34,13 +116,17 @@ void key_in(int16_t keycode) {
         dynamic_macro_buffer[dynamic_macro_ind] = keycode;
         dynamic_macro_ind++;
     } else {
-        register_code(keycode);
+        if (~handle_US_ANSI_shifted_keys(keycode, true)) {
+            register_code(keycode);
+        }
         send_keyboard_report();
     }
 }
 
 void key_out(int16_t keycode) {
-    unregister_code(keycode);
+    if (~handle_US_ANSI_shifted_keys(keycode, false)) {
+        unregister_code(keycode);
+    }
     send_keyboard_report();
 }
 

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "print.h"
 #include "debug.h"
 #include "util.h"
-#include "keymap_steno.h"
+//#include "keymap_steno.h"
 #include QMK_KEYBOARD_H
 #ifdef DEBUG_MATRIX_SCAN_RATE
 #include  "timer.h"
