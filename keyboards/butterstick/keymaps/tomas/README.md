@@ -70,7 +70,10 @@ enum internal_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_butter(
     TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0,
+    
+    FIRST_INTERNAL_KEYCODE = TOP1,
+    LAST_INTERNAL_KEYCODE = BOT0
   )
 };
 
@@ -87,7 +90,7 @@ To keep track which keys are pressed and have not been processed yet and to trac
 
 *If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
 
-Since I am completely skipping QMK's `process_record()` (`process_record_user()` always returns `true`), this was technically not necessary, but I wanted to keep my options open and to show that something funny will be happening when you press these keys.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes.
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
@@ -193,7 +196,7 @@ The complete list of strings that these macros can accept is:
 * Tap-holds
 
   * `KK(X, Y)`: Send code `X` on tap and code `Y` on hold.
-  * `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold.
+  * `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping).
   * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
 
 * `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
@@ -254,7 +257,7 @@ The complete list of strings that these macros can accept is:
 
 * `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace. In `keyboard.inc` is defined macro `DYNAMIC_MACRO_MAX_LENGTH` that defines the maximum length of the macro to be recorded. You can increase it for the price of RAM. The example above requires 4 units of length to be saved (Ctrl, A, next, Backspace).
 
-* `CLEAR`: clears keyboard, sets all chords to the default state and switches the pseudolayer to the default one. Basically the emergency stop button.
+* `CLEAR_KB`: clears keyboard, sets all chords to the default state and switches the pseudolayer to the default one. Basically the emergency stop button.
 
 * `RESET`: Go to the DFU flashing mode.
 

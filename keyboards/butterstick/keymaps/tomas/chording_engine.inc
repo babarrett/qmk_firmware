@@ -221,9 +221,7 @@ void deactivate_active_chords(uint16_t keycode) {
                 *chord->state = DEACTIVATED;
                 chord->function(chord);
                 
-                if (chord->function == one_shot_key || chord->function == one_shot_layer) {
-                    *chord->state = IN_ONE_SHOT;
-                } else {
+                if (*chord->state == DEACTIVATED) {
                     dance_timer = timer_read();
                     *chord->state = IDLE_IN_DANCE;
                     // kill_one_shots(chord);
