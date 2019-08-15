@@ -120,14 +120,17 @@ void key_in(int16_t keycode) {
             register_code(keycode);
         }
         send_keyboard_report();
+        a_key_went_through = true;
     }
 }
 
 void key_out(int16_t keycode) {
-    if (!handle_US_ANSI_shifted_keys(keycode, false)) {
-        unregister_code(keycode);
+    if (command_mode == 0) {
+        if (!handle_US_ANSI_shifted_keys(keycode, false)) {
+            unregister_code(keycode);
+        }
+        send_keyboard_report();
     }
-    send_keyboard_report();
 }
 
 void single_dance(const struct Chord* self) {
@@ -154,18 +157,27 @@ void key_layer_dance(const struct Chord* self) {
         case ACTIVATED:
             break;
         case DEACTIVATED:
-            register_code(self->value1);
-            send_keyboard_report();
+            key_in(self->value1);
             wait_ms(TAP_TIMEOUT);
-            unregister_code(self->value1);
+            key_out(self->value1);
             send_keyboard_report();
+
+            *self->state = IDLE;
             break;
         case FINISHED:
         case FINISHED_FROM_ACTIVE:
             current_pseudolayer = self->value2;
+            a_key_went_through = false;
             break;
         case RESTART:
-            current_pseudolayer = self->pseudolayer;
+            if (!a_key_went_through) {
+                key_in(self->value1);
+                wait_ms(TAP_TIMEOUT);
+                key_out(self->value1);
+                send_keyboard_report();
+            } else {
+                current_pseudolayer = self->pseudolayer;
+            }
             break;
         default:
             break;
@@ -177,20 +189,18 @@ void key_key_dance(const struct Chord* self) {
         case ACTIVATED:
             break;
         case DEACTIVATED:
-            register_code(self->value1);
-            send_keyboard_report();
+            key_in(self->value1);
             wait_ms(TAP_TIMEOUT);
-            unregister_code(self->value1);
-            send_keyboard_report();
+            key_out(self->value1);
+
+            *self->state = IDLE;
             break;
         case FINISHED:
         case FINISHED_FROM_ACTIVE:
-            register_code(self->value2);
-            send_keyboard_report();
+            key_in(self->value2);
             break;
         case RESTART:
-            unregister_code(self->value2);
-            send_keyboard_report();
+            key_out(self->value2);
             break;
         default:
             break;
@@ -233,6 +243,9 @@ void one_shot_key(const struct Chord* self) {
         case ACTIVATED:
             key_in(self->value1);
             break;
+        case DEACTIVATED:
+            *self->state = IN_ONE_SHOT;
+            break;
         case FINISHED_FROM_ACTIVE:
             key_in(self->value1);
             break;
@@ -247,6 +260,9 @@ void one_shot_layer(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
             current_pseudolayer = self->value1;
+            break;
+        case DEACTIVATED:
+            *self->state = IN_ONE_SHOT;
             break;
         case FINISHED_FROM_ACTIVE:
             current_pseudolayer = self->value1;

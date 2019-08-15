@@ -14,7 +14,7 @@ python3 expander3.py -f keymap.c.in > keymap.c
 
 Thanks to the provided macros, you should have to modify any file except `keymap.c.in`.
 
-## Features
+## Features Overview
 
 The chording engine completely sidesteps QMK's key event processing. Most of QMK's features are reimplemented. A list with short description follow, examples and further details follow later in this README.
 
@@ -28,7 +28,7 @@ To make it even stranger, all chords are tap-dance chords. They are relatively s
 
 ### Pseudolayers
 
-Only one QMK layer is used. Following the butterstick's default keymap's example, the chording engine is using pseudolayers. The main difference to QMK's layers is that only one pseudolayer can be active at each time (no `KC_TRANS`). Chords can be activated only if they are on the currently active pseudolayer. Chords that are currently active do not get deactivated if the pseudolayer changes and will deactivate if any of their keys gets depressed even no matter the current pseudolayer. Locked chords (see below) and chords on the `ALWAYS_ON` pseudolayer can be activated anytime.
+Only one QMK layer is used. Following the butterstick's default keymap's example, the chording engine is using pseudolayers. The main difference to QMK's layers is that only one pseudolayer can be active at each time (meaning you can not use `KC_TRANS`, I actually don't know what will happen). Chords can be activated only if they are on the currently active pseudolayer. Chords that are currently active do not get deactivated if the pseudolayer changes and will deactivate if any of their keys gets depressed even no matter the current pseudolayer. Locked chords (see below) and chords on the `ALWAYS_ON` pseudolayer can be activated anytime.
 
 ### Lock
 
@@ -58,7 +58,39 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 ### Keycodes
 
-I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0. To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits.  *If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
+I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0.
+
+```c
+enum internal_keycodes {
+    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
+};
+
+// No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [0] = LAYOUT_butter(
+    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0,
+    
+    FIRST_INTERNAL_KEYCODE = TOP1,
+    LAST_INTERNAL_KEYCODE = BOT0
+  )
+};
+
+```
+
+To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits. 
+
+```c
+#define H_TOP1 ((uint32_t) 1 << 0)
+#define H_TOP2 ((uint32_t) 1 << 1)
+#define H_TOP3 ((uint32_t) 1 << 2)
+...
+```
+
+*If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
+
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes.
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
@@ -96,7 +128,13 @@ void function_0(struct Chord* self) {
 const struct Chord chord_0 PROGMEM = {H_TOP1, QWERTY, &state_0, &counter_0, KC_Q, 0, function_0};
 ```
 
-All chords have to be added to `list_of_chord` array that gets regularly scanned and processed. 
+All chords have to be added to `list_of_chord` array that gets regularly scanned and processed. The function doesn't actually activate on all state changes, there are a few more like `IDLE` (nothing is currently happening to the chord) or `IN_ONE_SHOT` (the chord is one shot and is currently locked). Those are all necessary for internal use only. The ones you have to worry about are
+
+* `ACTIVATED`: Analogous to a key being pressed (this includes repeated presses for tap-dance)
+* `DEACTIVATED`: Analogous to a key being depressed (also can be repeated)
+* `FINISHED`: Happens if the chord got deactivated and then the dance timer expired.
+* `FINISHED_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
+* `RESTART`: The dance is done. Happens immediately after `FINISHED` or on chord deactivation from `FINISHED_FROM_ACTIVE`. Anything you have to do to get the chord into `IDLE` mode happens here.
 
 ### Macros
 
@@ -117,36 +155,113 @@ $butterstick_cols("QWERTY",
 
 The first macro defines single key chords and the logical middle row. The second one defines the logical columns (`TOP1 + TOP2 = KC_ESC`, `TOP9 + TOP0 + BOT9 + BOT0 = KC_ENTER` ).
 
-I *might* improve these to take in a single long string instead of having each key in a separate chord.
+I *might* improve these to take in a single long string instead of having each key in a separate chord. The arguments have to come in a string so they can be parsed. Not sure if I can work around that.
 
 You might notice that the macros try to do a few clever things:
 
-* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`. `,` will get replaced with `KC_COMMA`. This really works only for alphas, numbers and punctuation. `KC_ESC` still has to be fully spelled out.
+* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,`  will get replaced with `KC_COMMA`. This really works only for alphas, numbers and punctuation. `KC_ESC` still has to be fully spelled out. However, because of the order of preprocessors you can not use strings defined using `#define` in these strings. Pyexpander substitutions and macros will work:
+
+  ```c
+  $py(KEY1 = "KC_Q")
+  $butterstick_rows("QWERTY",
+      $(KEY1), "W", "E", "R", "T", "Y", "U", "I", "O", "P",
+      "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
+      "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+  ```
+
 * `MO()` and `DF()` macros work the same way for pseudolayers as they would for layers in pure QMK.
+
 * `O()` define a one shot key but it also supports pseudolayers!
+
 * `STR("...")` sends a string. Careful with quoting.
+
 * Special chords like Command mode have their own codes like `CMD`.
+
 * The empty strings `""` get ignored.
 
-These two macros take care of most chords, I need to manually add only chords with non-standard (from butterstick's point of view) keys like `$KC("QWERTY", "H_BOT1 + H_BOT0", "KC_SPACE")`. I also have a macro for ASETNIOP style layout but that one is much more WIP.
+These two macros take care of most chords, you need to manually add only chords with non-standard (from butterstick's point of view) keys like `$KC("QWERTY", "H_BOT1 + H_BOT0", "KC_SPACE")`. And that can be done with the `secret_chord` macro (see bellow). I also have a macro for ASETNIOP style layout but that one is much more WIP. Follow it's example to make any more complex chorded input macros.
 
-The complete list of strings that these two macros can accept is:
+The complete list of strings that these macros can accept is:
 
-* `KC_X`: Send code `X` just like a normal keyboard would (including repetition).
-* `STR("X")`: Send string "x" on each activation of the chord.
-* `MO(X)`: Temporary switch to pseudolayer `X`.
+* `KC_X`: Send code `KC_X` just like a normal keyboard. Often the parser will be able to deal even without the `KC_` at the beginning. Basic keycodes and US ANSI shifted keycodes are supported. Most quantum and advanced keycodes *do not*. I will be adding these as needed.
+
+* `STR("X")`: Send string "x" on each activation of the chord. Once again, watch out for quoting and escaping characters. If you want special characters (especially quotes) in your string, look up Python reference for string literals and experiment. Also, because of how the string gets parsed, it is not possible to use `(` in the string. 
+
+* `MO(X)`: Temporary switch to pseudolayer `X`. Because only one pseudolayer can be active at any moment, this works by switching back to the pseudolayer the chord lives on on deactivation. If you chain `MO()`s on multiple pseudolayers and deactivate them in a random order, you might end up stranded on a pseudolayer. I recommend adding `CLEAR` somewhere on `ALWAYS_ON` pseudolayer just in case.
+
 * `DF(X)`: Permanent switch to pseudolayer `X`.
+
 * `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) .
-* `KK(X,Y)`: Send code `X` on tap and code `Y` on hold.
-* `KL(X,Y)`: Send code `X` on tap and switch to layer `Y` on hold.
+
+* Tap-holds
+
+  * `KK(X, Y)`: Send code `X` on tap and code `Y` on hold.
+  * `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping).
+  * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
+
 * `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
+
 * `CMD`: The command mode. The number of keycodes that can be buffered is defined in `keyboard.inc` in `COMMAND_MAX_LENGTH` (works but needs cleanup).
-* `LEAD`: The leader key. The number of leader combos and their max length need to be defined in macros (works but needs cleanup).
-* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`.
+
+* `LEAD`: The leader key. The maximum length of the sequences needs to be defined in `keyboard.inc`. You can use the `add_leader_combo` macro to add sequences:
+
+  ```c
+  void fnc_L1(void) {
+      SEND(KC_LCTL);
+      SEND(KC_LALT);
+      SEND(KC_DEL);
+  }
+  $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", fnc_L1)
+  ```
+
+  This is the only instance the function called is not associated to a chord. That is why the function `fnc_L1` does not accept any inputs.
+
+* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. The only constraint is that the function has to follow the same syntax as in the previous example of adding a chord manually. The following example will register a macro that acts exactly like `KC_MEH` (the chording engine *should* support `KC_MEH`, this is just an example):
+
+  ```c
+  void fn_M1(const struct Chord* self) {
+      switch (*self->state) {
+          case ACTIVATED:
+              key_in(KC_LCTL);
+              key_in(KC_LSFT);
+              key_in(KC_LALT);
+              break;
+          case DEACTIVATED:
+              key_out(KC_LCTL);
+              key_out(KC_LSFT);
+              key_out(KC_LALT);
+              break;
+          case FINISHED:
+          case FINISHED_FROM_ACTIVE:
+              break;
+          case RESTART:
+              key_out(KC_LCTL);
+              key_out(KC_LSFT);
+              key_out(KC_LALT);
+              break;
+          default:
+              break;
+      }
+  }
+  $butterstick_rows("QWERTY",
+      "M(fnc_M1, 0, 0)", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
+      "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
+      "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+  ```
+
+  Since this feels like it would be the most common way to use this feature, I wrote a macro for this:
+
+* `MK(X1, X2, ...)`: Acts like `KC()` except it registers / unregisters all `X1`, `X2`, ... codes at the same time.
+
 * `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Just like the `butterstick_rows` and `butterstick_cols` macros, it will try to expand shortened keycodes. Advanced keycodes are not *yet* supported.
-* `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace.
-* `CLEAR`: clears keyboard, sets all chords to the default state and switches the pseudolayer to the default one. Basically "What are you doing?!? STOP!" button.
-* `RESET`: Go to DFU flashing mode.
+
+* `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace. In `keyboard.inc` is defined macro `DYNAMIC_MACRO_MAX_LENGTH` that defines the maximum length of the macro to be recorded. You can increase it for the price of RAM. The example above requires 4 units of length to be saved (Ctrl, A, next, Backspace).
+
+* `CLEAR_KB`: clears keyboard, sets all chords to the default state and switches the pseudolayer to the default one. Basically the emergency stop button.
+
+* `RESET`: Go to the DFU flashing mode.
+
+If the string has multiple elements, they have to be separated by a comma AND a space. I'll fix that soon.
 
 Macro `secret_chord` allows you to add a single chord while utilize the smart string parsing and defining the chord's keys visually. For example
 
@@ -174,9 +289,27 @@ $asetniop_layer("ASETNIOP",
 
 This macro can also parse strings like `butterstick_rows`.
 
+All these macros are defined in `macros.inc` and look something like this:
+
+```c
+$macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30)
+    $nonlocal(NUM_OF_CHORDS)
+    $add_key(PSEUDOLAYER, "H_TOP1", K1)
+...
+    $add_key(PSEUDOLAYER, "H_TOP0", K10)
+    $add_key(PSEUDOLAYER, "H_TOP1 + H_BOT1", K11)
+    $add_key(PSEUDOLAYER, "H_TOP2 + H_BOT2", K12)
+...
+    $add_key(PSEUDOLAYER, "H_BOT9", K29)
+    $add_key(PSEUDOLAYER, "H_BOT0", K30)
+$endmacro
+```
+
+On the input are all the actions (`K1` to `K30`) and each line runs the `$add_key` macro (parses the action string and adds a new chord). If you want the macro to create more chords, add more arguments and a new `$add_key` chord for each of them. The `secret_chord` macro uses variable `T1 ... T0` and `B1 ... B0` on the input. I am not sure if those names have to be unique.
+
 ### Leader Key
 
-To add a new sequence, use the macro `add_leader_combo`:
+To add a new sequence, in your `keymap.c.in` use the macro `add_leader_combo`:
 
 ```c
 void test(void) {
@@ -187,7 +320,7 @@ $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "test")
 
 
 
-Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter, pad with zeros. Currently the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
+Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter than the defined maximum, you have to pad it with zeros. Currently, the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
 
 ## Caveats
 

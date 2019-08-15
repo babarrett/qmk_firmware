@@ -80,6 +80,25 @@ void process_finished_dances(void) {
     }
 }
 
+void deactivate_active_taphold_chords(struct Chord* caller) {
+    if (caller->function == key_layer_dance || caller->function == key_key_dance) {
+        return;
+    }
+    
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
+        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
+        struct Chord chord_storage;
+        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
+        struct Chord* chord = &chord_storage;
+        
+        if (*chord->state == ACTIVATED && (chord->function == key_layer_dance || chord->function == key_key_dance)) {
+            *chord->state = DEACTIVATED;
+            chord->function(chord);
+            *chord->state = IDLE; // not necessary but let's keep it here for clarity
+        }
+    }
+}
+
 void process_ready_chords(void) {
     // find ready chords
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
@@ -156,7 +175,7 @@ void process_ready_chords(void) {
             silence_hash(chord->keycodes_hash, &keycodes_buffer);
             chord->function(chord);
             *chord->state = IDLE;
-            kill_one_shots(chord);
+            // kill_one_shots(chord);
         }
         
         if (*chord->state == READY || *chord->state == READY_IN_DANCE) {
@@ -170,6 +189,8 @@ void process_ready_chords(void) {
             silence_hash(chord->keycodes_hash, &keycodes_buffer);
             chord->function(chord);
             dance_timer = timer_read();
+            // kill_one_shots(chord);
+            deactivate_active_taphold_chords(chord);
             
             if (lock_next && lock_next == lock_next_prev_state) {
                 lock_next = false;
@@ -200,12 +221,10 @@ void deactivate_active_chords(uint16_t keycode) {
                 *chord->state = DEACTIVATED;
                 chord->function(chord);
                 
-                if (chord->function == one_shot_key || chord->function == one_shot_layer) {
-                    *chord->state = IN_ONE_SHOT;
-                } else {
+                if (*chord->state == DEACTIVATED) {
                     dance_timer = timer_read();
                     *chord->state = IDLE_IN_DANCE;
-                    kill_one_shots(chord);
+                    // kill_one_shots(chord);
                 }
                 break;
             case FINISHED_FROM_ACTIVE:
@@ -259,6 +278,10 @@ void process_leader(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode < FIRST_INTERNAL_KEYCODE || keycode > LAST_INTERNAL_KEYCODE) {
+        return true;
+    }
+    
     if (record->event.pressed) {
         sound_keycode(keycode, &keycodes_buffer);
     } else {

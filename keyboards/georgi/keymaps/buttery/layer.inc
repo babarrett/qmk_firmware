@@ -1,7 +1,10 @@
 enum internal_keycodes {
     TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6,             TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
     BOT1, BOT2, BOT3, BOT4, BOT5, BOT6,                          BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
-                      THU1, THU2, THU3,                          THU4, THU5, THU6
+                      THU1, THU2, THU3,                          THU4, THU5, THU6,
+
+    FIRST_INTERNAL_KEYCODE = TOP1,
+    LAST_INTERNAL_KEYCODE = THU6
 };
 
 // No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!

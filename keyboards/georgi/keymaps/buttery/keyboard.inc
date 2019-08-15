@@ -1,5 +1,5 @@
-#define CHORD_TIMEOUT 50
-#define DANCE_TIMEOUT 500
+#define CHORD_TIMEOUT 100
+#define DANCE_TIMEOUT 250
 $py(COMMAND_MAX_LENGTH = 5)
 #define LEADER_TIMEOUT 500
 $py(LEADER_MAX_LENGTH = 5)
@@ -36,3 +36,5 @@ uint16_t dynamic_macro_buffer[] = {
     $endfor
     };
 uint8_t dynamic_macro_ind;
+
+bool a_key_went_through = false;
