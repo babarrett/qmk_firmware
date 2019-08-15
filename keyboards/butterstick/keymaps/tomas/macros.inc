@@ -135,32 +135,412 @@ $endmacro
 
 $py(
 def expand_keycode_fnc(DEFINITION):
-    if DEFINITION == ",":
+    if DEFINITION == "A" or DEFINITION == "a":
+        return "KC_A"
+    elif DEFINITION == "B" or DEFINITION == "b":
+        return "KC_B"
+    elif DEFINITION == "C" or DEFINITION == "c":
+        return "KC_C"
+    elif DEFINITION == "D" or DEFINITION == "d":
+        return "KC_D"
+    elif DEFINITION == "E" or DEFINITION == "e":
+        return "KC_E"
+    elif DEFINITION == "F" or DEFINITION == "f":
+        return "KC_F"
+    elif DEFINITION == "G" or DEFINITION == "g":
+        return "KC_G"
+    elif DEFINITION == "H" or DEFINITION == "h":
+        return "KC_H"
+    elif DEFINITION == "I" or DEFINITION == "i":
+        return "KC_I"
+    elif DEFINITION == "J" or DEFINITION == "j":
+        return "KC_J"
+    elif DEFINITION == "K" or DEFINITION == "k":
+        return "KC_K"
+    elif DEFINITION == "L" or DEFINITION == "l":
+        return "KC_L"
+    elif DEFINITION == "M" or DEFINITION == "m":
+        return "KC_M"
+    elif DEFINITION == "N" or DEFINITION == "n":
+        return "KC_N"
+    elif DEFINITION == "O" or DEFINITION == "o":
+        return "KC_O"
+    elif DEFINITION == "P" or DEFINITION == "p":
+        return "KC_P"
+    elif DEFINITION == "Q" or DEFINITION == "q":
+        return "KC_Q"
+    elif DEFINITION == "R" or DEFINITION == "r":
+        return "KC_R"
+    elif DEFINITION == "S" or DEFINITION == "s":
+        return "KC_S"
+    elif DEFINITION == "T" or DEFINITION == "t":
+        return "KC_T"
+    elif DEFINITION == "U" or DEFINITION == "u":
+        return "KC_U"
+    elif DEFINITION == "V" or DEFINITION == "v":
+        return "KC_V"
+    elif DEFINITION == "W" or DEFINITION == "w":
+        return "KC_W"
+    elif DEFINITION == "X" or DEFINITION == "x":
+        return "KC_X"
+    elif DEFINITION == "Y" or DEFINITION == "y":
+        return "KC_Y"
+    elif DEFINITION == "Z" or DEFINITION == "z":
+        return "KC_Z"
+    elif DEFINITION == "1":
+        return "KC_1"
+    elif DEFINITION == "2":
+        return "KC_2"
+    elif DEFINITION == "3":
+        return "KC_3"
+    elif DEFINITION == "4":
+        return "KC_4"
+    elif DEFINITION == "5":
+        return "KC_5"
+    elif DEFINITION == "6":
+        return "KC_6"
+    elif DEFINITION == "7":
+        return "KC_7"
+    elif DEFINITION == "8":
+        return "KC_8"
+    elif DEFINITION == "9":
+        return "KC_9"
+    elif DEFINITION == "0":
+        return "KC_0"
+    elif DEFINITION == "F1":
+        return "KC_F1"
+    elif DEFINITION == "F2":
+        return "KC_F2"
+    elif DEFINITION == "F3":
+        return "KC_F3"
+    elif DEFINITION == "F4":
+        return "KC_F4"
+    elif DEFINITION == "F5":
+        return "KC_F5"
+    elif DEFINITION == "F6":
+        return "KC_F6"
+    elif DEFINITION == "F7":
+        return "KC_F7"
+    elif DEFINITION == "F8":
+        return "KC_F8"
+    elif DEFINITION == "F9":
+        return "KC_F9"
+    elif DEFINITION == "F10":
+        return "KC_F10"
+    elif DEFINITION == "F11":
+        return "KC_F11"
+    elif DEFINITION == "F12":
+        return "KC_F12"
+    elif DEFINITION == "F13":
+        return "KC_F13"
+    elif DEFINITION == "F14":
+        return "KC_F14"
+    elif DEFINITION == "F15":
+        return "KC_F15"
+    elif DEFINITION == "F16":
+        return "KC_F16"
+    elif DEFINITION == "F17":
+        return "KC_F17"
+    elif DEFINITION == "F18":
+        return "KC_F18"
+    elif DEFINITION == "F19":
+        return "KC_F19"
+    elif DEFINITION == "F20":
+        return "KC_F20"
+    elif DEFINITION == "F21":
+        return "KC_F21"
+    elif DEFINITION == "F22":
+        return "KC_F22"
+    elif DEFINITION == "F23":
+        return "KC_F23"
+    elif DEFINITION == "F24":
+        return "KC_F24"
+    elif DEFINITION == "ENTER" or DEFINITION == "ENT":
+        return "KC_ENTER"
+    elif DEFINITION == "ESCAPE" or DEFINITION == "ESC":
+        return "KC_ESCAPE"
+    elif DEFINITION == "BSPACE" or DEFINITION == "BSPC":
+        return "KC_BSPACE"
+    elif DEFINITION == "TAB":
+        return "KC_TAB"
+    elif DEFINITION == "SPACE" or DEFINITION == "SPC":
+        return "KC_SPACE"
+    elif DEFINITION == "NONUS_HASH" or DEFINITION == "NUHS":
+        return "KC_NONUS_HASH"
+    elif DEFINITION == "NONUS_BSLASH" or DEFINITION == "NUBS":
+        return "KC_NONUS_BSLASH"
+    elif DEFINITION == "," or DEFINITION == "COMMA" or DEFINITION == "COMM":
         return "KC_COMMA"
-    elif DEFINITION == ".":
+    elif DEFINITION == "." or DEFINITION == "DOT":
         return "KC_DOT"
-    elif DEFINITION == "/":
+    elif DEFINITION == "/" or DEFINITION == "SLASH" or DEFINITION == "SLSH":
         return "KC_SLASH"
-    elif DEFINITION == ";":
+    elif DEFINITION == ";" or DEFINITION == "SCOLON" or DEFINITION == "SCLN":
         return "KC_SCOLON"
-    elif DEFINITION == "'":
+    elif DEFINITION == "'" or DEFINITION == "QUOTE" or DEFINITION == "QUOT":
         return "KC_QUOTE"
-    elif DEFINITION == "[":
+    elif DEFINITION == "[" or DEFINITION == "LBRACKET" or DEFINITION == "LBRC":
         return "KC_LBRACKET"
-    elif DEFINITION == "]":
+    elif DEFINITION == "]" or DEFINITION == "RBRACKET" or DEFINITION == "RBRC":
         return "KC_RBRACKET"
-    elif DEFINITION == "\\":
+    elif DEFINITION == "\\" or DEFINITION == "BSLASH" or DEFINITION == "BSLS":
         return "KC_BSLASH"
-    elif DEFINITION == "-":
+    elif DEFINITION == "-" or DEFINITION == "MINUS" or DEFINITION == "MINS":
         return "KC_MINUS"
-    elif DEFINITION == "=":
+    elif DEFINITION == "=" or DEFINITION == "EQUAL" or DEFINITION == "EQL":
         return "KC_EQUAL"
-    elif DEFINITION == "`":
+    elif DEFINITION == "`" or DEFINITION == "GRAVE" or DEFINITION == "GRV" or DEFINITION == "ZKHK":
         return "KC_GRAVE"
-    elif DEFINITION[0:3] == "KC_":
-        return DEFINITION
+    elif DEFINITION == "CAPSLOCK" or DEFINITION == "CLCK" or DEFINITION == "CAPS":
+        return "KC_CAPSLOCK"
+    elif DEFINITION == "SCROLLOCK" or DEFINITION == "SLCK" or DEFINITION == "BRMD":
+        return "KC_SCROLLOCK"
+    elif DEFINITION == "NUMLOCK" or DEFINITION == "NLCK":
+        return "KC_CAPSLOCK"
+    elif DEFINITION == "LOCKING_CAPS" or DEFINITION == "LCAP":
+        return "KC_LOCKING_CAPS"
+    elif DEFINITION == "LOCKING_NUM" or DEFINITION == "LNUM":
+        return "KC_LOCKING_NUM"
+    elif DEFINITION == "LOCKING_SCROLL" or DEFINITION == "LSCR":
+        return "KC_LOCKING_SCROLL"
+    elif DEFINITION == "LCTRL" or DEFINITION == "LCTL":
+        return "KC_LCTRL"
+    elif DEFINITION == "LSHIFT" or DEFINITION == "LSFT":
+        return "KC_LSHIFT"
+    elif DEFINITION == "LALT":
+        return "KC_LALT"
+    elif DEFINITION == "LGUI" or DEFINITION == "LCMD" or DEFINITION == "LWIN":
+        return "KC_LGUI"
+    elif DEFINITION == "RCTRL" or DEFINITION == "RCTL":
+        return "KC_RCTRL"
+    elif DEFINITION == "RSHIFT" or DEFINITION == "RSFT":
+        return "KC_RSHIFT"
+    elif DEFINITION == "RALT":
+        return "KC_RALT"
+    elif DEFINITION == "RGUI" or DEFINITION == "RCMD" or DEFINITION == "RWIN":
+        return "KC_RGUI"
+    elif DEFINITION == "INT1" or DEFINITION == "RO":
+        return "KC_INT1"
+    elif DEFINITION == "INT2" or DEFINITION == "KANA":
+        return "KC_INT2"
+    elif DEFINITION == "INT3" or DEFINITION == "JYEN":
+        return "KC_INT3"
+    elif DEFINITION == "INT4" or DEFINITION == "HENK":
+        return "KC_INT4"
+    elif DEFINITION == "INT5" or DEFINITION == "MHEN":
+        return "KC_INT5"
+    elif DEFINITION == "INT6":
+        return "KC_INT6"
+    elif DEFINITION == "INT7":
+        return "KC_INT7"
+    elif DEFINITION == "INT8":
+        return "KC_INT8"
+    elif DEFINITION == "INT9":
+        return "KC_INT9"
+    elif DEFINITION == "LANG1" or DEFINITION == "HAEN":
+        return "KC_LANG1"
+    elif DEFINITION == "LANG2" or DEFINITION == "HANJ":
+        return "KC_LANG2"
+    elif DEFINITION == "LANG3":
+        return "KC_LANG3"
+    elif DEFINITION == "LANG4":
+        return "KC_LANG4"
+    elif DEFINITION == "LANG5":
+        return "KC_LANG5"
+    elif DEFINITION == "LANG6":
+        return "KC_LANG6"
+    elif DEFINITION == "LANG7":
+        return "KC_LANG7"
+    elif DEFINITION == "LANG8":
+        return "KC_LANG8"
+    elif DEFINITION == "LANG9":
+        return "KC_LANG9"
+    elif DEFINITION == "PSCREEN" or DEFINITION == "PSCR":
+        return "KC_PSCREEN"
+    elif DEFINITION == "PAUSE" or DEFINITION == "PAUS" or DEFINITION == "BRK" or DEFINITION == "BRMU":
+        return "KC_PAUSE"
+    elif DEFINITION == "INSERT" or DEFINITION == "INS":
+        return "KC_INSERT"
+    elif DEFINITION == "HOME":
+        return "KC_HOME"
+    elif DEFINITION == "PGUP":
+        return "KC_PGUP"
+    elif DEFINITION == "DELETE" or DEFINITION == "DEL":
+        return "KC_DELETE"
+    elif DEFINITION == "END":
+        return "KC_END"
+    elif DEFINITION == "PGDOWN" or DEFINITION == "PGDN":
+        return "KC_PGDOWN"
+    elif DEFINITION == "RIGHT" or DEFINITION == "RGHT":
+        return "KC_RIGHT"
+    elif DEFINITION == "LEFT":
+        return "KC_LEFT"
+    elif DEFINITION == "DOWN":
+        return "KC_DOWN"
+    elif DEFINITION == "UP":
+        return "KC_UP"
+    elif DEFINITION == "APPLICATION" or DEFINITION == "APP":
+        return "KC_APP"
+    elif DEFINITION == "POWER":
+        return "KC_POWER"
+    elif DEFINITION == "EXECUTE" or DEFINITION == "EXEC":
+        return "KC_EXEC"
+    elif DEFINITION == "HELP":
+        return "KC_HELP"
+    elif DEFINITION == "MENU":
+        return "KC_MENU"
+    elif DEFINITION == "SELECT" or DEFINITION == "SLCT":
+        return "KC_SELECT"
+    elif DEFINITION == "STOP":
+        return "KC_STOP"
+    elif DEFINITION == "AGAIN" or DEFINITION == "AGIN":
+        return "KC_AGAIN"
+    elif DEFINITION == "UNDO":
+        return "KC_UNDO"
+    elif DEFINITION == "CUT":
+        return "KC_CUT"
+    elif DEFINITION == "COPY":
+        return "KC_COPY"
+    elif DEFINITION == "PASTE" or DEFINITION == "PSTE":
+        return "KC_PASTE"
+    elif DEFINITION == "FIND":
+        return "KC_FIND"
+    elif DEFINITION == "MUTE":
+        return "KC__MUTE"
+    elif DEFINITION == "VOLUP":
+        return "KC__VOLUP"
+    elif DEFINITION == "VOLDOWN":
+        return "KC__VOLDOWN"
+    elif DEFINITION == "ALT_ERASE" or DEFINITION == "ERAS":
+        return "KC_ALT_ERASE"
+    elif DEFINITION == "SYSREQ":
+        return "KC_SYSREQ"
+    elif DEFINITION == "CANCEL":
+        return "KC_CANCEL"
+    elif DEFINITION == "CLEAR" or DEFINITION == "CLR":
+        return "KC_CLEAR"
+    elif DEFINITION == "PRIOR":
+        return "KC_PRIOR"
+    elif DEFINITION == "RETURN":
+        return "KC_RETURN"
+    elif DEFINITION == "SEPARATOR":
+        return "KC_SEPARATOR"
+    elif DEFINITION == "OUT":
+        return "KC_OUT"
+    elif DEFINITION == "OPER":
+        return "KC_OPER"
+    elif DEFINITION == "CLEAR_AGAIN":
+        return "KC_CLEAR_AGAIN"
+    elif DEFINITION == "CRSEL":
+        return "KC_CRSEL"
+    elif DEFINITION == "EXSEL":
+        return "KC_EXSEL"
+    elif DEFINITION == "SYSTEM_POWER" or DEFINITION == "PWR":
+        return "KC_PWR"
+    elif DEFINITION == "SYSTEM_SLEEP" or DEFINITION == "SLEP":
+        return "KC_SLEP"
+    elif DEFINITION == "SYSTEM_WAKE" or DEFINITION == "WAKE":
+        return "KC_WAKE"
+    elif DEFINITION == "AUDIO_MUTE" or DEFINITION == "MUTE":
+        return "KC_MUTE"
+    elif DEFINITION == "AUDIO_VOL_UP" or DEFINITION == "VOLU":
+        return "KC_VOLU"
+    elif DEFINITION == "AUDIO_VOL_DOWN" or DEFINITION == "VOLD":
+        return "KC_VOLD"
+    elif DEFINITION == "MEDIA_NEXT_TRACK" or DEFINITION == "MNXT":
+        return "KC_MNXT"
+    elif DEFINITION == "MEDIA_PREV_TRACK" or DEFINITION == "CPRV":
+        return "KC_MPRV"
+    elif DEFINITION == "MEDIA_STOP" or DEFINITION == "MSTP":
+        return "KC_MSTP"
+    elif DEFINITION == "MEDIA_PLAY_PAUSE" or DEFINITION == "MPLY":
+        return "KC_MPLY"
+    elif DEFINITION == "MEDIA_SELECT" or DEFINITION == "MSEL":
+        return "KC_MSEL"
+    elif DEFINITION == "MEDIA_EJECT" or DEFINITION == "EJCT":
+        return "KC_EJCT"
+    elif DEFINITION == "MAIL":
+        return "KC_MAIL"
+    elif DEFINITION == "CALCULATOR" or DEFINITION == "CALC":
+        return "KC_CALC"
+    elif DEFINITION == "MY_COMPUTER" or DEFINITION == "MYCM":
+        return "KC_MYCM"
+    elif DEFINITION == "WWW_SEATCH" or DEFINITION == "WSCH":
+        return "KC_WSCH"
+    elif DEFINITION == "WWW_HOME" or DEFINITION == "WHOM":
+        return "KC_WHOM"
+    elif DEFINITION == "WWW_BACK" or DEFINITION == "WBAK":
+        return "KC_WBAK"
+    elif DEFINITION == "WWW_FORWARD" or DEFINITION == "WFWD":
+        return "KC_WFWD"
+    elif DEFINITION == "WWW_STOP" or DEFINITION == "WSTP":
+        return "KC_WSTP"
+    elif DEFINITION == "WWW_REFRESH" or DEFINITION == "WREF":
+        return "KC_WREF"
+    elif DEFINITION == "WWW_FAVORITES" or DEFINITION == "WFAV":
+        return "KC_WFAV"
+    elif DEFINITION == "MEDIA_FAST_FORWARD" or DEFINITION == "MFFD":
+        return "KC_MFFD"
+    elif DEFINITION == "MEDIA_REWIND" or DEFINITION == "MRWD":
+        return "KC_MRWD"
+    elif DEFINITION == "BRIGHTNESS_UP" or DEFINITION == "BRIU":
+        return "KC_BRIU"
+    elif DEFINITION == "BRIGHTNESS_DOWN" or DEFINITION == "BRID":
+        return "KC_BRID"
+    elif DEFINITION == "KP_SLASH" or DEFINITION == "PSLS":
+        return "KC_PSLS"
+    elif DEFINITION == "KP_ASTERISK" or DEFINITION == "PAST":
+        return "KC_PAST"
+    elif DEFINITION == "KP_MINUS" or DEFINITION == "PMNS":
+        return "KC_PMNS"
+    elif DEFINITION == "KP_PLUS" or DEFINITION == "PPLS":
+        return "KC_PPLS"
+    elif DEFINITION == "KP_ENTER" or DEFINITION == "PENT":
+        return "KC_PENT"
+    elif DEFINITION == "KP_1" or DEFINITION == "P1":
+        return "KC_P1"
+    elif DEFINITION == "KP_2" or DEFINITION == "P2":
+        return "KC_P2"
+    elif DEFINITION == "KP_3" or DEFINITION == "P3":
+        return "KC_P3"
+    elif DEFINITION == "KP_4" or DEFINITION == "P4":
+        return "KC_P4"
+    elif DEFINITION == "KP_5" or DEFINITION == "P5":
+        return "KC_P5"
+    elif DEFINITION == "KP_6" or DEFINITION == "P6":
+        return "KC_P6"
+    elif DEFINITION == "KP_7" or DEFINITION == "P7":
+        return "KC_P7"
+    elif DEFINITION == "KP_8" or DEFINITION == "P8":
+        return "KC_P8"
+    elif DEFINITION == "KP_9" or DEFINITION == "P9":
+        return "KC_P9"
+    elif DEFINITION == "KP_0" or DEFINITION == "P0":
+        return "KC_P0"
+    elif DEFINITION == "KP_DOT" or DEFINITION == "PDOT":
+        return "KC_PDOT"
+    elif DEFINITION == "KP_EQUAL" or DEFINITION == "PEQL":
+        return "KC_PEQL"
+    elif DEFINITION == "KP_COMMA" or DEFINITION == "PCMM":
+        return "KC_PCMM"
+    elif DEFINITION == "MS_BTN1" or DEFINITION == "BTN1":
+        return "KC_MS_BTN1"
+    elif DEFINITION == "MS_BTN2" or DEFINITION == "BRN2":
+        return "KC_MS_BTN2"
+    elif DEFINITION == "MS_LEFT" or DEFINITION == "MS_L":
+        return "KC_MS_LEFT"
+    elif DEFINITION == "MS_DOWN" or DEFINITION == "MS_D":
+        return "KC_MS_DOWN"
+    elif DEFINITION == "MS_UP" or DEFINITION == "MS_U":
+        return "KC_MS_UP"
+    elif DEFINITION == "MS_RIGHT" or DEFINITION == "MS_R":
+        return "KC_MS_RIGHT"
+    elif DEFINITION == "MS_WH_UP" or DEFINITION == "WH_U":
+        return "KC_MS_WH_UP"
+    elif DEFINITION == "MS_WH_DOWN" or DEFINITION == "WH_D":
+        return "KC_MS_WH_DOWN"
     else:
-        return "KC_" + DEFINITION
+        return DEFINITION
 )
 
 $macro(MK, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
@@ -286,7 +666,7 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $DM_END(PSEUDOLAYER, KEYCODES_HASH)
             $elif(type == "DM_PLAY")
                 $DM_PLAY(PSEUDOLAYER, KEYCODES_HASH)
-            $elif(type == "CLEAR")
+            $elif(type == "CLEAR_KB")
                 $CLEAR(PSEUDOLAYER, KEYCODES_HASH)
             $elif(type == "RESET")
                 $RESET(PSEUDOLAYER, KEYCODES_HASH)
