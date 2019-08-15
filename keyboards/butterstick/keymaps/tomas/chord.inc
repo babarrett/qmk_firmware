@@ -116,7 +116,7 @@ void key_in(int16_t keycode) {
         dynamic_macro_buffer[dynamic_macro_ind] = keycode;
         dynamic_macro_ind++;
     } else {
-        if (~handle_US_ANSI_shifted_keys(keycode, true)) {
+        if (!handle_US_ANSI_shifted_keys(keycode, true)) {
             register_code(keycode);
         }
         send_keyboard_report();
