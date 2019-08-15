@@ -159,6 +159,8 @@ void key_layer_dance(const struct Chord* self) {
             wait_ms(TAP_TIMEOUT);
             unregister_code(self->value1);
             send_keyboard_report();
+            
+            *self->state = IDLE;
             break;
         case FINISHED:
         case FINISHED_FROM_ACTIVE:
@@ -182,6 +184,8 @@ void key_key_dance(const struct Chord* self) {
             wait_ms(TAP_TIMEOUT);
             unregister_code(self->value1);
             send_keyboard_report();
+            
+            *self->state = IDLE;
             break;
         case FINISHED:
         case FINISHED_FROM_ACTIVE:
