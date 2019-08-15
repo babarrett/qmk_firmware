@@ -3,7 +3,7 @@
 # Make sure you have dfu-programmer installed!
 #----------------------------------------------------------------------------
 
-NO_REPEAT		 = no
+NO_REPEAT		 = yes
 VERBOSE			 = yes
 KEYBOARD_SHARED_EP       = yes
 CUSTOM_MATRIX		 = yes

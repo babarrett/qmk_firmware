@@ -9,8 +9,8 @@ enum pseudolayers {
 };
 
 // Keyboard states and settings
-#define CHORD_TIMEOUT 100
-#define DANCE_TIMEOUT 250
+#define CHORD_TIMEOUT 50
+#define DANCE_TIMEOUT 500
 
 #define LEADER_TIMEOUT 500
 
@@ -272,7 +272,7 @@ void key_in(int16_t keycode) {
         dynamic_macro_buffer[dynamic_macro_ind] = keycode;
         dynamic_macro_ind++;
     } else {
-        if (handle_US_ANSI_shifted_keys(keycode, true)) {
+        if (!handle_US_ANSI_shifted_keys(keycode, true)) {
             register_code(keycode);
         }
         send_keyboard_report();
@@ -280,7 +280,7 @@ void key_in(int16_t keycode) {
 }
 
 void key_out(int16_t keycode) {
-    if (handle_US_ANSI_shifted_keys(keycode, false)) {
+    if (!handle_US_ANSI_shifted_keys(keycode, false)) {
         unregister_code(keycode);
     }
     send_keyboard_report();
