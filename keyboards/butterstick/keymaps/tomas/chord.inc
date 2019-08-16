@@ -140,6 +140,7 @@ void single_dance(const struct Chord* self) {
             break;
         case DEACTIVATED:
             key_out(self->value1);
+            *self->state = IDLE;
             break;
         case FINISHED:
         case FINISHED_FROM_ACTIVE:

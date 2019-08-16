@@ -34,10 +34,6 @@ bool are_hashed_keycodes_in_sound(uint32_t keycodes_hash, uint32_t sound) {
 }
 
 void kill_one_shots(struct Chord* caller) {
-    if (caller->function == one_shot_key) {
-        return;
-    }
-    
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
@@ -175,7 +171,6 @@ void process_ready_chords(void) {
             silence_hash(chord->keycodes_hash, &keycodes_buffer);
             chord->function(chord);
             *chord->state = IDLE;
-            // kill_one_shots(chord);
         }
         
         if (*chord->state == READY || *chord->state == READY_IN_DANCE) {
@@ -189,7 +184,7 @@ void process_ready_chords(void) {
             silence_hash(chord->keycodes_hash, &keycodes_buffer);
             chord->function(chord);
             dance_timer = timer_read();
-            // kill_one_shots(chord);
+            kill_one_shots(chord);
             deactivate_active_taphold_chords(chord);
             
             if (lock_next && lock_next == lock_next_prev_state) {
@@ -224,14 +219,18 @@ void deactivate_active_chords(uint16_t keycode) {
                 if (*chord->state == DEACTIVATED) {
                     dance_timer = timer_read();
                     *chord->state = IDLE_IN_DANCE;
-                    // kill_one_shots(chord);
+                }
+                if (*chord->state != IN_ONE_SHOT) {
+                    kill_one_shots(chord);
                 }
                 break;
             case FINISHED_FROM_ACTIVE:
                 *chord->state = RESTART;
                 chord->function(chord);
                 *chord->state = IDLE;
-                kill_one_shots(chord);
+                if (*chord->state != IN_ONE_SHOT) {
+                    kill_one_shots(chord);
+                }
                 break;
             default:
                 break;
