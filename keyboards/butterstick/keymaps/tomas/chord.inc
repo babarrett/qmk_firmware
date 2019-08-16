@@ -247,7 +247,6 @@ void one_shot_key(const struct Chord* self) {
             *self->state = IN_ONE_SHOT;
             break;
         case FINISHED_FROM_ACTIVE:
-            key_in(self->value1);
             break;
         case RESTART:
             key_out(self->value1);
@@ -265,7 +264,6 @@ void one_shot_layer(const struct Chord* self) {
             *self->state = IN_ONE_SHOT;
             break;
         case FINISHED_FROM_ACTIVE:
-            current_pseudolayer = self->value1;
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
