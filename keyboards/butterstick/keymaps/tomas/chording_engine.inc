@@ -22,8 +22,6 @@ bool are_hashed_keycodes_in_sound(uint32_t keycodes_hash, uint32_t sound) {
     return (keycodes_hash & sound) == keycodes_hash;
 }
 
-
-
 uint8_t keycode_to_index(uint16_t keycode) {
     return keycode - FIRST_INTERNAL_KEYCODE;
 }
@@ -165,7 +163,7 @@ void remove_subchords(void) {
     }
 }
 
-void new_fnc(void) {
+void process_ready_chords(void) {
     uint8_t first_keycode_index = 0;
     while (keycodes_buffer_array_min(&first_keycode_index)) {
         // find ready chords
@@ -249,11 +247,6 @@ void new_fnc(void) {
         // silence notes
         silence_keycode_hash_array(chord->keycodes_hash);
     }
-}
-
-
-void process_ready_chords(void) {
-    new_fnc();
 }
 
 void deactivate_active_chords(uint16_t keycode) {

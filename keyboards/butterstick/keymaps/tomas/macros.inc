@@ -347,8 +347,6 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $CLEAR(PSEUDOLAYER, KEYCODES_HASH)
             $elif(type == "RESET")
                 $RESET(PSEUDOLAYER, KEYCODES_HASH)
-            $elif(type == "RESET")
-                $KC(PSEUDOLAYER, KEYCODES_HASH, "RESET")
             $else
                 $py(code = expand_keycode_fnc(type))
                 $KC(PSEUDOLAYER, KEYCODES_HASH, code)
