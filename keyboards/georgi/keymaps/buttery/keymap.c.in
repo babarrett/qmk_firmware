@@ -5,7 +5,7 @@
 // the preprocessor code is written to be readable not to produce nice output
 
 enum pseudolayers {
-    ALWAYS_ON, QWERTY, NUM, SYM, MOVE
+    ALWAYS_ON, QWERTY, NUM, SYM, MOVE, MEDIA
 };
 
 // Keyboard states and settings
@@ -60,6 +60,11 @@ $butterstick_cols("QWERTY",
     "INS", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
                        "",     "MO(MOVE)",   "",       "TAB",  "")
 
+$secret_chord("QWERTY", "MO(MEDIA)",
+    "", "",  "",  "",  "",  "",        "", "", "", "", "", "",
+    "", "X", "X", "X", "X", "",        "", "", "", "", "", "",
+                  "",  "",  "",        "", "", "")
+
 $secret_chord("QWERTY", "MK(RCTRL, RALT)",
     "", "", "", "", "",  "",            "",  "",  "",  "", "", "",
     "", "", "", "", "",  "",            "X", "X", "X", "X", "", "",
@@ -105,10 +110,10 @@ $butterstick_cols("SYM",
                     "",     "",           "",       "",     "")
 
 $butterstick_rows("MOVE",
-    "",        "", "HOME", "UP",   "PGUP",  "",              "", "", "", "", "", "",
-    "INS",     "", "END",  "",     "PGDN",  "",              "", "", "", "", "", "",
-    "LSFT",    "", "LEFT", "DOWN", "RIGHT", "",              "", "", "", "", "", "RSFT",
-                           "",     "",      "",              "", "", "")
+    "",     "", "HOME", "UP",   "PGUP",  "",              "", "", "", "", "", "",
+    "INS",  "", "END",  "",     "PGDN",  "",              "", "", "", "", "", "",
+    "LSFT", "", "LEFT", "DOWN", "RIGHT", "",              "", "", "", "", "", "RSFT",
+                        "",     "",      "",              "", "", "")
 
 $butterstick_cols("MOVE",
     "", "", "",     "",     "",           "",       "",     "",     "",     "", "",
@@ -116,5 +121,10 @@ $butterstick_cols("MOVE",
     "", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
                     "",     "",           "",       "",     "")
 
+$butterstick_rows("MEDIA",
+    "", "", "", "", "", "",              "", "KC_MPRV", "KC_MPLY", "KC_MPLY", "KC_MNXT", "",
+    "", "", "", "", "", "",              "", "",        "",        "",        "KC_MUTE", "KC_VOLU",
+    "", "", "", "", "", "",              "", "",        "",        "",        "",        "KC_VOLD",
+                "", "", "",              "", "",        "")
 // Register all chords, load chording logic
 $include("chording_engine.inc")
