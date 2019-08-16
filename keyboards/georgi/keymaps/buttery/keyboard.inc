@@ -1,5 +1,5 @@
 #define CHORD_TIMEOUT 100
-#define DANCE_TIMEOUT 250
+#define DANCE_TIMEOUT 500
 $py(COMMAND_MAX_LENGTH = 5)
 #define LEADER_TIMEOUT 500
 $py(LEADER_MAX_LENGTH = 5)
@@ -8,9 +8,16 @@ $py(DYNAMIC_MACRO_MAX_LENGTH = 20)
 
 uint8_t current_pseudolayer = 1;
 bool lock_next = false;
-uint32_t keycodes_buffer = 0;
 uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
+
+// uint32_t keycodes_buffer = 0;
+
+#define NUM_OF_KEYS 30
+uint8_t keycodes_buffer_array[NUM_OF_KEYS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                              0, 0, 0, 0, 0, 0};
+uint8_t keycode_index = 0;
 
 uint8_t command_mode = 0;
 uint16_t command_buffer[] = {

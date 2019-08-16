@@ -10,7 +10,7 @@ enum pseudolayers {
 
 // Keyboard states and settings
 #define CHORD_TIMEOUT 100
-#define DANCE_TIMEOUT 250
+#define DANCE_TIMEOUT 500
 
 #define LEADER_TIMEOUT 500
 
@@ -18,9 +18,16 @@ enum pseudolayers {
 
 uint8_t current_pseudolayer = 1;
 bool lock_next = false;
-uint32_t keycodes_buffer = 0;
 uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
+
+// uint32_t keycodes_buffer = 0;
+
+#define NUM_OF_KEYS 30
+uint8_t keycodes_buffer_array[NUM_OF_KEYS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                              0, 0, 0, 0, 0, 0};
+uint8_t keycode_index = 0;
 
 uint8_t command_mode = 0;
 uint16_t command_buffer[] = {
@@ -323,7 +330,7 @@ void key_layer_dance(const struct Chord* self) {
             wait_ms(TAP_TIMEOUT);
             key_out(self->value1);
             send_keyboard_report();
-
+            
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -353,7 +360,7 @@ void key_key_dance(const struct Chord* self) {
             key_in(self->value1);
             wait_ms(TAP_TIMEOUT);
             key_out(self->value1);
-
+            
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -407,9 +414,6 @@ void one_shot_key(const struct Chord* self) {
         case DEACTIVATED:
             *self->state = IN_ONE_SHOT;
             break;
-        case FINISHED_FROM_ACTIVE:
-            key_in(self->value1);
-            break;
         case RESTART:
             key_out(self->value1);
         default:
@@ -424,9 +428,6 @@ void one_shot_layer(const struct Chord* self) {
             break;
         case DEACTIVATED:
             *self->state = IN_ONE_SHOT;
-            break;
-        case FINISHED_FROM_ACTIVE:
-            current_pseudolayer = self->value1;
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
@@ -1027,7 +1028,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_4 = IDLE;
-    const struct Chord chord_4 PROGMEM = {H_THU2 + H_THU5, ALWAYS_ON, &state_4, NULL, KC_ESCAPE, 0, single_dance};
+    const struct Chord chord_4 PROGMEM = {H_THU2 + H_THU5, ALWAYS_ON, &state_4, NULL, KC_ESC, 0, single_dance};
     
 
             
@@ -1258,7 +1259,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_16 = IDLE;
-    const struct Chord chord_16 PROGMEM = {H_TOP12, QWERTY, &state_16, NULL, KC_RCTRL, 0, single_dance};
+    const struct Chord chord_16 PROGMEM = {H_TOP12, QWERTY, &state_16, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -1277,7 +1278,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_17 = IDLE;
-    const struct Chord chord_17 PROGMEM = {H_TOP1 + H_BOT1, QWERTY, &state_17, NULL, KC_ESCAPE, 0, single_dance};
+    const struct Chord chord_17 PROGMEM = {H_TOP1 + H_BOT1, QWERTY, &state_17, NULL, KC_ESC, 0, single_dance};
     
 
             
@@ -1505,7 +1506,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_29 = IDLE;
-    const struct Chord chord_29 PROGMEM = {H_BOT1, QWERTY, &state_29, NULL, KC_LSHIFT, 0, single_dance};
+    const struct Chord chord_29 PROGMEM = {H_BOT1, QWERTY, &state_29, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -1714,7 +1715,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_40 = IDLE;
-    const struct Chord chord_40 PROGMEM = {H_BOT12, QWERTY, &state_40, NULL, KC_DELETE, 0, single_dance};
+    const struct Chord chord_40 PROGMEM = {H_BOT12, QWERTY, &state_40, NULL, KC_DEL, 0, single_dance};
     
 
             
@@ -1777,7 +1778,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_43 = IDLE;
-    const struct Chord chord_43 PROGMEM = {H_THU3, QWERTY, &state_43, NULL, KC_LSHIFT, 0, single_dance};
+    const struct Chord chord_43 PROGMEM = {H_THU3, QWERTY, &state_43, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -1996,7 +1997,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_47 = IDLE;
-    const struct Chord chord_47 PROGMEM = {H_BOT1 + H_BOT2, QWERTY, &state_47, NULL, KC_INSERT, 0, single_dance};
+    const struct Chord chord_47 PROGMEM = {H_BOT1 + H_BOT2, QWERTY, &state_47, NULL, KC_INS, 0, single_dance};
     
 
             
@@ -2059,7 +2060,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_50 = IDLE;
-    const struct Chord chord_50 PROGMEM = {H_BOT5 + H_BOT6, QWERTY, &state_50, NULL, KC_LCTRL, 0, single_dance};
+    const struct Chord chord_50 PROGMEM = {H_BOT5 + H_BOT6, QWERTY, &state_50, NULL, KC_LCTL, 0, single_dance};
     
 
             
@@ -2084,7 +2085,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_51 = IDLE;
-    const struct Chord chord_51 PROGMEM = {H_BOT7 + H_BOT8, QWERTY, &state_51, NULL, KC_RCTRL, 0, single_dance};
+    const struct Chord chord_51 PROGMEM = {H_BOT7 + H_BOT8, QWERTY, &state_51, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -2767,7 +2768,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_69 = IDLE;
-    const struct Chord chord_69 PROGMEM = {H_BOT1, NUM, &state_69, NULL, KC_LSHIFT, 0, single_dance};
+    const struct Chord chord_69 PROGMEM = {H_BOT1, NUM, &state_69, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -2976,7 +2977,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_80 = IDLE;
-    const struct Chord chord_80 PROGMEM = {H_BOT12, NUM, &state_80, NULL, KC_RSHIFT, 0, single_dance};
+    const struct Chord chord_80 PROGMEM = {H_BOT12, NUM, &state_80, NULL, KC_RSFT, 0, single_dance};
     
 
             
@@ -3227,7 +3228,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_84 = IDLE;
-    const struct Chord chord_84 PROGMEM = {H_BOT5 + H_BOT6, NUM, &state_84, NULL, KC_LCTRL, 0, single_dance};
+    const struct Chord chord_84 PROGMEM = {H_BOT5 + H_BOT6, NUM, &state_84, NULL, KC_LCTL, 0, single_dance};
     
 
             
@@ -3252,7 +3253,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_85 = IDLE;
-    const struct Chord chord_85 PROGMEM = {H_BOT7 + H_BOT8, NUM, &state_85, NULL, KC_RCTRL, 0, single_dance};
+    const struct Chord chord_85 PROGMEM = {H_BOT7 + H_BOT8, NUM, &state_85, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -3781,7 +3782,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_101 = IDLE;
-    const struct Chord chord_101 PROGMEM = {H_TOP12, SYM, &state_101, NULL, KC_RCTRL, 0, single_dance};
+    const struct Chord chord_101 PROGMEM = {H_TOP12, SYM, &state_101, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -4449,7 +4450,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_126 = IDLE;
-    const struct Chord chord_126 PROGMEM = {H_BOT5 + H_BOT6, SYM, &state_126, NULL, KC_LCTRL, 0, single_dance};
+    const struct Chord chord_126 PROGMEM = {H_BOT5 + H_BOT6, SYM, &state_126, NULL, KC_LCTL, 0, single_dance};
     
 
             
@@ -4474,7 +4475,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_127 = IDLE;
-    const struct Chord chord_127 PROGMEM = {H_BOT7 + H_BOT8, SYM, &state_127, NULL, KC_RCTRL, 0, single_dance};
+    const struct Chord chord_127 PROGMEM = {H_BOT7 + H_BOT8, SYM, &state_127, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -4685,7 +4686,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_133 = IDLE;
-    const struct Chord chord_133 PROGMEM = {H_TOP1 + H_BOT1, MOVE, &state_133, NULL, KC_INSERT, 0, single_dance};
+    const struct Chord chord_133 PROGMEM = {H_TOP1 + H_BOT1, MOVE, &state_133, NULL, KC_INS, 0, single_dance};
     
 
             
@@ -4735,7 +4736,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_135 = IDLE;
-    const struct Chord chord_135 PROGMEM = {H_TOP5 + H_BOT5, MOVE, &state_135, NULL, KC_PGDOWN, 0, single_dance};
+    const struct Chord chord_135 PROGMEM = {H_TOP5 + H_BOT5, MOVE, &state_135, NULL, KC_PGDN, 0, single_dance};
     
 
             
@@ -4796,7 +4797,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_136 = IDLE;
-    const struct Chord chord_136 PROGMEM = {H_BOT1, MOVE, &state_136, NULL, KC_LSHIFT, 0, single_dance};
+    const struct Chord chord_136 PROGMEM = {H_BOT1, MOVE, &state_136, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -4914,7 +4915,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_140 = IDLE;
-    const struct Chord chord_140 PROGMEM = {H_BOT12, MOVE, &state_140, NULL, KC_RSHIFT, 0, single_dance};
+    const struct Chord chord_140 PROGMEM = {H_BOT12, MOVE, &state_140, NULL, KC_RSFT, 0, single_dance};
     
 
             
@@ -5152,7 +5153,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_143 = IDLE;
-    const struct Chord chord_143 PROGMEM = {H_BOT5 + H_BOT6, MOVE, &state_143, NULL, KC_LCTRL, 0, single_dance};
+    const struct Chord chord_143 PROGMEM = {H_BOT5 + H_BOT6, MOVE, &state_143, NULL, KC_LCTL, 0, single_dance};
     
 
             
@@ -5177,7 +5178,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_144 = IDLE;
-    const struct Chord chord_144 PROGMEM = {H_BOT7 + H_BOT8, MOVE, &state_144, NULL, KC_RCTRL, 0, single_dance};
+    const struct Chord chord_144 PROGMEM = {H_BOT7 + H_BOT8, MOVE, &state_144, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -5931,32 +5932,55 @@ void (*leader_functions[]) (void) = {
 
 struct Chord* last_chord = NULL;
 
-void sound_keycode(uint16_t keycode, uint32_t* sound) {
-    uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
-    *sound |= hash;
-}
-void silence_keycode(uint16_t keycode, uint32_t* sound) {
-    uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
-    *sound ^= hash;
-}
-void silence_hash(uint32_t hash, uint32_t* sound) {
-    *sound ^= hash;
-}
 bool are_hashed_keycodes_in_sound(uint32_t keycodes_hash, uint32_t sound) {
     return (keycodes_hash & sound) == keycodes_hash;
 }
 
-void kill_one_shots(struct Chord* caller) {
+uint8_t keycode_to_index(uint16_t keycode) {
+    return keycode - FIRST_INTERNAL_KEYCODE;
+}
+
+void sound_keycode_array(uint16_t keycode) {
+    uint8_t index = keycode_to_index(keycode);
+    
+    keycode_index++;
+    keycodes_buffer_array[index] = keycode_index;
+}
+
+void silence_keycode_hash_array(uint32_t keycode_hash) {
+    for (int i = 0; i < NUM_OF_KEYS; i++) {
+        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
+        if (index_in_hash) {
+            uint8_t current_val = keycodes_buffer_array[i];
+            keycodes_buffer_array[i] = 0;
+            for (int j = 0; j < NUM_OF_KEYS; j++) {
+                if (keycodes_buffer_array[j] > current_val) {
+                    keycodes_buffer_array[j]--;
+                }
+            }
+            keycode_index--;
+        }
+    }
+}
+
+bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
+    for (int i = 0; i < NUM_OF_KEYS; i++) {
+        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
+        bool index_in_array = (bool) keycodes_buffer_array[i];
+        if (index_in_hash && !index_in_array) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void kill_one_shots(void) {
     for (int i = 0; i < 154; i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
-        
-        if (chord == caller) {
-            continue;
-        }
         
         if (*chord->state == IN_ONE_SHOT) {
             *chord->state = RESTART;
@@ -5984,7 +6008,6 @@ void process_finished_dances(void) {
             *chord->state = RESTART;
             chord->function(chord);
             *chord->state = IDLE;
-            kill_one_shots(chord);
         }
     }
 }
@@ -6008,38 +6031,19 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
     }
 }
 
-void process_ready_chords(void) {
-    // find ready chords
-    for (int i = 0; i < 154; i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
-        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
-        
-        if (!are_hashed_keycodes_in_sound(chord->keycodes_hash, keycodes_buffer)) {
-            continue;
-        }
-        
-        if (*chord->state == LOCKED) {
-            *chord->state = READY_LOCKED;
-            continue;
-        }
-        
-        if (!(chord->pseudolayer == current_pseudolayer || chord->pseudolayer == ALWAYS_ON)) {
-            continue;
-        }
-        
-        if (*chord->state == IDLE) {
-            *chord->state = READY;
-            continue;
-        }
-        
-        if (*chord->state == IDLE_IN_DANCE) {
-            *chord->state = READY_IN_DANCE;
+uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
+    for (int i = 0; i < NUM_OF_KEYS; i++) {
+        if (keycodes_buffer_array[i] == 1) {
+            if (first_keycode_index != NULL) {
+                *first_keycode_index = (uint8_t) i;
+            }
+            return 1;
         }
     }
-    
-    // remove subchords
+    return 0;
+}
+
+void remove_subchords(void) {
     for (int i = 0; i < 154; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -6071,42 +6075,91 @@ void process_ready_chords(void) {
             }
         }
     }
-    
-    // execute logic
-    for (int i = 0; i < 154; i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
-        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
-        
-        if (*chord->state == READY_LOCKED) {
-            *chord->state = RESTART;
-            silence_hash(chord->keycodes_hash, &keycodes_buffer);
-            chord->function(chord);
-            *chord->state = IDLE;
-        }
-        
-        if (*chord->state == READY || *chord->state == READY_IN_DANCE) {
-            if (last_chord && last_chord != chord) {
-                process_finished_dances();
+}
+
+void process_ready_chords(void) {
+    uint8_t first_keycode_index = 0;
+    while (keycodes_buffer_array_min(&first_keycode_index)) {
+        // find ready chords
+        for (int i = 0; i < 154; i++) {
+            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
+            struct Chord chord_storage;
+            memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
+            struct Chord* chord = &chord_storage;
+            
+            // if the chord does not contain the first keycode
+            bool contains_first_keycode = ((uint32_t) 1 << first_keycode_index) & chord->keycodes_hash;
+            if (!contains_first_keycode) {
+                continue;
             }
             
-            bool lock_next_prev_state = lock_next;
+            if (!are_hashed_keycodes_in_array(chord->keycodes_hash)){
+                continue;
+            }
             
-            *chord->state = ACTIVATED;
-            silence_hash(chord->keycodes_hash, &keycodes_buffer);
-            chord->function(chord);
-            dance_timer = timer_read();
-            kill_one_shots(chord);
-            deactivate_active_taphold_chords(chord);
+            if (*chord->state == LOCKED) {
+                *chord->state = READY_LOCKED;
+                continue;
+            }
             
-            if (lock_next && lock_next == lock_next_prev_state) {
-                lock_next = false;
-                *chord->state = FINISHED_FROM_ACTIVE;
+            if (!(chord->pseudolayer == current_pseudolayer || chord->pseudolayer == ALWAYS_ON)) {
+                continue;
+            }
+            
+            if (*chord->state == IDLE) {
+                *chord->state = READY;
+                continue;
+            }
+            
+            if (*chord->state == IDLE_IN_DANCE) {
+                *chord->state = READY_IN_DANCE;
+            }
+        }
+        
+        // remove subchords
+        remove_subchords();
+        
+        // execute logic
+        // this should be only one chord
+        struct Chord* chord = NULL;
+        for (int i = 0; i < 154; i++) {
+            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
+            struct Chord chord_storage;
+            memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
+            chord = &chord_storage;
+            
+            if (*chord->state == READY_LOCKED) {
+                *chord->state = RESTART;
                 chord->function(chord);
-                *chord->state = LOCKED;
+                *chord->state = IDLE;
+                break;
+            }
+            
+            if (*chord->state == READY || *chord->state == READY_IN_DANCE) {
+                if (last_chord && last_chord != chord) {
+                    process_finished_dances();
+                }
+                
+                bool lock_next_prev_state = lock_next;
+                
+                *chord->state = ACTIVATED;
+                chord->function(chord);
+                dance_timer = timer_read();
+                deactivate_active_taphold_chords(chord);
+                
+                if (lock_next && lock_next == lock_next_prev_state) {
+                    lock_next = false;
+                    *chord->state = FINISHED_FROM_ACTIVE;
+                    chord->function(chord);
+                    *chord->state = LOCKED;
+                }
+                break;
             }
         }
+        
+        
+        // silence notes
+        silence_keycode_hash_array(chord->keycodes_hash);
     }
 }
 
@@ -6134,20 +6187,20 @@ void deactivate_active_chords(uint16_t keycode) {
                     *chord->state = IDLE_IN_DANCE;
                 }
                 if (*chord->state != IN_ONE_SHOT) {
-                    kill_one_shots(chord);
+                    kill_one_shots();
                 }
                 break;
             case FINISHED_FROM_ACTIVE:
                 *chord->state = RESTART;
                 chord->function(chord);
                 *chord->state = IDLE;
-                if (*chord->state != IN_ONE_SHOT) {
-                    kill_one_shots(chord);
-                }
+                kill_one_shots();
                 break;
             default:
                 break;
         }
+        
+        break;
     }
     
 }
@@ -6195,7 +6248,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     
     if (record->event.pressed) {
-        sound_keycode(keycode, &keycodes_buffer);
+        sound_keycode_array(keycode);
     } else {
         process_ready_chords();
         deactivate_active_chords(keycode);
@@ -6210,7 +6263,8 @@ void matrix_scan_user(void) {
     bool chord_timer_expired = timer_elapsed(chord_timer) > CHORD_TIMEOUT;
     bool dance_timer_expired = timer_elapsed(dance_timer) > DANCE_TIMEOUT;
     bool leader_timer_expired = timer_elapsed(leader_timer) > LEADER_TIMEOUT;
-    if (chord_timer_expired && keycodes_buffer) {
+    
+    if (chord_timer_expired && keycodes_buffer_array_min(NULL)) {
         process_ready_chords();
     }
     if (dance_timer_expired) { // would love to have && in_dance but not sure how
