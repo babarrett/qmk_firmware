@@ -126,7 +126,7 @@ void key_in(int16_t keycode) {
 
 void key_out(int16_t keycode) {
     if (command_mode == 0) {
-        if (~handle_US_ANSI_shifted_keys(keycode, false)) {
+        if (!handle_US_ANSI_shifted_keys(keycode, false)) {
             unregister_code(keycode);
         }
         send_keyboard_report();
