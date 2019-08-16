@@ -7193,8 +7193,6 @@ void deactivate_active_chords(uint16_t keycode) {
             default:
                 break;
         }
-        
-        break;
     }
     
 }
