@@ -246,8 +246,6 @@ void one_shot_key(const struct Chord* self) {
         case DEACTIVATED:
             *self->state = IN_ONE_SHOT;
             break;
-        case FINISHED_FROM_ACTIVE:
-            break;
         case RESTART:
             key_out(self->value1);
         default:
@@ -262,8 +260,6 @@ void one_shot_layer(const struct Chord* self) {
             break;
         case DEACTIVATED:
             *self->state = IN_ONE_SHOT;
-            break;
-        case FINISHED_FROM_ACTIVE:
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
