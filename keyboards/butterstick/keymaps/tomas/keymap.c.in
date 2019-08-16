@@ -26,7 +26,7 @@ $butterstick_cols("ALWAYS_ON",
     "LOCK", "", "", "", "CMD", "", "", "", "",
     "", "", "", "", "", "", "", "", "")
 
-$secret_chord("ALWAYS_ON", "CLEAR",
+$secret_chord("ALWAYS_ON", "CLEAR_KB",
     "X", "X", "", "", "", "", "", "", "X", "X",
     "X", "X", "", "", "", "", "", "", "X", "X")
 
@@ -38,7 +38,7 @@ $butterstick_rows("QWERTY",
 $butterstick_cols("QWERTY",
     "ESC", "MO(MOV)", "TAB", "", "RGUI", "", "INS", "DEL", "BSPC",
     "", "", "", "", "", "", "", "", "ENTER",
-    "O(KC_LSFT)", "LCTL", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "RCTL", "RSFT")
+    "KL(SPACE, NUM)", "LCTL", "LALT", "MO(NUM)", "LGUI", "MO(NUM)", "RALT", "RCTL", "RSFT")
 
 $# $butterstick("QWERTY",
 $#     "Q", "ESC",  "W", "MO(MOV)", "E", "TAB",  "R", "",        "T", "RGUI", "Y", "",        "U", "INS",  "I", "DEL",  "O", "BSPC",  "P",

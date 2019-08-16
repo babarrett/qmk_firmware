@@ -28,7 +28,7 @@ $butterstick_cols("ALWAYS_ON",
     "", "", "", "", "",       "",       "", "", "", "", "",
                 "", "",       "",       "", "")
 
-$secret_chord("ALWAYS_ON", "CLEAR",
+$secret_chord("ALWAYS_ON", "CLEAR_KB",
     "X", "X", "", "", "", "",             "", "", "", "", "X", "X",
     "X", "X", "", "", "", "",             "", "", "", "", "X", "X",
                   "", "", "",             "", "", "")
