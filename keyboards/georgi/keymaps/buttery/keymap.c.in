@@ -28,7 +28,7 @@ $butterstick_cols("ALWAYS_ON",
     "", "", "", "", "",       "",       "", "", "", "", "",
                 "", "",       "",       "", "")
 
-$secret_chord("ALWAYS_ON", "CLEAR",
+$secret_chord("ALWAYS_ON", "CLEAR_KB",
     "X", "X", "", "", "", "",             "", "", "", "", "X", "X",
     "X", "X", "", "", "", "",             "", "", "", "", "X", "X",
                   "", "", "",             "", "", "")
@@ -60,6 +60,16 @@ $butterstick_cols("QWERTY",
     "INS", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
                        "",     "MO(MOVE)",   "",       "TAB",  "")
 
+$secret_chord("QWERTY", "MK(RCTRL, RALT)",
+    "", "", "", "", "",  "",            "",  "",  "",  "", "", "",
+    "", "", "", "", "",  "",            "X", "X", "X", "X", "", "",
+                "", "", "",             "",  "",  "")
+
+$secret_chord("QWERTY", "MK(LCTRL, LALT)",
+    "", "", "",  "",  "",   "",         "", "", "", "", "", "",
+    "", "", "X", "X", "X",  "X",        "", "", "", "", "", "",
+                 "",  "",  "",          "", "", "")
+
 $butterstick_rows("NUM",
     "",     "1",  "2",  "3",  "4",  "5",               "6",  "7",  "8",  "9",  "0",   "",
     "",     "",   "",   "",   "",   "",                "",   "",   "",   "",   "",    "",
@@ -71,6 +81,16 @@ $butterstick_cols("NUM",
     "", "",    "",     "",     "",       "",       "",     "",     "",     "",    "",
     "", "F11", "LALT", "LGUI", "LCTL",   "",       "RCTL", "RGUI", "RALT", "F12", "",
                        "",     "",       "",       "",     "")
+
+$secret_chord("NUM", "MK(RCTRL, RALT)",
+    "", "", "", "", "",  "",            "",  "",  "",  "", "", "",
+    "", "", "", "", "",  "",            "X", "X", "X", "X", "", "",
+                "", "", "",             "",  "",  "")
+
+$secret_chord("NUM", "MK(LCTRL, LALT)",
+    "", "", "",  "",  "",   "",         "", "", "", "", "", "",
+    "", "", "X", "X", "X",  "X",        "", "", "", "", "", "",
+                 "",  "",  "",          "", "", "")
 
 $butterstick_rows("SYM",
     "", "KC_GRV",   "KC_LBRC", "KC_LCBR", "KC_LPRN", "KC_LABK",             "KC_RABK", "KC_RPRN", "KC_RCBR", "KC_RBRC", "KC_QUES", "RCTL",
