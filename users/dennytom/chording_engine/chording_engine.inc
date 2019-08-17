@@ -34,12 +34,12 @@ void sound_keycode_array(uint16_t keycode) {
 }
 
 void silence_keycode_hash_array(uint32_t keycode_hash) {
-    for (int i = 0; i < NUM_OF_KEYS; i++) {
+    for (int i = 0; i < $(NUM_OF_KEYS); i++) {
         bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
         if (index_in_hash) {
             uint8_t current_val = keycodes_buffer_array[i];
             keycodes_buffer_array[i] = 0;
-            for (int j = 0; j < NUM_OF_KEYS; j++) {
+            for (int j = 0; j < $(NUM_OF_KEYS); j++) {
                 if (keycodes_buffer_array[j] > current_val) {
                     keycodes_buffer_array[j]--;
                 }
@@ -50,7 +50,7 @@ void silence_keycode_hash_array(uint32_t keycode_hash) {
 }
 
 bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
-    for (int i = 0; i < NUM_OF_KEYS; i++) {
+    for (int i = 0; i < $(NUM_OF_KEYS); i++) {
         bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
         bool index_in_array = (bool) keycodes_buffer_array[i];
         if (index_in_hash && !index_in_array) {
@@ -118,7 +118,7 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
 }
 
 uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
-    for (int i = 0; i < NUM_OF_KEYS; i++) {
+    for (int i = 0; i < $(NUM_OF_KEYS); i++) {
         if (keycodes_buffer_array[i] == 1) {
             if (first_keycode_index != NULL) {
                 *first_keycode_index = (uint8_t) i;

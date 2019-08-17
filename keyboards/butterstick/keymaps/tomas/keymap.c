@@ -8,7 +8,10 @@ enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
 };
 
+// Macros to simplify chord definitions
+
 // Keyboard states and settings
+
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 500
 
@@ -16,16 +19,97 @@ enum pseudolayers {
 
 #define TAP_TIMEOUT 50
 
+enum internal_keycodes {
+    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0,
+    
+    FIRST_INTERNAL_KEYCODE = TOP1,
+    LAST_INTERNAL_KEYCODE = BOT0
+};
+
+// No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [0] = LAYOUT_butter(
+    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
+  )
+};
+
+// "Don't fuck with this, thanks." -- germ
+// Sorry, it has been fucked with.
+size_t keymapsCount = 1;
+
+// Bit masks for hashing
+#define H_TOP1 ((uint32_t) 1 << 0)
+#define H_TOP2 ((uint32_t) 1 << 1)
+#define H_TOP3 ((uint32_t) 1 << 2)
+#define H_TOP4 ((uint32_t) 1 << 3)
+#define H_TOP5 ((uint32_t) 1 << 4)
+#define H_TOP6 ((uint32_t) 1 << 5)
+#define H_TOP7 ((uint32_t) 1 << 6)
+#define H_TOP8 ((uint32_t) 1 << 7)
+#define H_TOP9 ((uint32_t) 1 << 8)
+#define H_TOP0 ((uint32_t) 1 << 9)
+#define H_BOT1 ((uint32_t) 1 << 10)
+#define H_BOT2 ((uint32_t) 1 << 11)
+#define H_BOT3 ((uint32_t) 1 << 12)
+#define H_BOT4 ((uint32_t) 1 << 13)
+#define H_BOT5 ((uint32_t) 1 << 14)
+#define H_BOT6 ((uint32_t) 1 << 15)
+#define H_BOT7 ((uint32_t) 1 << 16)
+#define H_BOT8 ((uint32_t) 1 << 17)
+#define H_BOT9 ((uint32_t) 1 << 18)
+#define H_BOT0 ((uint32_t) 1 << 19)
+
+// The chord structure and chord functions (send key, switch pseudolayer, ...)
 uint8_t current_pseudolayer = 1;
 bool lock_next = false;
 uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
 
-// uint32_t keycodes_buffer = 0;
-
-#define NUM_OF_KEYS 20
-uint8_t keycodes_buffer_array[NUM_OF_KEYS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint8_t keycodes_buffer_array[20] = {
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+        0,
+    
+    };
 uint8_t keycode_index = 0;
 
 uint8_t command_mode = 0;
@@ -109,50 +193,6 @@ uint8_t dynamic_macro_ind;
 
 bool a_key_went_through = false;
 
-// Definitions of internal keycodes and the actual QMK layer
-enum internal_keycodes {
-    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0,
-    
-    FIRST_INTERNAL_KEYCODE = TOP1,
-    LAST_INTERNAL_KEYCODE = BOT0
-};
-
-// No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [0] = LAYOUT_butter(
-    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
-  )
-};
-
-// "Don't fuck with this, thanks." -- germ
-// Sorry, it has been fucked with.
-size_t keymapsCount = 1;
-
-// Bit masks for hashing
-#define H_TOP1 ((uint32_t) 1 << 0)
-#define H_TOP2 ((uint32_t) 1 << 1)
-#define H_TOP3 ((uint32_t) 1 << 2)
-#define H_TOP4 ((uint32_t) 1 << 3)
-#define H_TOP5 ((uint32_t) 1 << 4)
-#define H_TOP6 ((uint32_t) 1 << 5)
-#define H_TOP7 ((uint32_t) 1 << 6)
-#define H_TOP8 ((uint32_t) 1 << 7)
-#define H_TOP9 ((uint32_t) 1 << 8)
-#define H_TOP0 ((uint32_t) 1 << 9)
-#define H_BOT1 ((uint32_t) 1 << 10)
-#define H_BOT2 ((uint32_t) 1 << 11)
-#define H_BOT3 ((uint32_t) 1 << 12)
-#define H_BOT4 ((uint32_t) 1 << 13)
-#define H_BOT5 ((uint32_t) 1 << 14)
-#define H_BOT6 ((uint32_t) 1 << 15)
-#define H_BOT7 ((uint32_t) 1 << 16)
-#define H_BOT8 ((uint32_t) 1 << 17)
-#define H_BOT9 ((uint32_t) 1 << 18)
-#define H_BOT0 ((uint32_t) 1 << 19)
-
-// The chord structure and chord functions (send key, switch pseudolayer, ...)
 enum chord_states {
     IDLE,
     READY,
@@ -510,7 +550,16 @@ void reset(const struct Chord* self) {
     }
 }
 
-// Macros to simplify chord definitions
+/*
+void send_to_qmk(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        keyevent_t event = {key, pressed, (timer_read() | 1) };
+        process_record_quantum
+    }
+    if (*self->state == DEACTIVATED) {
+    }
+}
+*/
 
 // Add all chords
 
@@ -6942,12 +6991,12 @@ void sound_keycode_array(uint16_t keycode) {
 }
 
 void silence_keycode_hash_array(uint32_t keycode_hash) {
-    for (int i = 0; i < NUM_OF_KEYS; i++) {
+    for (int i = 0; i < 20; i++) {
         bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
         if (index_in_hash) {
             uint8_t current_val = keycodes_buffer_array[i];
             keycodes_buffer_array[i] = 0;
-            for (int j = 0; j < NUM_OF_KEYS; j++) {
+            for (int j = 0; j < 20; j++) {
                 if (keycodes_buffer_array[j] > current_val) {
                     keycodes_buffer_array[j]--;
                 }
@@ -6958,7 +7007,7 @@ void silence_keycode_hash_array(uint32_t keycode_hash) {
 }
 
 bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
-    for (int i = 0; i < NUM_OF_KEYS; i++) {
+    for (int i = 0; i < 20; i++) {
         bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
         bool index_in_array = (bool) keycodes_buffer_array[i];
         if (index_in_hash && !index_in_array) {
@@ -7026,7 +7075,7 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
 }
 
 uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
-    for (int i = 0; i < NUM_OF_KEYS; i++) {
+    for (int i = 0; i < 20; i++) {
         if (keycodes_buffer_array[i] == 1) {
             if (first_keycode_index != NULL) {
                 *first_keycode_index = (uint8_t) i;

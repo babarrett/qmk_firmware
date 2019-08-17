@@ -1,3 +1,42 @@
+uint8_t current_pseudolayer = 1;
+bool lock_next = false;
+uint16_t chord_timer = 0;
+uint16_t dance_timer = 0;
+
+uint8_t keycodes_buffer_array[$(NUM_OF_KEYS)] = {
+    $for(i in range(0, NUM_OF_KEYS))
+        0,
+    $endfor
+    };
+uint8_t keycode_index = 0;
+
+uint8_t command_mode = 0;
+uint16_t command_buffer[] = {
+    $for(i in range(0, COMMAND_MAX_LENGTH))
+        0,
+    $endfor
+    };
+uint8_t command_ind = 0;
+
+bool in_leader_mode = false;
+uint16_t leader_buffer[] = {
+    $for(i in range(0, LEADER_MAX_LENGTH))
+        0,
+    $endfor
+    };
+uint8_t leader_ind = 0;
+uint16_t leader_timer = 0;
+
+bool dynamic_macro_mode = false;
+uint16_t dynamic_macro_buffer[] = {
+    $for(i in range(0, DYNAMIC_MACRO_MAX_LENGTH))
+        0,
+    $endfor
+    };
+uint8_t dynamic_macro_ind;
+
+bool a_key_went_through = false;
+
 enum chord_states {
     IDLE,
     READY,
@@ -354,3 +393,14 @@ void reset(const struct Chord* self) {
         reset_keyboard_kb();
     }
 }
+
+/*
+void send_to_qmk(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        keyevent_t event = {key, pressed, (timer_read() | 1) };
+        process_record_quantum
+    }
+    if (*self->state == DEACTIVATED) {
+    }
+}
+*/

@@ -4,21 +4,20 @@
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
+$py(engine_path = "../../../../users/dennytom/chording_engine/")
+
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
 };
 
+// Macros to simplify chord definitions
+$include(engine_path + "macros.inc")
+
 // Keyboard states and settings
 $include("keyboard.inc")
 
-// Definitions of internal keycodes and the actual QMK layer
-$include("layer.inc")
-
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
-$include("chord.inc")
-
-// Macros to simplify chord definitions
-$include("macros.inc")
+$include(engine_path + "chord.inc")
 
 // Add all chords
 $butterstick_cols("ALWAYS_ON",
@@ -158,4 +157,4 @@ $butterstick_cols("ASETNIOP_FN",
     "", "", "", "", "",     "", "", "", "")
 
 // Register all chords, load chording logic
-$include("chording_engine.inc")
+$include(engine_path + "chording_engine.inc")
