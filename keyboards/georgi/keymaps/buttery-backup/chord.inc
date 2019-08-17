@@ -140,6 +140,7 @@ void single_dance(const struct Chord* self) {
             break;
         case DEACTIVATED:
             key_out(self->value1);
+            *self->state = IDLE;
             break;
         case FINISHED:
         case FINISHED_FROM_ACTIVE:
@@ -161,7 +162,7 @@ void key_layer_dance(const struct Chord* self) {
             wait_ms(TAP_TIMEOUT);
             key_out(self->value1);
             send_keyboard_report();
-
+            
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -175,9 +176,8 @@ void key_layer_dance(const struct Chord* self) {
                 wait_ms(TAP_TIMEOUT);
                 key_out(self->value1);
                 send_keyboard_report();
-            } else {
-                current_pseudolayer = self->pseudolayer;
             }
+            current_pseudolayer = self->pseudolayer;
             break;
         default:
             break;
@@ -192,7 +192,7 @@ void key_key_dance(const struct Chord* self) {
             key_in(self->value1);
             wait_ms(TAP_TIMEOUT);
             key_out(self->value1);
-
+            
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -246,9 +246,6 @@ void one_shot_key(const struct Chord* self) {
         case DEACTIVATED:
             *self->state = IN_ONE_SHOT;
             break;
-        case FINISHED_FROM_ACTIVE:
-            key_in(self->value1);
-            break;
         case RESTART:
             key_out(self->value1);
         default:
@@ -263,9 +260,6 @@ void one_shot_layer(const struct Chord* self) {
             break;
         case DEACTIVATED:
             *self->state = IN_ONE_SHOT;
-            break;
-        case FINISHED_FROM_ACTIVE:
-            current_pseudolayer = self->value1;
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
