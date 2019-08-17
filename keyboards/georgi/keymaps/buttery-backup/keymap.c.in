@@ -4,20 +4,21 @@
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
-$py(engine_path = "../../../../users/dennytom/chording_engine/")
-
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, SYM, MOVE, MEDIA
 };
 
-// Macros to simplify chord definitions
-$include(engine_path + "macros.inc")
-
 // Keyboard states and settings
 $include("keyboard.inc")
 
+// Definitions of internal keycodes and the actual QMK layer
+$include("layer.inc")
+
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
-$include(engine_path + "chord.inc")
+$include("chord.inc")
+
+// Macros to simplify chord definitions
+$include("macros.inc")
 
 // Add all chords
 
@@ -136,4 +137,4 @@ $butterstick_rows("MEDIA",
     "", "", "", "", "", "",              "", "",        "",        "",        "",        "KC_VOLD",
                 "", "", "",              "", "",        "")
 // Register all chords, load chording logic
-$include(engine_path + "chording_engine.inc")
+$include("chording_engine.inc")
