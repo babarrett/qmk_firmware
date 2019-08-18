@@ -18,7 +18,7 @@ void (*leader_functions[]) (void) = {
 
 struct Chord* last_chord = NULL;
 
-bool are_hashed_keycodes_in_sound(uint32_t keycodes_hash, uint32_t sound) {
+bool are_hashed_keycodes_in_sound($(type) keycodes_hash, $(type) sound) {
     return (keycodes_hash & sound) == keycodes_hash;
 }
 
@@ -33,9 +33,9 @@ void sound_keycode_array(uint16_t keycode) {
     keycodes_buffer_array[index] = keycode_index;
 }
 
-void silence_keycode_hash_array(uint32_t keycode_hash) {
+void silence_keycode_hash_array($(type) keycode_hash) {
     for (int i = 0; i < $(NUM_OF_KEYS); i++) {
-        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
+        bool index_in_hash = (($(type)) 1 << i) & keycode_hash;
         if (index_in_hash) {
             uint8_t current_val = keycodes_buffer_array[i];
             keycodes_buffer_array[i] = 0;
@@ -49,9 +49,9 @@ void silence_keycode_hash_array(uint32_t keycode_hash) {
     }
 }
 
-bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
+bool are_hashed_keycodes_in_array($(type) keycode_hash) {
     for (int i = 0; i < $(NUM_OF_KEYS); i++) {
-        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
+        bool index_in_hash = (($(type)) 1 << i) & keycode_hash;
         bool index_in_array = (bool) keycodes_buffer_array[i];
         if (index_in_hash && !index_in_array) {
             return false;
@@ -250,7 +250,7 @@ void process_ready_chords(void) {
 }
 
 void deactivate_active_chords(uint16_t keycode) {
-    uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
+    uint32_t hash = ($(type))1 << (keycode - SAFE_RANGE);
     bool broken;
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
