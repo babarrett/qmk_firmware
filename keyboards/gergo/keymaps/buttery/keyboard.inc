@@ -11,7 +11,7 @@ $include(engine_path + "keyboard_macros.inc")
 
 $internal_keycodes("TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10, TOP11, TOP12, MID1, MID2, MID3, MID4, MID5, MID6, MID7, MID8, MID9, MID10, MID11, MID12, MID13, MID14, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, THU1, THU6, BOT8, BOT9, BOT10, BOT11, BOT12, BOT13, BOT14, THU2, THU3, THU4, THU5, THU7, THU8, THU9, THU10")
 
-$macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38, K39, K40, K41, K42)
+$macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38, K39, K40, K41, K42, K43, K44, K45, K46, K47, K48, K49, K50, K51, K52, K53, K54, K55, K56, K57, K58, K59, K60, K61, K62, K63, K64, K65, K66, K67, K68, K69, K70, K71, K72, K73, K74, K75, K76)
     $nonlocal(NUM_OF_CHORDS)
     $add_key(PSEUDOLAYER, "H_TOP1", K1)
     $add_key(PSEUDOLAYER, "H_TOP2", K2)
@@ -99,7 +99,7 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     
 $endmacro
 
-$macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38)
+$macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38, K39, K40, K41, K42, K43, K44, K45, K46, K47, K48, K49, K50, K51, K52, K53, K54, K55, K56, K57, K58, K59, K60)
     $nonlocal(NUM_OF_CHORDS)
     $add_key(PSEUDOLAYER, "H_TOP1 + H_TOP2", K1)
     $add_key(PSEUDOLAYER, "H_TOP2 + H_TOP3", K2)
@@ -112,36 +112,63 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_TOP9 + H_TOP10", K9)
     $add_key(PSEUDOLAYER, "H_TOP10 + H_TOP11", K10)
     $add_key(PSEUDOLAYER, "H_TOP11 + H_TOP12", K11)
-    $add_key(PSEUDOLAYER, "H_TOP1 + H_BOT1 + H_TOP2 + H_BOT2", K12)
-    $add_key(PSEUDOLAYER, "H_TOP2 + H_BOT2 + H_TOP3 + H_BOT3", K13)
-    $add_key(PSEUDOLAYER, "H_TOP3 + H_BOT3 + H_TOP4 + H_BOT4", K14)
-    $add_key(PSEUDOLAYER, "H_TOP4 + H_BOT4 + H_TOP5 + H_BOT5", K15)
-    $add_key(PSEUDOLAYER, "H_TOP5 + H_BOT5 + H_TOP6 + H_BOT6", K16)
-    $add_key(PSEUDOLAYER, "H_TOP6 + H_BOT6 + H_TOP7 + H_BOT7", K17)
-    $add_key(PSEUDOLAYER, "H_TOP7 + H_BOT7 + H_TOP8 + H_BOT8", K18)
-    $add_key(PSEUDOLAYER, "H_TOP8 + H_BOT8 + H_TOP9 + H_BOT9", K19)
-    $add_key(PSEUDOLAYER, "H_TOP9 + H_BOT9 + H_TOP10 + H_BOT10", K20)
-    $add_key(PSEUDOLAYER, "H_TOP10 + H_BOT10 + H_TOP11 + H_BOT11", K21)
-    $add_key(PSEUDOLAYER, "H_TOP11 + H_BOT11 + H_TOP12 + H_BOT12", K22)
-    $add_key(PSEUDOLAYER, "H_BOT1 + H_BOT2", K23)
-    $add_key(PSEUDOLAYER, "H_BOT2 + H_BOT3", K24)
-    $add_key(PSEUDOLAYER, "H_BOT3 + H_BOT4", K25)
-    $add_key(PSEUDOLAYER, "H_BOT4 + H_BOT5", K26)
-    $add_key(PSEUDOLAYER, "H_BOT5 + H_BOT6", K27)
-    $add_key(PSEUDOLAYER, "H_BOT6 + H_BOT7", K28)
-    $add_key(PSEUDOLAYER, "H_BOT7 + H_BOT8", K29)
-    $add_key(PSEUDOLAYER, "H_BOT8 + H_BOT9", K30)
-    $add_key(PSEUDOLAYER, "H_BOT9 + H_BOT10", K31)
-    $add_key(PSEUDOLAYER, "H_BOT10 + H_BOT11", K32)
-    $add_key(PSEUDOLAYER, "H_BOT11 + H_BOT12", K33)
-    $add_key(PSEUDOLAYER, "H_THU1 + H_THU2", K34)
-    $add_key(PSEUDOLAYER, "H_THU2 + H_THU3", K35)
-    $add_key(PSEUDOLAYER, "H_THU3 + H_THU4", K36)
-    $add_key(PSEUDOLAYER, "H_THU4 + H_THU5", K37)
-    $add_key(PSEUDOLAYER, "H_THU5 + H_THU6", K38)
+    
+    $add_key(PSEUDOLAYER, "H_TOP1 + H_MID1 + H_TOP2 + H_MID2", K12)
+    $add_key(PSEUDOLAYER, "H_TOP2 + H_MID2 + H_TOP3 + H_MID3", K13)
+    $add_key(PSEUDOLAYER, "H_TOP3 + H_MID3 + H_TOP4 + H_MID4", K14)
+    $add_key(PSEUDOLAYER, "H_TOP4 + H_MID4 + H_TOP5 + H_MID5", K15)
+    $add_key(PSEUDOLAYER, "H_TOP5 + H_MID5 + H_TOP6 + H_MID6", K16)
+    $add_key(PSEUDOLAYER, "H_TOP6 + H_MID6 + H_TOP7 + H_MID7", K17)
+    $add_key(PSEUDOLAYER, "H_TOP7 + H_MID7 + H_TOP8 + H_MID8", K18)
+    $add_key(PSEUDOLAYER, "H_TOP8 + H_MID8 + H_TOP9 + H_MID9", K19)
+    $add_key(PSEUDOLAYER, "H_TOP9 + H_MID9 + H_TOP10 + H_MID10", K20)
+    $add_key(PSEUDOLAYER, "H_TOP10 + H_MID10 + H_TOP11 + H_MID11", K21)
+    $add_key(PSEUDOLAYER, "H_TOP11 + H_MID11 + H_TOP12 + H_MID12", K22)
+    
+    $add_key(PSEUDOLAYER, "H_MID1 + H_MID2", K23)
+    $add_key(PSEUDOLAYER, "H_MID2 + H_MID3", K24)
+    $add_key(PSEUDOLAYER, "H_MID3 + H_MID4", K25)
+    $add_key(PSEUDOLAYER, "H_MID4 + H_MID5", K26)
+    $add_key(PSEUDOLAYER, "H_MID5 + H_MID6", K27)
+    $add_key(PSEUDOLAYER, "H_MID6 + H_MID7", K28)
+    $add_key(PSEUDOLAYER, "H_MID7 + H_MID8", K29)
+    $add_key(PSEUDOLAYER, "H_MID8 + H_MID9", K30)
+    $add_key(PSEUDOLAYER, "H_MID9 + H_MID10", K31)
+    $add_key(PSEUDOLAYER, "H_MID10 + H_MID11", K32)
+    $add_key(PSEUDOLAYER, "H_MID11 + H_MID12", K33)
+    $add_key(PSEUDOLAYER, "H_MID12 + H_MID13", K34)
+    $add_key(PSEUDOLAYER, "H_MID13 + H_MID14", K35)
+    
+    $add_key(PSEUDOLAYER, "H_MID1 + H_BOT1 + H_MID2 + H_BOT2", K35)
+    $add_key(PSEUDOLAYER, "H_MID2 + H_BOT2 + H_MID3 + H_BOT3", K36)
+    $add_key(PSEUDOLAYER, "H_MID3 + H_BOT3 + H_MID4 + H_BOT4", K37)
+    $add_key(PSEUDOLAYER, "H_MID4 + H_BOT4 + H_MID5 + H_BOT5", K38)
+    $add_key(PSEUDOLAYER, "H_MID5 + H_BOT5 + H_MID6 + H_BOT6", K39)
+    $add_key(PSEUDOLAYER, "H_MID6 + H_BOT6 + H_MID7 + H_BOT7", K40)
+    $add_key(PSEUDOLAYER, "H_MID7 + H_BOT7 + H_MID8 + H_BOT8", K41)
+    $add_key(PSEUDOLAYER, "H_MID8 + H_BOT8 + H_MID9 + H_BOT9", K42)
+    $add_key(PSEUDOLAYER, "H_MID9 + H_BOT9 + H_MID10 + H_BOT10", K43)
+    $add_key(PSEUDOLAYER, "H_MID10 + H_BOT10 + H_MID11 + H_BOT11", K44)
+    $add_key(PSEUDOLAYER, "H_MID11 + H_BOT11 + H_MID12 + H_BOT12", K45)
+    $add_key(PSEUDOLAYER, "H_MID12 + H_BOT12 + H_MID13 + H_BOT13", K46)
+    $add_key(PSEUDOLAYER, "H_MID13 + H_BOT13 + H_MID14 + H_BOT14", K47)
+    
+    $add_key(PSEUDOLAYER, "H_BOT1 + H_BOT2", K48)
+    $add_key(PSEUDOLAYER, "H_BOT2 + H_BOT3", K49)
+    $add_key(PSEUDOLAYER, "H_BOT3 + H_BOT4", K50)
+    $add_key(PSEUDOLAYER, "H_BOT4 + H_BOT5", K51)
+    $add_key(PSEUDOLAYER, "H_BOT5 + H_BOT6", K52)
+    $add_key(PSEUDOLAYER, "H_BOT6 + H_BOT7", K53)
+    $add_key(PSEUDOLAYER, "H_BOT7 + H_BOT8", K54)
+    $add_key(PSEUDOLAYER, "H_BOT8 + H_BOT9", K55)
+    $add_key(PSEUDOLAYER, "H_BOT9 + H_BOT10", K56)
+    $add_key(PSEUDOLAYER, "H_BOT10 + H_BOT11", K57)
+    $add_key(PSEUDOLAYER, "H_BOT11 + H_BOT12", K58)
+    $add_key(PSEUDOLAYER, "H_BOT12 + H_BOT13", K59)
+    $add_key(PSEUDOLAYER, "H_BOT13 + H_BOT14", K60)
 $endmacro
 
-$macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12, TH1, TH2, TH3, TH4, TH5, TH6)
+$macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, B1, B2, B3, B4, B5, B6, B7, TH1, TH6, B8, B9, B10, B11, B12, B13, B14, TH2, TH3, TH4, TH5, TH7, TH8, TH9, TH10)
     $nonlocal(NUM_OF_CHORDS)
     $py(hash = "")
     $if(T1 != "")
@@ -180,6 +207,48 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T1
     $if(T12 != "")
         $py(hash = hash + " + H_TOP12")
     $endif
+    $if(M1 != "")
+        $py(hash = hash + " + H_MID1")
+    $endif
+    $if(M2 != "")
+        $py(hash = hash + " + H_MID2")
+    $endif
+    $if(M3 != "")
+        $py(hash = hash + " + H_MID3")
+    $endif
+    $if(M4 != "")
+        $py(hash = hash + " + H_MID4")
+    $endif
+    $if(M5 != "")
+        $py(hash = hash + " + H_MID5")
+    $endif
+    $if(M6 != "")
+        $py(hash = hash + " + H_MID6")
+    $endif
+    $if(M7 != "")
+        $py(hash = hash + " + H_MID7")
+    $endif
+    $if(M8 != "")
+        $py(hash = hash + " + H_MID8")
+    $endif
+    $if(M9 != "")
+        $py(hash = hash + " + H_TOP9")
+    $endif
+    $if(M10 != "")
+        $py(hash = hash + " + H_TOP10")
+    $endif
+    $if(M11 != "")
+        $py(hash = hash + " + H_MID11")
+    $endif
+    $if(M12 != "")
+        $py(hash = hash + " + H_MID12")
+    $endif
+    $if(M13 != "")
+        $py(hash = hash + " + H_MID13")
+    $endif
+    $if(M14 != "")
+        $py(hash = hash + " + H_MID14")
+    $endif
     $if(B1 != "")
         $py(hash = hash + " + H_BOT1")
     $endif
@@ -201,6 +270,12 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T1
     $if(B7 != "")
         $py(hash = hash + " + H_BOT7")
     $endif
+    $if(TH1 != "")
+        $py(hash = hash + " + H_THU1")
+    $endif
+    $if(TH6 != "")
+        $py(hash = hash + " + H_THU6")
+    $endif
     $if(B8 != "")
         $py(hash = hash + " + H_BOT8")
     $endif
@@ -216,9 +291,12 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T1
     $if(B12 != "")
         $py(hash = hash + " + H_BOT12")
     $endif
-    $if(TH1 != "")
-        $py(hash = hash + " + H_THU1")
+    $if(B13 != "")
+        $py(hash = hash + " + H_BOT13")
     $endif
+    $if(B14 != "")
+        $py(hash = hash + " + H_BOT14")
+    $endif    
     $if(TH2 != "")
         $py(hash = hash + " + H_THU2")
     $endif
@@ -231,8 +309,17 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T1
     $if(TH5 != "")
         $py(hash = hash + " + H_THU5")
     $endif
-    $if(TH6 != "")
-        $py(hash = hash + " + H_THU6")
+    $if(THU7 != "")
+        $py(hash = hash + " + H_THU7")
+    $endif
+    $if(TH8 != "")
+        $py(hash = hash + " + H_THU8")
+    $endif
+    $if(TH9 != "")
+        $py(hash = hash + " + H_THU9")
+    $endif
+    $if(TH10 != "")
+        $py(hash = hash + " + H_THU10")
     $endif
     $py(hash = hash[3:])
     $if(hash != "")
