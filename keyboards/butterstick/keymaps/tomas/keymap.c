@@ -22,6 +22,7 @@ enum pseudolayers {
     
     
     
+    
     enum internal_keycodes {
         TOP1 = SAFE_RANGE,
         
@@ -1705,6 +1706,7 @@ void send_to_qmk(const struct Chord* self) {
             
             
                 
+                
     
     
         
@@ -1728,6 +1730,7 @@ void send_to_qmk(const struct Chord* self) {
         
             
             
+                
                 
     
     
@@ -1753,6 +1756,7 @@ void send_to_qmk(const struct Chord* self) {
             
             
                 
+                
     
     
         
@@ -1776,6 +1780,7 @@ void send_to_qmk(const struct Chord* self) {
         
             
             
+                
                 
     
     
@@ -1801,6 +1806,7 @@ void send_to_qmk(const struct Chord* self) {
             
             
                 
+                
     
     
         
@@ -1824,6 +1830,7 @@ void send_to_qmk(const struct Chord* self) {
         
             
             
+                
                 
     
     
@@ -1849,6 +1856,7 @@ void send_to_qmk(const struct Chord* self) {
             
             
                 
+                
     
     
         
@@ -1873,6 +1881,7 @@ void send_to_qmk(const struct Chord* self) {
             
             
                 
+                
     
     
         
@@ -1896,6 +1905,7 @@ void send_to_qmk(const struct Chord* self) {
         
             
             
+                
                 
     
     

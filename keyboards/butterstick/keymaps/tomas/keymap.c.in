@@ -37,7 +37,7 @@ $butterstick_rows("QWERTY",
 $butterstick_cols("QWERTY",
     "ESC", "MO(MOV)", "TAB", "", "RGUI", "", "INS", "DEL", "BSPC",
     "", "", "", "", "", "", "", "", "ENTER",
-    "O(KC_LSFT)", "O(KC_LCTL)", "O(KC_LALT)", "O(NUM)", "O(KC_LGUI)", "O(NUM)", "O(KC_RALT)", "O(KC_RCTL)", "O(KC_RSFT)")
+    "O(LSFT)", "O(LCTL)", "O(LALT)", "O(NUM)", "O(LGUI)", "O(NUM)", "O(RALT)", "O(RCTL)", "O(RSFT)")
 
 $# $butterstick("QWERTY",
 $#     "Q", "ESC",  "W", "MO(MOV)", "E", "TAB",  "R", "",        "T", "RGUI", "Y", "",        "U", "INS",  "I", "DEL",  "O", "BSPC",  "P",
