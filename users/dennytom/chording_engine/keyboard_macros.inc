@@ -8,21 +8,21 @@ $macro(internal_keycodes, keycodes_string)
     $py(keycodes = keycodes_string.split(','))
     $py(NUM_OF_KEYS = len(keycodes))
     enum internal_keycodes {
-        $(keycodes[0].lstrip()) = SAFE_RANGE,
+        $(keycodes[0].strip()) = SAFE_RANGE,
         $for(i in range(1,len(keycodes)))
-            $(keycodes[i].lstrip()),
+            $(keycodes[i].strip()),
         $endfor
         
-        FIRST_INTERNAL_KEYCODE = $(keycodes[0].lstrip()),
-        LAST_INTERNAL_KEYCODE = $(keycodes[-1].lstrip())
+        FIRST_INTERNAL_KEYCODE = $(keycodes[0].strip()),
+        LAST_INTERNAL_KEYCODE = $(keycodes[-1].strip())
     };
     
     const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         [0] = $(layout_name)(
             $for(i in range(0, len(keycodes) - 1))
-                $(keycodes[i].lstrip()),
+                $(keycodes[i].strip()),
             $endfor
-            $(keycodes[-1].lstrip())
+            $(keycodes[-1].strip())
             )
     };
     
@@ -42,6 +42,6 @@ $macro(internal_keycodes, keycodes_string)
         $py(raise Exception("The current implementation supports up to 64 keys."))
     $endif
     $for(i in range( 0, len(keycodes)))
-        #define H_$(keycodes[i].lstrip()) (($(type)) 1 << $(i))
+        #define H_$(keycodes[i].strip()) (($(type)) 1 << $(i))
     $endfor
 $endmacro
