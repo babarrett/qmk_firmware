@@ -53,7 +53,7 @@ enum chord_states {
 };
 
 struct Chord {
-    uint32_t keycodes_hash;
+    $(type) keycodes_hash;
     uint8_t pseudolayer;
     uint8_t* state;
     uint8_t* counter;

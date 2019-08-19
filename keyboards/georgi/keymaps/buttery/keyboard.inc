@@ -1,5 +1,3 @@
-$py(NUM_OF_KEYS = 30)
-
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 400
 $py(COMMAND_MAX_LENGTH = 5)
@@ -8,59 +6,9 @@ $py(LEADER_MAX_LENGTH = 5)
 #define TAP_TIMEOUT 50
 $py(DYNAMIC_MACRO_MAX_LENGTH = 20)
 
-enum internal_keycodes {
-    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6,             TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6,                          BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
-                      THU1, THU2, THU3,                          THU4, THU5, THU6,
+$include(engine_path + "keyboard_macros.inc")
 
-    FIRST_INTERNAL_KEYCODE = TOP1,
-    LAST_INTERNAL_KEYCODE = THU6
-};
-
-// No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [0] = LAYOUT_georgi(
-    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6,             TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6,             BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
-                      THU1, THU2, THU3,             THU4, THU5, THU6
-  )
-};
-
-// "Don't fuck with this, thanks." -- germ
-// Sorry, it has been fucked with.
-size_t keymapsCount = 1;
-
-// Bit masks for hashing
-#define H_TOP1 ((uint32_t) 1 << 0)
-#define H_TOP2 ((uint32_t) 1 << 1)
-#define H_TOP3 ((uint32_t) 1 << 2)
-#define H_TOP4 ((uint32_t) 1 << 3)
-#define H_TOP5 ((uint32_t) 1 << 4)
-#define H_TOP6 ((uint32_t) 1 << 5)
-#define H_TOP7 ((uint32_t) 1 << 6)
-#define H_TOP8 ((uint32_t) 1 << 7)
-#define H_TOP9 ((uint32_t) 1 << 8)
-#define H_TOP10 ((uint32_t) 1 << 9)
-#define H_TOP11 ((uint32_t) 1 << 10)
-#define H_TOP12 ((uint32_t) 1 << 11)
-#define H_BOT1 ((uint32_t) 1 << 12)
-#define H_BOT2 ((uint32_t) 1 << 13)
-#define H_BOT3 ((uint32_t) 1 << 14)
-#define H_BOT4 ((uint32_t) 1 << 15)
-#define H_BOT5 ((uint32_t) 1 << 16)
-#define H_BOT6 ((uint32_t) 1 << 17)
-#define H_BOT7 ((uint32_t) 1 << 18)
-#define H_BOT8 ((uint32_t) 1 << 19)
-#define H_BOT9 ((uint32_t) 1 << 20)
-#define H_BOT10 ((uint32_t) 1 << 21)
-#define H_BOT11 ((uint32_t) 1 << 22)
-#define H_BOT12 ((uint32_t) 1 << 23)
-#define H_THU1 ((uint32_t) 1 << 24)
-#define H_THU2 ((uint32_t) 1 << 25)
-#define H_THU3 ((uint32_t) 1 << 26)
-#define H_THU4 ((uint32_t) 1 << 27)
-#define H_THU5 ((uint32_t) 1 << 28)
-#define H_THU6 ((uint32_t) 1 << 29)
+$internal_keycodes("TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10, TOP11, TOP12, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT10, BOT11, BOT12, THU1, THU2, THU3, THU4, THU5, THU6")
 
 $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38, K39, K40, K41, K42)
     $nonlocal(NUM_OF_CHORDS)

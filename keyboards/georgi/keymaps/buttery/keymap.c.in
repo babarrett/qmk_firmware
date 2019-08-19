@@ -119,10 +119,10 @@ $butterstick_cols("SYM",
                     "",     "",           "",       "",     "")
 
 $butterstick_rows("MOVE",
-    "",     "", "HOME", "UP",   "PGUP",  "",              "", "", "", "", "", "",
-    "INS",  "", "END",  "",     "PGDN",  "",              "", "", "", "", "", "",
-    "LSFT", "", "LEFT", "DOWN", "RIGHT", "",              "", "", "", "", "", "RSFT",
-                        "",     "",      "",              "", "", "")
+    "",     "", "HOME", "UP",   "PGUP",  "",              "", "",     "UP",   "",      "", "",
+    "INS",  "", "END",  "",     "PGDN",  "",              "", "LEFT", "DOWN", "RIGHT", "", "",
+    "LSFT", "", "LEFT", "DOWN", "RIGHT", "",              "", "LEFT", "DOWN", "RIGHT", "", "RSFT",
+                        "",     "",      "",              "", "",     "")
 
 $butterstick_cols("MOVE",
     "", "", "",     "",     "",           "",       "",     "",     "",     "", "",

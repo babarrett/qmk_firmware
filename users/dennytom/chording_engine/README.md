@@ -2,11 +2,11 @@
 
 ## About
 
-This keymap is using a custom chording engine and general purpose preprocessor [pyexpander](http://pyexpander.sourceforge.net/).
+This is a custom chording engine.
 
 Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
-The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. The general preprocessor makes it relatively easy. Since I use it heavily and since you will be modifying the code for the preprocessor and not the C code, the code is written to be well formatted in the file `keymap.c.in` and *not to produce pretty C code* in `keymap.c`. To produce C code from the `keymap.c.in` file, run
+To use it, you will need a general purpose preprocessor [pyexpander](http://pyexpander.sourceforge.net/). The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. The general preprocessor makes it relatively easy. Since I use it heavily and since you will be modifying the code for the preprocessor and not the C code, the code is written to be well formatted in the file `keymap.c.in` and *not to produce pretty C code* in `keymap.c`. My `keymap.c` ends up over 7000 lines long and more than half whitespace. To produce C code from the `keymap.c.in` file, run
 
 ```sh
 python3 expander3.py -f keymap.c.in > keymap.c
@@ -56,39 +56,21 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 ## Examples and Details
 
+### Implementation
+
+The source files are split into three categories. `keymap.c.in` is the main file. In defines all the chords that you wish to use and includes all the other files. `keyboard.inc` file contains all details specific to the board this should be running on -- timings, keys, macros specific to the amount of keys. Finally everything else is in this folder and contains all the definitions, algorithms and macros. Because all the files here are included by the pyexpander, you do not need to worry about adding the user space in your path, as long as in your `keymap.c.in` file is properly defined the `engine_path` variable.
+
 ### Keycodes
 
 I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0.
 
 ```c
-enum internal_keycodes {
-    TOP1 = SAFE_RANGE, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0
-};
-
-// No need for QMK layers, we can make our own. And we dont' even need GAME layer since we do not use steno!
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [0] = LAYOUT_butter(
-    TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-    BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0,
-    
-    FIRST_INTERNAL_KEYCODE = TOP1,
-    LAST_INTERNAL_KEYCODE = BOT0
-  )
-};
-
+$internal_keycodes("TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0")
 ```
 
-To keep track which keys are pressed and have not been processed yet and to track which keys need to be pressed to activate a chord, each key has assigned a bit in a uint32_t variable. Macros H_TOP1, H_TOP2, ... provide a translation for these bits. 
+in `keyboard.inc`. This macro gets expanded and creates the keycodes definitions (starting at `TOP1 = SAFE_RANGE`), creates a single keymaps layer with these keycodes and finally creates `H_TOP1` to `H_BOT0` (or whatever keycodes you define) macros used for defining which keys have to be pressed for each added chord. In my keymap I also define macros for easy adding a large number of chords.
 
-```c
-#define H_TOP1 ((uint32_t) 1 << 0)
-#define H_TOP2 ((uint32_t) 1 << 1)
-#define H_TOP3 ((uint32_t) 1 << 2)
-...
-```
-
-*If your keyboard has more than 20 keys, you need to add more keycodes and their translation. If you have more than 32 keys, you also have to upgrade the buffer and chord's keycodes_hash types*.
+*The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me at Reddit.*
 
 When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes.
 
@@ -133,7 +115,7 @@ All chords have to be added to `list_of_chord` array that gets regularly scanned
 * `ACTIVATED`: Analogous to a key being pressed (this includes repeated presses for tap-dance)
 * `DEACTIVATED`: Analogous to a key being depressed (also can be repeated)
 * `FINISHED`: Happens if the chord got deactivated and then the dance timer expired.
-* `FINISHED_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
+* `FINISHED_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired. Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
 * `RESTART`: The dance is done. Happens immediately after `FINISHED` or on chord deactivation from `FINISHED_FROM_ACTIVE`. Anything you have to do to get the chord into `IDLE` mode happens here.
 
 ### Macros
@@ -323,6 +305,8 @@ $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "test")
 Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter than the defined maximum, you have to pad it with zeros. Currently, the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
 
 ## Caveats
+
+**The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me at Reddit.**
 
 Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn't allocate `counter`. However it still has to store it's `state` and sometimes the `counter` in RAM. If you keep adding more chords, at one point you will run out. If your firmware fits in the memory and your keyboard crashes, try optimizing your RAM usage.
 
