@@ -12,7 +12,13 @@ To use it, you will need a general purpose preprocessor [pyexpander](http://pyex
 python3 expander3.py -f keymap.c.in > keymap.c
 ```
 
-Thanks to the provided macros, you should have to modify any file except `keymap.c.in`.
+If you want to have a nice `keymap.c`, use some linter or formatter. I use `indent`:
+
+```sh
+indent keymap.c -bad -bap -bbb -br -brf -brs -ce -i4 -l100 -nut -sob
+```
+
+Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`.
 
 ## Features Overview
 

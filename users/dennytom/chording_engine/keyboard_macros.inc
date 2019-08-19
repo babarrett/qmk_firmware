@@ -9,7 +9,7 @@ $macro(internal_keycodes, keycodes_string)
     $py(NUM_OF_KEYS = len(keycodes))
     enum internal_keycodes {
         $(keycodes[0].strip()) = SAFE_RANGE,
-        $for(i in range(1,len(keycodes)))
+        $for(i in range(1,len(keycodes)))\
             $(keycodes[i].strip()),
         $endfor
         
@@ -19,7 +19,7 @@ $macro(internal_keycodes, keycodes_string)
     
     const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         [0] = $(layout_name)(
-            $for(i in range(0, len(keycodes) - 1))
+            $for(i in range(0, len(keycodes) - 1))\
                 $(keycodes[i].strip()),
             $endfor
             $(keycodes[-1].strip())
@@ -41,7 +41,7 @@ $macro(internal_keycodes, keycodes_string)
     $else
         $py(raise Exception("The current implementation supports up to 64 keys."))
     $endif
-    $for(i in range( 0, len(keycodes)))
+    $for(i in range(0, len(keycodes)))\
         #define H_$(keycodes[i].strip()) (($(type)) 1 << $(i))
     $endfor
 $endmacro
