@@ -70,9 +70,9 @@ $internal_keycodes("TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, 
 
 in `keyboard.inc`. This macro gets expanded and creates the keycodes definitions (starting at `TOP1 = SAFE_RANGE`), creates a single keymaps layer with these keycodes and finally creates `H_TOP1` to `H_BOT0` (or whatever keycodes you define) macros used for defining which keys have to be pressed for each added chord. In my keymap I also define macros for easy adding a large number of chords.
 
-*The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me at Reddit.*
+*The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard.inc` is using the `internal_keycodes` macro to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing. If you want to add more QMK layers or have a mixed layer, you will have to modify the `internal_keycodes` macro or write it's content manually.
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
@@ -243,7 +243,6 @@ The complete list of strings that these macros can accept is:
 
 * `RESET`: Go to the DFU flashing mode.
 
-If the string has multiple elements, they have to be separated by a comma AND a space. I'll fix that soon.
 
 Macro `secret_chord` allows you to add a single chord while utilize the smart string parsing and defining the chord's keys visually. For example
 
@@ -305,8 +304,6 @@ $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "test")
 Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter than the defined maximum, you have to pad it with zeros. Currently, the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
 
 ## Caveats
-
-**The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me at Reddit.**
 
 Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn't allocate `counter`. However it still has to store it's `state` and sometimes the `counter` in RAM. If you keep adding more chords, at one point you will run out. If your firmware fits in the memory and your keyboard crashes, try optimizing your RAM usage.
 
