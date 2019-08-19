@@ -19,10 +19,10 @@ $macro(internal_keycodes, keycodes_string)
     
     const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         [0] = $(layout_name)(
-            $for(i in range(0, len(keycodes) - 1))\
+            $for(i in range(0, len(keycodes)-1))\
                 $(keycodes[i].strip()),
-            $endfor
-            $(keycodes[-1].strip())
+            $endfor\
+                $(keycodes[-1].strip())
             )
     };
     

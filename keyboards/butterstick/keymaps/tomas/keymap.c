@@ -13,9 +13,7 @@ enum pseudolayers {
 // Keyboard states and settings
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 500
-
 #define LEADER_TIMEOUT 500
-
 #define TAP_TIMEOUT 50
 
 enum internal_keycodes {
@@ -64,7 +62,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          BOT7,
                          BOT8,
                          BOT9,
-
                          BOT0)
 };
 
@@ -120,7 +117,6 @@ uint8_t keycodes_buffer_array[20] = {
     0,
     0,
     0,
-
 };
 
 uint8_t keycode_index = 0;
@@ -133,7 +129,6 @@ uint16_t command_buffer[] = {
     0,
     0,
     0,
-
 };
 
 uint8_t command_ind = 0;
@@ -146,7 +141,6 @@ uint16_t leader_buffer[] = {
     0,
     0,
     0,
-
 };
 
 uint8_t leader_ind = 0;
@@ -175,7 +169,6 @@ uint16_t dynamic_macro_buffer[] = {
     0,
     0,
     0,
-
 };
 
 uint8_t dynamic_macro_ind;
@@ -561,17 +554,6 @@ reset (const struct Chord *self) {
         reset_keyboard_kb ();
     }
 }
-
-/*
-void send_to_qmk(const struct Chord* self) {
-    if (*self->state == ACTIVATED) {
-        keyevent_t event = {key, pressed, (timer_read() | 1) };
-        process_record_quantum
-    }
-    if (*self->state == DEACTIVATED) {
-    }
-}
-*/
 
 // Add all chords
 

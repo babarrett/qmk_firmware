@@ -230,30 +230,30 @@ $macro(MK, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
     void function_$(NUM_OF_CHORDS)(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                $for(i in range(0, l))
+                $for(i in range(0, l))\
                     $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
                     register_code($(code));
-                $endfor
+                $endfor\
                 send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                $for(i in range(0, l))
+                $for(i in range(0, l))\
                     $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
                     register_code($(code));
-                $endfor
+                $endfor\
                 send_keyboard_report();
                 break;
             case RESTART:
-                $for(i in range(0, l))
+                $for(i in range(0, l))\
                     $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
                     unregister_code($(code));
-                $endfor
+                $endfor\
                 send_keyboard_report();
                 break;
             default:
@@ -279,13 +279,13 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
                 switch (*self->counter) {
-                    $for(i in range(0, l))
+                    $for(i in range(0, l))\
                         $py(val = DEFINITION.split(',')[i].strip())
                         case $(i+1):
                             $py(code = expand_keycode_fnc(val))
                             register_code($(code));
                             break;
-                    $endfor
+                    $endfor\
                     default:
                         break;
                 }
@@ -293,13 +293,13 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 break;
             case RESTART:
                 switch (*self->counter) {
-                    $for(i in range(0, l))
+                    $for(i in range(0, l))\
                         $py(val = DEFINITION.split(',')[i].strip())
                         case $(i+1):
                             $py(code = expand_keycode_fnc(val))
                             unregister_code($(code));
                             break;
-                    $endfor
+                    $endfor\
                     default:
                         break;
                 }
