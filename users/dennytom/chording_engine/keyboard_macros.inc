@@ -4,6 +4,7 @@ $py(NUM_OF_KEYS = 0)
 $macro(internal_keycodes, keycodes_string)
     $nonlocal(type)
     $nonlocal(NUM_OF_KEYS)
+    $nonlocal(layout_name)
     $py(keycodes = keycodes_string.split(','))
     $py(NUM_OF_KEYS = len(keycodes))
     enum internal_keycodes {
@@ -17,7 +18,7 @@ $macro(internal_keycodes, keycodes_string)
     };
     
     const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-        [0] = LAYOUT_butter(
+        [0] = $(layout_name)(
             $for(i in range(0, len(keycodes) - 1))
                 $(keycodes[i].lstrip()),
             $endfor

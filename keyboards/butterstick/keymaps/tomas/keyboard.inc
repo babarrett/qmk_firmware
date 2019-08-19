@@ -5,6 +5,7 @@ $py(COMMAND_MAX_LENGTH = 5)
 $py(LEADER_MAX_LENGTH = 5)
 #define TAP_TIMEOUT 50
 $py(DYNAMIC_MACRO_MAX_LENGTH = 20)
+$py(layout_name = "LAYOUT_butter")
 
 $include(engine_path + "keyboard_macros.inc")
 
