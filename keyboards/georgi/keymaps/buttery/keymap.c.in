@@ -83,6 +83,11 @@ $secret_chord("QWERTY", "MK(LCTRL, LGUI)",
     "", "", "", "",  "",  "",         "", "", "", "", "", "",
     "", "", "", "X", "X", "X",        "", "", "", "", "", "",
                 "",  "",  "",         "", "", "")
+                
+$secret_chord("QWERTY", "DF(GAME)",
+    "", "", "",  "X", "",  "",         "", "",  "X", "",  "", "",
+    "", "", "X", "X", "X", "",         "", "X", "X", "X", "", "",
+                 "",  "",  "",         "", "", "")
 
 $butterstick_rows("NUM",
     "",     "1",  "2",  "3",  "4",  "5",               "6",  "7",  "8",  "9",  "0",   "",
@@ -135,5 +140,12 @@ $butterstick_rows("MEDIA",
     "", "", "", "", "", "",              "", "",        "",        "",        "",        "KC_MUTE",
     "", "", "", "", "", "",              "", "",        "",        "",        "",        "KC_VOLD",
                 "", "", "",              "", "",        "")
+                
+$butterstick_rows("GAME",
+                "TAB",  "Q", "W", "F", "P", "G",         "J", "L", "U", "Y", ";", "RCTL",
+                "ESC",  "A", "R", "S", "T", "D",         "H", "N", "E", "I", "O", "DF(QWERTY)",
+                "LSFT", "Z", "X", "C", "V", "B",         "K", "M", ",", ".", "/", "DEL",
+                    "MO(NUM)", "KC_SPC", "LSFT",         "KK(ENTER, KC_RSFT)", "KL(KC_SPC, NUM)", "KL(KC_BSPC, SYM)")
+
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
