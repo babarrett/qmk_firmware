@@ -57,7 +57,7 @@ $butterstick_cols("QWERTY",
     "",    "", "",     "",     "",           "",       "",     "",     "",     "", "",
     "",    "", "",     "",     "",           "",       "",     "",     "",     "", "",
     "INS", "", "LALT", "LGUI", "LCTL",       "",       "RCTL", "RGUI", "RALT", "", "",
-                       "",     "MO(MOVE)",   "",       "TAB",  "")
+                       "LCTL", "MO(MOVE)",   "",       "TAB",  "")
 
 $secret_chord("QWERTY", "MO(MEDIA)",
     "", "",  "",  "",  "",  "",        "", "", "", "", "", "",
