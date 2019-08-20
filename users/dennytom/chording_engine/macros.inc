@@ -230,30 +230,30 @@ $macro(MK, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
     void function_$(NUM_OF_CHORDS)(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                $for(i in range(0, l))
-                    $py(val = DEFINITION.split(',')[i].lstrip())
+                $for(i in range(0, l))\
+                    $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
                     register_code($(code));
-                $endfor
+                $endfor\
                 send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                $for(i in range(0, l))
-                    $py(val = DEFINITION.split(',')[i].lstrip())
+                $for(i in range(0, l))\
+                    $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
                     register_code($(code));
-                $endfor
+                $endfor\
                 send_keyboard_report();
                 break;
             case RESTART:
-                $for(i in range(0, l))
-                    $py(val = DEFINITION.split(',')[i].lstrip())
+                $for(i in range(0, l))\
+                    $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
                     unregister_code($(code));
-                $endfor
+                $endfor\
                 send_keyboard_report();
                 break;
             default:
@@ -279,13 +279,13 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
                 switch (*self->counter) {
-                    $for(i in range(0, l))
-                        $py(val = DEFINITION.split(',')[i].lstrip())
+                    $for(i in range(0, l))\
+                        $py(val = DEFINITION.split(',')[i].strip())
                         case $(i+1):
                             $py(code = expand_keycode_fnc(val))
                             register_code($(code));
                             break;
-                    $endfor
+                    $endfor\
                     default:
                         break;
                 }
@@ -293,13 +293,13 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 break;
             case RESTART:
                 switch (*self->counter) {
-                    $for(i in range(0, l))
-                        $py(val = DEFINITION.split(',')[i].lstrip())
+                    $for(i in range(0, l))\
+                        $py(val = DEFINITION.split(',')[i].strip())
                         case $(i+1):
                             $py(code = expand_keycode_fnc(val))
                             unregister_code($(code));
                             break;
-                    $endfor
+                    $endfor\
                     default:
                         break;
                 }
@@ -331,7 +331,7 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
     $if(DEFINITION == "")
     $else
         $py(split = DEFINITION.split("("))
-        $py(type = split[0])
+        $py(type = split[0].strip())
         $if(len(split) == 1)
             $if(type == "LOCK")
                 $LOCK(PSEUDOLAYER, KEYCODES_HASH)
@@ -356,28 +356,29 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $KC(PSEUDOLAYER, KEYCODES_HASH, code)
             $endif
         $else
-            $py(val = split[1][:-1])
+            $py(val = split[1][:-1].strip())
             $if(type == "O")
-                $O(PSEUDOLAYER, KEYCODES_HASH, val)
+                $py(code = expand_keycode_fnc(val))
+                $O(PSEUDOLAYER, KEYCODES_HASH, code)
             $elif(type == "D")
                 $D(PSEUDOLAYER, KEYCODES_HASH, val)
             $elif(type == "MK")
                 $MK(PSEUDOLAYER, KEYCODES_HASH, val)
             $elif(type == "M")
-                $py(fnc = val.split(',')[0].lstrip())
-                $py(val1 = val.split(',')[1].lstrip())
-                $py(val2 = val.split(',')[2].lstrip())
+                $py(fnc = val.split(',')[0].strip())
+                $py(val1 = val.split(',')[1].strip())
+                $py(val2 = val.split(',')[2].strip())
                 $M(PSEUDOLAYER, KEYCODES_HASH, val1, val2, fnc)
             $elif(type == "KK")
-                $py(val1 = val.split(',')[0].lstrip())
+                $py(val1 = val.split(',')[0].strip())
                 $py(code1 = expand_keycode_fnc(val1))
-                $py(val2 = val.split(',')[1].lstrip())
+                $py(val2 = val.split(',')[1].strip())
                 $py(code2 = expand_keycode_fnc(val2))
                 $KK(PSEUDOLAYER, KEYCODES_HASH, code1, code2)
             $elif(type == "KL")
-                $py(val1 = val.split(',')[0].lstrip())
+                $py(val1 = val.split(',')[0].strip())
                 $py(code1 = expand_keycode_fnc(val1))
-                $py(val2 = val.split(',')[1].lstrip())
+                $py(val2 = val.split(',')[1].strip())
                 $KL(PSEUDOLAYER, KEYCODES_HASH, code1, val2)
             $elif(type == "MO")
                 $MO(PSEUDOLAYER, KEYCODES_HASH, val)

@@ -1,10 +1,10 @@
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 500
-$py(COMMAND_MAX_LENGTH = 5)
+$py(COMMAND_MAX_LENGTH = 5)\
 #define LEADER_TIMEOUT 500
-$py(LEADER_MAX_LENGTH = 5)
+$py(LEADER_MAX_LENGTH = 5)\
 #define TAP_TIMEOUT 50
-$py(DYNAMIC_MACRO_MAX_LENGTH = 20)
+$py(DYNAMIC_MACRO_MAX_LENGTH = 20)\
 $py(layout_name = "LAYOUT_gergo")
 
 $include(engine_path + "keyboard_macros.inc")
@@ -25,7 +25,6 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_TOP10", K10)
     $add_key(PSEUDOLAYER, "H_TOP11", K11)
     $add_key(PSEUDOLAYER, "H_TOP12", K12)
-    
     $add_key(PSEUDOLAYER, "H_TOP1 + H_MID1", K13)
     $add_key(PSEUDOLAYER, "H_TOP2 + H_MID2", K14)
     $add_key(PSEUDOLAYER, "H_TOP3 + H_MID3", K15)
@@ -38,7 +37,6 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_TOP10 + H_MID12", K22)
     $add_key(PSEUDOLAYER, "H_TOP11 + H_MID13", K23)
     $add_key(PSEUDOLAYER, "H_TOP12 + H_MID14", K24)
-    
     $add_key(PSEUDOLAYER, "H_MID1", K25)
     $add_key(PSEUDOLAYER, "H_MID2", K26)
     $add_key(PSEUDOLAYER, "H_MID3", K27)
@@ -46,10 +44,8 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_MID5", K29)
     $add_key(PSEUDOLAYER, "H_MID6", K30)
     $add_key(PSEUDOLAYER, "H_MID7", K31)
- 
     $add_key(PSEUDOLAYER, "H_THU1", K32)
-    $add_key(PSEUDOLAYER, "H_THU6", K33)   
-    
+    $add_key(PSEUDOLAYER, "H_THU6", K33)
     $add_key(PSEUDOLAYER, "H_MID8", K34)
     $add_key(PSEUDOLAYER, "H_MID9", K35)
     $add_key(PSEUDOLAYER, "H_MID10", K36)
@@ -57,7 +53,6 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_MID12", K38)
     $add_key(PSEUDOLAYER, "H_MID13", K39)
     $add_key(PSEUDOLAYER, "H_MID14", K40)
-    
     $add_key(PSEUDOLAYER, "H_MID1 + H_BOT1", K41)
     $add_key(PSEUDOLAYER, "H_MID2 + H_BOT2", K42)
     $add_key(PSEUDOLAYER, "H_MID3 + H_BOT3", K43)
@@ -72,7 +67,6 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_MID12 + H_BOT12", K52)
     $add_key(PSEUDOLAYER, "H_MID13 + H_BOT13", K53)
     $add_key(PSEUDOLAYER, "H_MID14 + H_BOT14", K54)
-    
     $add_key(PSEUDOLAYER, "H_BOT1", K55)
     $add_key(PSEUDOLAYER, "H_BOT2", K56)
     $add_key(PSEUDOLAYER, "H_BOT3", K57)
@@ -86,8 +80,7 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_BOT11", K65)
     $add_key(PSEUDOLAYER, "H_BOT12", K66)
     $add_key(PSEUDOLAYER, "H_BOT13", K67)
-    $add_key(PSEUDOLAYER, "H_BOT14", K68)    
-    
+    $add_key(PSEUDOLAYER, "H_BOT14", K68)
     $add_key(PSEUDOLAYER, "H_THU2", K69)
     $add_key(PSEUDOLAYER, "H_THU3", K70)
     $add_key(PSEUDOLAYER, "H_THU4", K71)
@@ -96,7 +89,6 @@ $macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_THU8", K74)
     $add_key(PSEUDOLAYER, "H_THU9", K75)
     $add_key(PSEUDOLAYER, "H_THU10", K76)
-    
 $endmacro
 
 $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30, K31, K32, K33, K34, K35, K36, K37, K38, K39, K40, K41, K42, K43, K44, K45, K46, K47, K48, K49, K50, K51, K52, K53, K54, K55, K56, K57, K58, K59, K60)
@@ -112,7 +104,6 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_TOP9 + H_TOP10", K9)
     $add_key(PSEUDOLAYER, "H_TOP10 + H_TOP11", K10)
     $add_key(PSEUDOLAYER, "H_TOP11 + H_TOP12", K11)
-    
     $add_key(PSEUDOLAYER, "H_TOP1 + H_MID1 + H_TOP2 + H_MID2", K12)
     $add_key(PSEUDOLAYER, "H_TOP2 + H_MID2 + H_TOP3 + H_MID3", K13)
     $add_key(PSEUDOLAYER, "H_TOP3 + H_MID3 + H_TOP4 + H_MID4", K14)
@@ -124,7 +115,6 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_TOP9 + H_MID9 + H_TOP10 + H_MID10", K20)
     $add_key(PSEUDOLAYER, "H_TOP10 + H_MID10 + H_TOP11 + H_MID11", K21)
     $add_key(PSEUDOLAYER, "H_TOP11 + H_MID11 + H_TOP12 + H_MID12", K22)
-    
     $add_key(PSEUDOLAYER, "H_MID1 + H_MID2", K23)
     $add_key(PSEUDOLAYER, "H_MID2 + H_MID3", K24)
     $add_key(PSEUDOLAYER, "H_MID3 + H_MID4", K25)
@@ -138,7 +128,6 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_MID11 + H_MID12", K33)
     $add_key(PSEUDOLAYER, "H_MID12 + H_MID13", K34)
     $add_key(PSEUDOLAYER, "H_MID13 + H_MID14", K35)
-    
     $add_key(PSEUDOLAYER, "H_MID1 + H_BOT1 + H_MID2 + H_BOT2", K35)
     $add_key(PSEUDOLAYER, "H_MID2 + H_BOT2 + H_MID3 + H_BOT3", K36)
     $add_key(PSEUDOLAYER, "H_MID3 + H_BOT3 + H_MID4 + H_BOT4", K37)
@@ -152,7 +141,6 @@ $macro(butterstick_cols, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K
     $add_key(PSEUDOLAYER, "H_MID11 + H_BOT11 + H_MID12 + H_BOT12", K45)
     $add_key(PSEUDOLAYER, "H_MID12 + H_BOT12 + H_MID13 + H_BOT13", K46)
     $add_key(PSEUDOLAYER, "H_MID13 + H_BOT13 + H_MID14 + H_BOT14", K47)
-    
     $add_key(PSEUDOLAYER, "H_BOT1 + H_BOT2", K48)
     $add_key(PSEUDOLAYER, "H_BOT2 + H_BOT3", K49)
     $add_key(PSEUDOLAYER, "H_BOT3 + H_BOT4", K50)
@@ -296,7 +284,7 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T1
     $endif
     $if(B14 != "")
         $py(hash = hash + " + H_BOT14")
-    $endif    
+    $endif
     $if(TH2 != "")
         $py(hash = hash + " + H_THU2")
     $endif
@@ -309,7 +297,7 @@ $macro(secret_chord, PSEUDOLAYER, ACTION, T1, T2, T3, T4, T5, T6, T7, T8, T9, T1
     $if(TH5 != "")
         $py(hash = hash + " + H_THU5")
     $endif
-    $if(THU7 != "")
+    $if(TH7 != "")
         $py(hash = hash + " + H_THU7")
     $endif
     $if(TH8 != "")

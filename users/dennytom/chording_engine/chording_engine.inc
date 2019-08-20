@@ -1,17 +1,17 @@
 const struct Chord* const list_of_chords[] PROGMEM = {
-    $for(i in range(0, NUM_OF_CHORDS))
+    $for(i in range(0, NUM_OF_CHORDS))\
         &chord_$(i),
     $endfor
 };
 
 const uint16_t leader_triggers[$(len(list_of_leader_combos))][$(LEADER_MAX_LENGTH)] PROGMEM = {
-    $for(i in range(0, len(list_of_leader_combos)))
+    $for(i in range(0, len(list_of_leader_combos)))\
         $(list_of_leader_combos[i][0]),
     $endfor
 };
 
 void (*leader_functions[]) (void) = {
-    $for(i in range(0, len(list_of_leader_combos)))
+    $for(i in range(0, len(list_of_leader_combos)))\
         $(list_of_leader_combos[i][1]),
     $endfor
 };

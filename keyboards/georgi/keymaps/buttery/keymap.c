@@ -13,213 +13,123 @@ enum pseudolayers {
 // Keyboard states and settings
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 400
-
 #define LEADER_TIMEOUT 500
-
 #define TAP_TIMEOUT 50
 
     
     
     
     
+    
     enum internal_keycodes {
         TOP1 = SAFE_RANGE,
+                    TOP2,
+                    TOP3,
+                    TOP4,
+                    TOP5,
+                    TOP6,
+                    TOP7,
+                    TOP8,
+                    TOP9,
+                    TOP10,
+                    TOP11,
+                    TOP12,
+                    BOT1,
+                    BOT2,
+                    BOT3,
+                    BOT4,
+                    BOT5,
+                    BOT6,
+                    BOT7,
+                    BOT8,
+                    BOT9,
+                    BOT10,
+                    BOT11,
+                    BOT12,
+                    THU1,
+                    THU2,
+                    THU3,
+                    THU4,
+                    THU5,
+                    THU6,
         
-            TOP2,
         
-            TOP3,
-        
-            TOP4,
-        
-            TOP5,
-        
-            TOP6,
-        
-            TOP7,
-        
-            TOP8,
-        
-            TOP9,
-        
-            TOP10,
-        
-            TOP11,
-        
-            TOP12,
-        
-            BOT1,
-        
-            BOT2,
-        
-            BOT3,
-        
-            BOT4,
-        
-            BOT5,
-        
-            BOT6,
-        
-            BOT7,
-        
-            BOT8,
-        
-            BOT9,
-        
-            BOT10,
-        
-            BOT11,
-        
-            BOT12,
-        
-            THU1,
-        
-            THU2,
-        
-            THU3,
-        
-            THU4,
-        
-            THU5,
-        
-            THU6,
-        
-
         FIRST_INTERNAL_KEYCODE = TOP1,
         LAST_INTERNAL_KEYCODE = THU6
     };
-
+    
     const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         [0] = LAYOUT_georgi(
-            
-                TOP1,
-            
-                TOP2,
-            
-                TOP3,
-            
-                TOP4,
-            
-                TOP5,
-            
-                TOP6,
-            
-                TOP7,
-            
-                TOP8,
-            
-                TOP9,
-            
-                TOP10,
-            
-                TOP11,
-            
-                TOP12,
-            
-                BOT1,
-            
-                BOT2,
-            
-                BOT3,
-            
-                BOT4,
-            
-                BOT5,
-            
-                BOT6,
-            
-                BOT7,
-            
-                BOT8,
-            
-                BOT9,
-            
-                BOT10,
-            
-                BOT11,
-            
-                BOT12,
-            
-                THU1,
-            
-                THU2,
-            
-                THU3,
-            
-                THU4,
-            
-                THU5,
-            
-            THU6
+                            TOP1,
+                            TOP2,
+                            TOP3,
+                            TOP4,
+                            TOP5,
+                            TOP6,
+                            TOP7,
+                            TOP8,
+                            TOP9,
+                            TOP10,
+                            TOP11,
+                            TOP12,
+                            BOT1,
+                            BOT2,
+                            BOT3,
+                            BOT4,
+                            BOT5,
+                            BOT6,
+                            BOT7,
+                            BOT8,
+                            BOT9,
+                            BOT10,
+                            BOT11,
+                            BOT12,
+                            THU1,
+                            THU2,
+                            THU3,
+                            THU4,
+                            THU5,
+                            THU6
             )
     };
-
+    
     // "Don't fuck with this, thanks." -- germ
     // Sorry, it has been fucked with.
     size_t keymapsCount = 1;
-
+    
     
         
     
-    
-        #define H_TOP1 ((uint32_t) 1 << 0)
-    
-        #define H_TOP2 ((uint32_t) 1 << 1)
-    
-        #define H_TOP3 ((uint32_t) 1 << 2)
-    
-        #define H_TOP4 ((uint32_t) 1 << 3)
-    
-        #define H_TOP5 ((uint32_t) 1 << 4)
-    
-        #define H_TOP6 ((uint32_t) 1 << 5)
-    
-        #define H_TOP7 ((uint32_t) 1 << 6)
-    
-        #define H_TOP8 ((uint32_t) 1 << 7)
-    
-        #define H_TOP9 ((uint32_t) 1 << 8)
-    
-        #define H_TOP10 ((uint32_t) 1 << 9)
-    
-        #define H_TOP11 ((uint32_t) 1 << 10)
-    
-        #define H_TOP12 ((uint32_t) 1 << 11)
-    
-        #define H_BOT1 ((uint32_t) 1 << 12)
-    
-        #define H_BOT2 ((uint32_t) 1 << 13)
-    
-        #define H_BOT3 ((uint32_t) 1 << 14)
-    
-        #define H_BOT4 ((uint32_t) 1 << 15)
-    
-        #define H_BOT5 ((uint32_t) 1 << 16)
-    
-        #define H_BOT6 ((uint32_t) 1 << 17)
-    
-        #define H_BOT7 ((uint32_t) 1 << 18)
-    
-        #define H_BOT8 ((uint32_t) 1 << 19)
-    
-        #define H_BOT9 ((uint32_t) 1 << 20)
-    
-        #define H_BOT10 ((uint32_t) 1 << 21)
-    
-        #define H_BOT11 ((uint32_t) 1 << 22)
-    
-        #define H_BOT12 ((uint32_t) 1 << 23)
-    
-        #define H_THU1 ((uint32_t) 1 << 24)
-    
-        #define H_THU2 ((uint32_t) 1 << 25)
-    
-        #define H_THU3 ((uint32_t) 1 << 26)
-    
-        #define H_THU4 ((uint32_t) 1 << 27)
-    
-        #define H_THU5 ((uint32_t) 1 << 28)
-    
-        #define H_THU6 ((uint32_t) 1 << 29)
+            #define H_TOP1 ((uint32_t) 1 << 0)
+            #define H_TOP2 ((uint32_t) 1 << 1)
+            #define H_TOP3 ((uint32_t) 1 << 2)
+            #define H_TOP4 ((uint32_t) 1 << 3)
+            #define H_TOP5 ((uint32_t) 1 << 4)
+            #define H_TOP6 ((uint32_t) 1 << 5)
+            #define H_TOP7 ((uint32_t) 1 << 6)
+            #define H_TOP8 ((uint32_t) 1 << 7)
+            #define H_TOP9 ((uint32_t) 1 << 8)
+            #define H_TOP10 ((uint32_t) 1 << 9)
+            #define H_TOP11 ((uint32_t) 1 << 10)
+            #define H_TOP12 ((uint32_t) 1 << 11)
+            #define H_BOT1 ((uint32_t) 1 << 12)
+            #define H_BOT2 ((uint32_t) 1 << 13)
+            #define H_BOT3 ((uint32_t) 1 << 14)
+            #define H_BOT4 ((uint32_t) 1 << 15)
+            #define H_BOT5 ((uint32_t) 1 << 16)
+            #define H_BOT6 ((uint32_t) 1 << 17)
+            #define H_BOT7 ((uint32_t) 1 << 18)
+            #define H_BOT8 ((uint32_t) 1 << 19)
+            #define H_BOT9 ((uint32_t) 1 << 20)
+            #define H_BOT10 ((uint32_t) 1 << 21)
+            #define H_BOT11 ((uint32_t) 1 << 22)
+            #define H_BOT12 ((uint32_t) 1 << 23)
+            #define H_THU1 ((uint32_t) 1 << 24)
+            #define H_THU2 ((uint32_t) 1 << 25)
+            #define H_THU3 ((uint32_t) 1 << 26)
+            #define H_THU4 ((uint32_t) 1 << 27)
+            #define H_THU5 ((uint32_t) 1 << 28)
+            #define H_THU6 ((uint32_t) 1 << 29)
     
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
@@ -229,147 +139,83 @@ uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
 
 uint8_t keycodes_buffer_array[30] = {
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-    };
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+        };
 uint8_t keycode_index = 0;
 
 uint8_t command_mode = 0;
 uint16_t command_buffer[] = {
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-    };
+            0,
+            0,
+            0,
+            0,
+            0,
+        };
 uint8_t command_ind = 0;
 
 bool in_leader_mode = false;
 uint16_t leader_buffer[] = {
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-    };
+            0,
+            0,
+            0,
+            0,
+            0,
+        };
 uint8_t leader_ind = 0;
 uint16_t leader_timer = 0;
 
 bool dynamic_macro_mode = false;
 uint16_t dynamic_macro_buffer[] = {
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-        0,
-    
-    };
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+        };
 uint8_t dynamic_macro_ind;
 
 bool a_key_went_through = false;
@@ -730,17 +576,6 @@ void reset(const struct Chord* self) {
         reset_keyboard_kb();
     }
 }
-
-/*
-void send_to_qmk(const struct Chord* self) {
-    if (*self->state == ACTIVATED) {
-        keyevent_t event = {key, pressed, (timer_read() | 1) };
-        process_record_quantum
-    }
-    if (*self->state == DEACTIVATED) {
-    }
-}
-*/
 
 // Add all chords
 
@@ -2535,43 +2370,34 @@ void send_to_qmk(const struct Chord* self) {
     void function_57(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                
-                    
+                                    
                     
                     register_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_RALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                
-                    
+                                    
                     
                     register_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_RALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case RESTART:
-                
-                    
+                                    
                     
                     unregister_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     unregister_code(KC_RALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             default:
                 break;
@@ -2645,43 +2471,34 @@ void send_to_qmk(const struct Chord* self) {
     void function_58(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                
-                    
+                                    
                     
                     register_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_LALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                
-                    
+                                    
                     
                     register_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_LALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case RESTART:
-                
-                    
+                                    
                     
                     unregister_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     unregister_code(KC_LALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             default:
                 break;
@@ -2753,43 +2570,34 @@ void send_to_qmk(const struct Chord* self) {
     void function_59(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                
-                    
+                                    
                     
                     register_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_RGUI);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                
-                    
+                                    
                     
                     register_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_RGUI);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case RESTART:
-                
-                    
+                                    
                     
                     unregister_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     unregister_code(KC_RGUI);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             default:
                 break;
@@ -2861,43 +2669,34 @@ void send_to_qmk(const struct Chord* self) {
     void function_60(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                
-                    
+                                    
                     
                     register_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_LGUI);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                
-                    
+                                    
                     
                     register_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_LGUI);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case RESTART:
-                
-                    
+                                    
                     
                     unregister_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     unregister_code(KC_LGUI);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             default:
                 break;
@@ -3843,43 +3642,34 @@ void send_to_qmk(const struct Chord* self) {
     void function_91(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                
-                    
+                                    
                     
                     register_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_RALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                
-                    
+                                    
                     
                     register_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_RALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case RESTART:
-                
-                    
+                                    
                     
                     unregister_code(KC_RCTRL);
-                
-                    
+                                    
                     
                     unregister_code(KC_RALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             default:
                 break;
@@ -3953,43 +3743,34 @@ void send_to_qmk(const struct Chord* self) {
     void function_92(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                
-                    
+                                    
                     
                     register_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_LALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case DEACTIVATED:
                 break;
             case FINISHED:
             case FINISHED_FROM_ACTIVE:
-                
-                    
+                                    
                     
                     register_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     register_code(KC_LALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             case RESTART:
-                
-                    
+                                    
                     
                     unregister_code(KC_LCTRL);
-                
-                    
+                                    
                     
                     unregister_code(KC_LALT);
-                
-                send_keyboard_report();
+                                send_keyboard_report();
                 break;
             default:
                 break;
@@ -6135,332 +5916,169 @@ void send_to_qmk(const struct Chord* self) {
 
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
-    
-        &chord_0,
-    
-        &chord_1,
-    
-        &chord_2,
-    
-        &chord_3,
-    
-        &chord_4,
-    
-        &chord_5,
-    
-        &chord_6,
-    
-        &chord_7,
-    
-        &chord_8,
-    
-        &chord_9,
-    
-        &chord_10,
-    
-        &chord_11,
-    
-        &chord_12,
-    
-        &chord_13,
-    
-        &chord_14,
-    
-        &chord_15,
-    
-        &chord_16,
-    
-        &chord_17,
-    
-        &chord_18,
-    
-        &chord_19,
-    
-        &chord_20,
-    
-        &chord_21,
-    
-        &chord_22,
-    
-        &chord_23,
-    
-        &chord_24,
-    
-        &chord_25,
-    
-        &chord_26,
-    
-        &chord_27,
-    
-        &chord_28,
-    
-        &chord_29,
-    
-        &chord_30,
-    
-        &chord_31,
-    
-        &chord_32,
-    
-        &chord_33,
-    
-        &chord_34,
-    
-        &chord_35,
-    
-        &chord_36,
-    
-        &chord_37,
-    
-        &chord_38,
-    
-        &chord_39,
-    
-        &chord_40,
-    
-        &chord_41,
-    
-        &chord_42,
-    
-        &chord_43,
-    
-        &chord_44,
-    
-        &chord_45,
-    
-        &chord_46,
-    
-        &chord_47,
-    
-        &chord_48,
-    
-        &chord_49,
-    
-        &chord_50,
-    
-        &chord_51,
-    
-        &chord_52,
-    
-        &chord_53,
-    
-        &chord_54,
-    
-        &chord_55,
-    
-        &chord_56,
-    
-        &chord_57,
-    
-        &chord_58,
-    
-        &chord_59,
-    
-        &chord_60,
-    
-        &chord_61,
-    
-        &chord_62,
-    
-        &chord_63,
-    
-        &chord_64,
-    
-        &chord_65,
-    
-        &chord_66,
-    
-        &chord_67,
-    
-        &chord_68,
-    
-        &chord_69,
-    
-        &chord_70,
-    
-        &chord_71,
-    
-        &chord_72,
-    
-        &chord_73,
-    
-        &chord_74,
-    
-        &chord_75,
-    
-        &chord_76,
-    
-        &chord_77,
-    
-        &chord_78,
-    
-        &chord_79,
-    
-        &chord_80,
-    
-        &chord_81,
-    
-        &chord_82,
-    
-        &chord_83,
-    
-        &chord_84,
-    
-        &chord_85,
-    
-        &chord_86,
-    
-        &chord_87,
-    
-        &chord_88,
-    
-        &chord_89,
-    
-        &chord_90,
-    
-        &chord_91,
-    
-        &chord_92,
-    
-        &chord_93,
-    
-        &chord_94,
-    
-        &chord_95,
-    
-        &chord_96,
-    
-        &chord_97,
-    
-        &chord_98,
-    
-        &chord_99,
-    
-        &chord_100,
-    
-        &chord_101,
-    
-        &chord_102,
-    
-        &chord_103,
-    
-        &chord_104,
-    
-        &chord_105,
-    
-        &chord_106,
-    
-        &chord_107,
-    
-        &chord_108,
-    
-        &chord_109,
-    
-        &chord_110,
-    
-        &chord_111,
-    
-        &chord_112,
-    
-        &chord_113,
-    
-        &chord_114,
-    
-        &chord_115,
-    
-        &chord_116,
-    
-        &chord_117,
-    
-        &chord_118,
-    
-        &chord_119,
-    
-        &chord_120,
-    
-        &chord_121,
-    
-        &chord_122,
-    
-        &chord_123,
-    
-        &chord_124,
-    
-        &chord_125,
-    
-        &chord_126,
-    
-        &chord_127,
-    
-        &chord_128,
-    
-        &chord_129,
-    
-        &chord_130,
-    
-        &chord_131,
-    
-        &chord_132,
-    
-        &chord_133,
-    
-        &chord_134,
-    
-        &chord_135,
-    
-        &chord_136,
-    
-        &chord_137,
-    
-        &chord_138,
-    
-        &chord_139,
-    
-        &chord_140,
-    
-        &chord_141,
-    
-        &chord_142,
-    
-        &chord_143,
-    
-        &chord_144,
-    
-        &chord_145,
-    
-        &chord_146,
-    
-        &chord_147,
-    
-        &chord_148,
-    
-        &chord_149,
-    
-        &chord_150,
-    
-        &chord_151,
-    
-        &chord_152,
-    
-        &chord_153,
-    
-        &chord_154,
-    
-        &chord_155,
-    
-        &chord_156,
-    
-        &chord_157,
-    
-        &chord_158,
-    
-        &chord_159,
-    
-        &chord_160,
-    
-        &chord_161,
-    
-        &chord_162,
+            &chord_0,
+            &chord_1,
+            &chord_2,
+            &chord_3,
+            &chord_4,
+            &chord_5,
+            &chord_6,
+            &chord_7,
+            &chord_8,
+            &chord_9,
+            &chord_10,
+            &chord_11,
+            &chord_12,
+            &chord_13,
+            &chord_14,
+            &chord_15,
+            &chord_16,
+            &chord_17,
+            &chord_18,
+            &chord_19,
+            &chord_20,
+            &chord_21,
+            &chord_22,
+            &chord_23,
+            &chord_24,
+            &chord_25,
+            &chord_26,
+            &chord_27,
+            &chord_28,
+            &chord_29,
+            &chord_30,
+            &chord_31,
+            &chord_32,
+            &chord_33,
+            &chord_34,
+            &chord_35,
+            &chord_36,
+            &chord_37,
+            &chord_38,
+            &chord_39,
+            &chord_40,
+            &chord_41,
+            &chord_42,
+            &chord_43,
+            &chord_44,
+            &chord_45,
+            &chord_46,
+            &chord_47,
+            &chord_48,
+            &chord_49,
+            &chord_50,
+            &chord_51,
+            &chord_52,
+            &chord_53,
+            &chord_54,
+            &chord_55,
+            &chord_56,
+            &chord_57,
+            &chord_58,
+            &chord_59,
+            &chord_60,
+            &chord_61,
+            &chord_62,
+            &chord_63,
+            &chord_64,
+            &chord_65,
+            &chord_66,
+            &chord_67,
+            &chord_68,
+            &chord_69,
+            &chord_70,
+            &chord_71,
+            &chord_72,
+            &chord_73,
+            &chord_74,
+            &chord_75,
+            &chord_76,
+            &chord_77,
+            &chord_78,
+            &chord_79,
+            &chord_80,
+            &chord_81,
+            &chord_82,
+            &chord_83,
+            &chord_84,
+            &chord_85,
+            &chord_86,
+            &chord_87,
+            &chord_88,
+            &chord_89,
+            &chord_90,
+            &chord_91,
+            &chord_92,
+            &chord_93,
+            &chord_94,
+            &chord_95,
+            &chord_96,
+            &chord_97,
+            &chord_98,
+            &chord_99,
+            &chord_100,
+            &chord_101,
+            &chord_102,
+            &chord_103,
+            &chord_104,
+            &chord_105,
+            &chord_106,
+            &chord_107,
+            &chord_108,
+            &chord_109,
+            &chord_110,
+            &chord_111,
+            &chord_112,
+            &chord_113,
+            &chord_114,
+            &chord_115,
+            &chord_116,
+            &chord_117,
+            &chord_118,
+            &chord_119,
+            &chord_120,
+            &chord_121,
+            &chord_122,
+            &chord_123,
+            &chord_124,
+            &chord_125,
+            &chord_126,
+            &chord_127,
+            &chord_128,
+            &chord_129,
+            &chord_130,
+            &chord_131,
+            &chord_132,
+            &chord_133,
+            &chord_134,
+            &chord_135,
+            &chord_136,
+            &chord_137,
+            &chord_138,
+            &chord_139,
+            &chord_140,
+            &chord_141,
+            &chord_142,
+            &chord_143,
+            &chord_144,
+            &chord_145,
+            &chord_146,
+            &chord_147,
+            &chord_148,
+            &chord_149,
+            &chord_150,
+            &chord_151,
+            &chord_152,
+            &chord_153,
+            &chord_154,
+            &chord_155,
+            &chord_156,
+            &chord_157,
+            &chord_158,
+            &chord_159,
+            &chord_160,
+            &chord_161,
+            &chord_162,
     
 };
 
