@@ -16,11 +16,11 @@ enum pseudolayers {
 #define LEADER_TIMEOUT 500
 #define TAP_TIMEOUT 50
 
-    
-    
-    
-    
-    
+
+
+
+
+
     enum internal_keycodes {
         TOP1 = SAFE_RANGE,
                     TOP2,
@@ -72,12 +72,12 @@ enum pseudolayers {
                     THU8,
                     THU9,
                     THU10,
-        
-        
+
+
         FIRST_INTERNAL_KEYCODE = TOP1,
         LAST_INTERNAL_KEYCODE = THU10
     };
-    
+
     const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         [0] = LAYOUT_gergo(
                             TOP1,
@@ -132,14 +132,14 @@ enum pseudolayers {
                             THU10
             )
     };
-    
+
     // "Don't fuck with this, thanks." -- germ
     // Sorry, it has been fucked with.
     size_t keymapsCount = 1;
-    
-    
-        
-    
+
+
+
+
             #define H_TOP1 ((uint64_t) 1 << 0)
             #define H_TOP2 ((uint64_t) 1 << 1)
             #define H_TOP3 ((uint64_t) 1 << 2)
@@ -190,7 +190,7 @@ enum pseudolayers {
             #define H_THU8 ((uint64_t) 1 << 47)
             #define H_THU9 ((uint64_t) 1 << 48)
             #define H_THU10 ((uint64_t) 1 << 49)
-    
+
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 uint8_t current_pseudolayer = 1;
@@ -464,7 +464,7 @@ void key_layer_dance(const struct Chord* self) {
             wait_ms(TAP_TIMEOUT);
             key_out(self->value1);
             send_keyboard_report();
-            
+
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -494,7 +494,7 @@ void key_key_dance(const struct Chord* self) {
             key_in(self->value1);
             wait_ms(TAP_TIMEOUT);
             key_out(self->value1);
-            
+
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -659,2595 +659,2595 @@ void reset(const struct Chord* self) {
 
 // Add all chords
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-        
-        
-        
-            
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_0 = IDLE;
     const struct Chord chord_0 PROGMEM = {H_MID1 + H_MID2 + H_MID13 + H_MID14 + H_BOT1 + H_BOT2 + H_BOT13 + H_BOT14, ALWAYS_ON, &state_0, NULL, 0, 0, clear};
-    
 
-            
-        
-    
 
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-        
-        
-        
-            
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_1 = IDLE;
     const struct Chord chord_1 PROGMEM = {H_MID1 + H_MID14 + H_BOT1 + H_BOT14, ALWAYS_ON, &state_1, NULL, 0, 0, command};
-    
 
-            
-        
-    
 
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-        
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-        
-        
-        
-            
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_2 = IDLE;
     const struct Chord chord_2 PROGMEM = {H_MID1 + H_MID2 + H_MID3 + H_MID12 + H_MID13 + H_MID14 + H_BOT1 + H_BOT2 + H_BOT3 + H_BOT12 + H_BOT13 + H_BOT14, ALWAYS_ON, &state_2, NULL, 0, 0, reset};
-    
 
-            
-        
-    
 
-    
 
-    
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_3 = IDLE;
     const struct Chord chord_3 PROGMEM = {H_TOP1, QWERTY, &state_3, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_4 = IDLE;
     const struct Chord chord_4 PROGMEM = {H_TOP2, QWERTY, &state_4, NULL, KC_Q, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_5 = IDLE;
     const struct Chord chord_5 PROGMEM = {H_TOP3, QWERTY, &state_5, NULL, KC_W, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_6 = IDLE;
     const struct Chord chord_6 PROGMEM = {H_TOP4, QWERTY, &state_6, NULL, KC_E, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_7 = IDLE;
     const struct Chord chord_7 PROGMEM = {H_TOP5, QWERTY, &state_7, NULL, KC_R, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_8 = IDLE;
     const struct Chord chord_8 PROGMEM = {H_TOP6, QWERTY, &state_8, NULL, KC_T, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_9 = IDLE;
     const struct Chord chord_9 PROGMEM = {H_TOP7, QWERTY, &state_9, NULL, KC_Y, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_10 = IDLE;
     const struct Chord chord_10 PROGMEM = {H_TOP8, QWERTY, &state_10, NULL, KC_U, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_11 = IDLE;
     const struct Chord chord_11 PROGMEM = {H_TOP9, QWERTY, &state_11, NULL, KC_I, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_12 = IDLE;
     const struct Chord chord_12 PROGMEM = {H_TOP10, QWERTY, &state_12, NULL, KC_O, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_13 = IDLE;
     const struct Chord chord_13 PROGMEM = {H_TOP11, QWERTY, &state_13, NULL, KC_P, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_14 = IDLE;
     const struct Chord chord_14 PROGMEM = {H_MID1, QWERTY, &state_14, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_15 = IDLE;
     const struct Chord chord_15 PROGMEM = {H_MID2, QWERTY, &state_15, NULL, KC_A, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_16 = IDLE;
     const struct Chord chord_16 PROGMEM = {H_MID3, QWERTY, &state_16, NULL, KC_S, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_17 = IDLE;
     const struct Chord chord_17 PROGMEM = {H_MID4, QWERTY, &state_17, NULL, KC_D, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_18 = IDLE;
     const struct Chord chord_18 PROGMEM = {H_MID5, QWERTY, &state_18, NULL, KC_F, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_19 = IDLE;
     const struct Chord chord_19 PROGMEM = {H_MID6, QWERTY, &state_19, NULL, KC_G, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_20 = IDLE;
     const struct Chord chord_20 PROGMEM = {H_MID7, QWERTY, &state_20, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_21 = IDLE;
     const struct Chord chord_21 PROGMEM = {H_THU1, QWERTY, &state_21, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_22 = IDLE;
     const struct Chord chord_22 PROGMEM = {H_THU6, QWERTY, &state_22, NULL, KC_H, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_23 = IDLE;
     const struct Chord chord_23 PROGMEM = {H_MID8, QWERTY, &state_23, NULL, KC_J, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_24 = IDLE;
     const struct Chord chord_24 PROGMEM = {H_MID9, QWERTY, &state_24, NULL, KC_K, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_25 = IDLE;
     const struct Chord chord_25 PROGMEM = {H_MID10, QWERTY, &state_25, NULL, KC_L, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_26 = IDLE;
     const struct Chord chord_26 PROGMEM = {H_MID11, QWERTY, &state_26, NULL, KC_SCOLON, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_27 = IDLE;
     const struct Chord chord_27 PROGMEM = {H_MID12, QWERTY, &state_27, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_28 = IDLE;
     const struct Chord chord_28 PROGMEM = {H_MID13 + H_BOT13, QWERTY, &state_28, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_29 = IDLE;
     const struct Chord chord_29 PROGMEM = {H_MID14 + H_BOT14, QWERTY, &state_29, NULL, KC_Z, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_30 = IDLE;
     const struct Chord chord_30 PROGMEM = {H_BOT1, QWERTY, &state_30, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_31 = IDLE;
     const struct Chord chord_31 PROGMEM = {H_BOT2, QWERTY, &state_31, NULL, KC_C, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_32 = IDLE;
     const struct Chord chord_32 PROGMEM = {H_BOT3, QWERTY, &state_32, NULL, KC_V, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_33 = IDLE;
     const struct Chord chord_33 PROGMEM = {H_BOT4, QWERTY, &state_33, NULL, KC_B, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_34 = IDLE;
     const struct Chord chord_34 PROGMEM = {H_BOT5, QWERTY, &state_34, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_35 = IDLE;
     const struct Chord chord_35 PROGMEM = {H_BOT6, QWERTY, &state_35, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_36 = IDLE;
     const struct Chord chord_36 PROGMEM = {H_BOT7, QWERTY, &state_36, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_37 = IDLE;
     const struct Chord chord_37 PROGMEM = {H_BOT8, QWERTY, &state_37, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_38 = IDLE;
     const struct Chord chord_38 PROGMEM = {H_BOT9, QWERTY, &state_38, NULL, KC_N, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_39 = IDLE;
     const struct Chord chord_39 PROGMEM = {H_BOT10, QWERTY, &state_39, NULL, KC_M, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_40 = IDLE;
     const struct Chord chord_40 PROGMEM = {H_BOT11, QWERTY, &state_40, NULL, KC_COMMA, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_41 = IDLE;
     const struct Chord chord_41 PROGMEM = {H_BOT12, QWERTY, &state_41, NULL, KC_DOT, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_42 = IDLE;
     const struct Chord chord_42 PROGMEM = {H_BOT13, QWERTY, &state_42, NULL, KC_SLASH, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_43 = IDLE;
     const struct Chord chord_43 PROGMEM = {H_BOT14, QWERTY, &state_43, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_44 = IDLE;
     const struct Chord chord_44 PROGMEM = {H_THU2, QWERTY, &state_44, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_45 = IDLE;
     const struct Chord chord_45 PROGMEM = {H_THU3, QWERTY, &state_45, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_46 = IDLE;
     const struct Chord chord_46 PROGMEM = {H_THU4, QWERTY, &state_46, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_47 = IDLE;
     const struct Chord chord_47 PROGMEM = {H_THU5, QWERTY, &state_47, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_48 = IDLE;
     const struct Chord chord_48 PROGMEM = {H_THU7, QWERTY, &state_48, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_49 = IDLE;
     const struct Chord chord_49 PROGMEM = {H_THU8, QWERTY, &state_49, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_50 = IDLE;
     const struct Chord chord_50 PROGMEM = {H_THU9, QWERTY, &state_50, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_51 = IDLE;
     const struct Chord chord_51 PROGMEM = {H_THU10, QWERTY, &state_51, NULL, KC_X, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_52 = IDLE;
     const struct Chord chord_52 PROGMEM = {H_TOP2, NUM, &state_52, NULL, KC_1, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_53 = IDLE;
     const struct Chord chord_53 PROGMEM = {H_TOP3, NUM, &state_53, NULL, KC_2, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_54 = IDLE;
     const struct Chord chord_54 PROGMEM = {H_TOP4, NUM, &state_54, NULL, KC_3, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_55 = IDLE;
     const struct Chord chord_55 PROGMEM = {H_TOP5, NUM, &state_55, NULL, KC_4, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_56 = IDLE;
     const struct Chord chord_56 PROGMEM = {H_TOP6, NUM, &state_56, NULL, KC_5, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_57 = IDLE;
     const struct Chord chord_57 PROGMEM = {H_TOP7, NUM, &state_57, NULL, KC_6, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_58 = IDLE;
     const struct Chord chord_58 PROGMEM = {H_TOP8, NUM, &state_58, NULL, KC_7, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_59 = IDLE;
     const struct Chord chord_59 PROGMEM = {H_TOP9, NUM, &state_59, NULL, KC_8, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_60 = IDLE;
     const struct Chord chord_60 PROGMEM = {H_TOP10, NUM, &state_60, NULL, KC_9, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_61 = IDLE;
     const struct Chord chord_61 PROGMEM = {H_TOP11, NUM, &state_61, NULL, KC_0, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_62 = IDLE;
     const struct Chord chord_62 PROGMEM = {H_MID1, NUM, &state_62, NULL, KC_F1, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_63 = IDLE;
     const struct Chord chord_63 PROGMEM = {H_MID2, NUM, &state_63, NULL, KC_F2, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_64 = IDLE;
     const struct Chord chord_64 PROGMEM = {H_MID3, NUM, &state_64, NULL, KC_F3, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_65 = IDLE;
     const struct Chord chord_65 PROGMEM = {H_MID4, NUM, &state_65, NULL, KC_F4, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_66 = IDLE;
     const struct Chord chord_66 PROGMEM = {H_MID5, NUM, &state_66, NULL, KC_F5, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_67 = IDLE;
     const struct Chord chord_67 PROGMEM = {H_MID6, NUM, &state_67, NULL, KC_F6, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_68 = IDLE;
     const struct Chord chord_68 PROGMEM = {H_MID7, NUM, &state_68, NULL, KC_MS_BTN1, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_69 = IDLE;
     const struct Chord chord_69 PROGMEM = {H_MID13 + H_BOT13, NUM, &state_69, NULL, KC_F7, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_70 = IDLE;
     const struct Chord chord_70 PROGMEM = {H_MID14 + H_BOT14, NUM, &state_70, NULL, KC_F8, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_71 = IDLE;
     const struct Chord chord_71 PROGMEM = {H_BOT1, NUM, &state_71, NULL, KC_F9, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_72 = IDLE;
     const struct Chord chord_72 PROGMEM = {H_BOT2, NUM, &state_72, NULL, KC_F10, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_73 = IDLE;
     const struct Chord chord_73 PROGMEM = {H_BOT3, NUM, &state_73, NULL, KC_F11, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_74 = IDLE;
     const struct Chord chord_74 PROGMEM = {H_BOT4, NUM, &state_74, NULL, KC_F12, 0, single_dance};
-    
 
-            
-        
-    
 
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     uint8_t state_75 = IDLE;
     const struct Chord chord_75 PROGMEM = {H_BOT5, NUM, &state_75, NULL, KC_MS_BTN2, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
@@ -3327,15 +3327,15 @@ const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_73,
             &chord_74,
             &chord_75,
-    
+
 };
 
 const uint16_t leader_triggers[0][5] PROGMEM = {
-    
+
 };
 
 void (*leader_functions[]) (void) = {
-    
+
 };
 
 struct Chord* last_chord = NULL;
@@ -3350,7 +3350,7 @@ uint8_t keycode_to_index(uint16_t keycode) {
 
 void sound_keycode_array(uint16_t keycode) {
     uint8_t index = keycode_to_index(keycode);
-    
+
     keycode_index++;
     keycodes_buffer_array[index] = keycode_index;
 }
@@ -3389,7 +3389,7 @@ void kill_one_shots(void) {
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
-        
+
         if (*chord->state == IN_ONE_SHOT) {
             *chord->state = RESTART;
             chord->function(chord);
@@ -3404,12 +3404,12 @@ void process_finished_dances(void) {
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
-        
+
         if (*chord->state == ACTIVATED) {
             *chord->state = FINISHED_FROM_ACTIVE;
             chord->function(chord);
         }
-        
+
         if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
@@ -3424,13 +3424,13 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
     if (caller->function == key_layer_dance || caller->function == key_key_dance) {
         return;
     }
-    
+
     for (int i = 0; i < 76; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
-        
+
         if (*chord->state == ACTIVATED && (chord->function == key_layer_dance || chord->function == key_key_dance)) {
             *chord->state = DEACTIVATED;
             chord->function(chord);
@@ -3457,19 +3457,19 @@ void remove_subchords(void) {
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
-        
+
         if (!(*chord->state == READY || *chord->state == READY_IN_DANCE || *chord->state == READY_LOCKED)) {
             continue;
         }
-        
+
         for (int j = 0; j < 76; j++) {
             if (i == j) {continue;}
-            
+
             struct Chord* chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
             struct Chord chord_storage_2;
             memcpy_P(&chord_storage_2, chord_ptr_2, sizeof(struct Chord));
             struct Chord* chord_2 = &chord_storage_2;
-            
+
             if (are_hashed_keycodes_in_sound(chord_2->keycodes_hash, chord->keycodes_hash)) {
                 if (*chord_2->state == READY) {
                     *chord_2->state = IDLE;
@@ -3494,39 +3494,39 @@ void process_ready_chords(void) {
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             struct Chord* chord = &chord_storage;
-            
+
             // if the chord does not contain the first keycode
             bool contains_first_keycode = ((uint32_t) 1 << first_keycode_index) & chord->keycodes_hash;
             if (!contains_first_keycode) {
                 continue;
             }
-            
+
             if (!are_hashed_keycodes_in_array(chord->keycodes_hash)){
                 continue;
             }
-            
+
             if (*chord->state == LOCKED) {
                 *chord->state = READY_LOCKED;
                 continue;
             }
-            
+
             if (!(chord->pseudolayer == current_pseudolayer || chord->pseudolayer == ALWAYS_ON)) {
                 continue;
             }
-            
+
             if (*chord->state == IDLE) {
                 *chord->state = READY;
                 continue;
             }
-            
+
             if (*chord->state == IDLE_IN_DANCE) {
                 *chord->state = READY_IN_DANCE;
             }
         }
-        
+
         // remove subchords
         remove_subchords();
-        
+
         // execute logic
         // this should be only one chord
         struct Chord* chord = NULL;
@@ -3535,26 +3535,26 @@ void process_ready_chords(void) {
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
-            
+
             if (*chord->state == READY_LOCKED) {
                 *chord->state = RESTART;
                 chord->function(chord);
                 *chord->state = IDLE;
                 break;
             }
-            
+
             if (*chord->state == READY || *chord->state == READY_IN_DANCE) {
                 if (last_chord && last_chord != chord) {
                     process_finished_dances();
                 }
-                
+
                 bool lock_next_prev_state = lock_next;
-                
+
                 *chord->state = ACTIVATED;
                 chord->function(chord);
                 dance_timer = timer_read();
                 deactivate_active_taphold_chords(chord);
-                
+
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;
                     *chord->state = FINISHED_FROM_ACTIVE;
@@ -3564,8 +3564,8 @@ void process_ready_chords(void) {
                 break;
             }
         }
-        
-        
+
+
         // silence notes
         silence_keycode_hash_array(chord->keycodes_hash);
     }
@@ -3579,17 +3579,17 @@ void deactivate_active_chords(uint16_t keycode) {
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
-        
+
         broken = are_hashed_keycodes_in_sound(hash, chord->keycodes_hash);
         if (!broken) {
             continue;
         }
-        
+
         switch (*chord->state) {
             case ACTIVATED:
                 *chord->state = DEACTIVATED;
                 chord->function(chord);
-                
+
                 if (*chord->state == DEACTIVATED) {
                     dance_timer = timer_read();
                     *chord->state = IDLE_IN_DANCE;
@@ -3608,7 +3608,7 @@ void deactivate_active_chords(uint16_t keycode) {
                 break;
         }
     }
-    
+
 }
 
 void process_command(void) {
@@ -3637,7 +3637,7 @@ void process_leader(void) {
     for (int i = 0; i < 0; i++) {
         uint16_t trigger[5];
         memcpy_P(trigger, leader_triggers[i], 5 * sizeof(uint16_t));
-        
+
         if (identical(leader_buffer, trigger)) {
             (*leader_functions[i])();
             break;
@@ -3652,7 +3652,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (keycode < FIRST_INTERNAL_KEYCODE || keycode > LAST_INTERNAL_KEYCODE) {
         return true;
     }
-    
+
     if (record->event.pressed) {
         sound_keycode_array(keycode);
     } else {
@@ -3661,7 +3661,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     chord_timer = timer_read();
     leader_timer = timer_read();
-    
+
     return false;
 }
 
@@ -3669,7 +3669,7 @@ void matrix_scan_user(void) {
     bool chord_timer_expired = timer_elapsed(chord_timer) > CHORD_TIMEOUT;
     bool dance_timer_expired = timer_elapsed(dance_timer) > DANCE_TIMEOUT;
     bool leader_timer_expired = timer_elapsed(leader_timer) > LEADER_TIMEOUT;
-    
+
     if (chord_timer_expired && keycodes_buffer_array_min(NULL)) {
         process_ready_chords();
     }
@@ -3682,7 +3682,7 @@ void matrix_scan_user(void) {
     if (leader_timer_expired && in_leader_mode) {
         process_leader();
     }
-    
+
 }
 
 // for now here
@@ -3694,17 +3694,17 @@ void clear(const struct Chord* self) {
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             struct Chord* chord = &chord_storage;
-            
+
             *chord->state = IDLE;
         }
-        
+
         // clear keyboard
         clear_keyboard();
         send_keyboard_report();
-        
+
         // switch to default pseudolayer
         current_pseudolayer = 1;
-        
+
         // clear all keyboard states
         lock_next = false;
     }
