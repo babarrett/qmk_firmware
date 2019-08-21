@@ -2,7 +2,7 @@
 
 ## About
 
-This is a custom chording engine.
+This is a custom chording engine. See butterstick:tomas keymap for an example use.
 
 Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
@@ -128,40 +128,40 @@ All chords have to be added to `list_of_chord` array that gets regularly scanned
 
 The file `macros.inc` contains pyexpander macros that simplify adding the chords. The same chord can be added using this line: `$KC("QWERTY", "H_TOP1", "KC_Q")`.
 
-Macros `butterstick_rows` and `butterstick_cols` (in process of getting cleaned up) allow to add all standard butterstick combos in a syntax similar to QMK's layer syntax:
+In my keymap, I also have macros `butterstick_rows` and `butterstick_cols` (in process of getting cleaned up) that allow to add all standard butterstick combos in a syntax similar to QMK's layer syntax:
 
 ```c
 $butterstick_rows("QWERTY",
-    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
-    "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
-    "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+    "Q, W, E, R, T, Y, U, I, O, P,\
+     A, S, D, F, G, H, J, K, L, ;,\
+     Z, X, C, V, B, N, M, ,, ., /")
 $butterstick_cols("QWERTY",
-    "KC_ESC", "MO(MOV)", "KC_TAB", "", "O(KC_RGUI)", "", "KC_INS", "KC_DEL", "KC_BSPC",
-    'STR("HELLO")', "", "", "", "CMD", "", "", "", "KC_ENTER",
-    "O(KC_LSFT)", "O(KC_LCTL)", "O(KC_LALT)", "MO(NUM)", "O(KC_LGUI)", "MO(NUM)", "O(KC_RALT)", "O(KC_RCTL)", "O(KC_RSFT)")
+    "ESC, , TAB, , O(RGUI), , INS, DEL, BSPC,\
+        , ,    , ,        , ,    ,    , ENTER,\
+     O(LSFT), O(LCTL), O(LALT), O(NUM), O(LGUI), O(NUM), O(RALT), O(RCTL),  O(RSFT)")
 ```
 
 The first macro defines single key chords and the logical middle row. The second one defines the logical columns (`TOP1 + TOP2 = KC_ESC`, `TOP9 + TOP0 + BOT9 + BOT0 = KC_ENTER` ).
 
-I *might* improve these to take in a single long string instead of having each key in a separate chord. The arguments have to come in a string so they can be parsed. Not sure if I can work around that.
+The arguments have to come in a string so they can be parsed. Not sure if I can work around that. Take a look on how these are implemented, they are using a `$add_key` macro that you can use even if you don't want to use these keyboard specific macros.
 
 You might notice that the macros try to do a few clever things:
 
-* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,`  will get replaced with `KC_COMMA`. This really works only for alphas, numbers and punctuation. `KC_ESC` still has to be fully spelled out. However, because of the order of preprocessors you can not use strings defined using `#define` in these strings. Pyexpander substitutions and macros will work:
+* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,` becomes `KC_COMMA`. *To allow simple string splitting, you have to put a whitespace after the separating commas and no whitespace after the commas you want to expand into `KC_COMMA`.* I will see if I figure out a more flexible solution. This really works only for basic keycodes. However, because of the order of preprocessors you can not use strings defined using `#define` in these strings. Pyexpander substitutions and macros will work:
 
   ```c
-  $py(KEY1 = "KC_Q")
+  $py(key1 = "Q")
   $butterstick_rows("QWERTY",
-      $(KEY1), "W", "E", "R", "T", "Y", "U", "I", "O", "P",
-      "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
-      "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+      key1 + ", W, E, R, T, Y, U, I, O, P,\
+       A, S, D, F, G, H, J, K, L, ;,\
+       Z, X, C, V, B, N, M, ,, ., /")
   ```
 
 * `MO()` and `DF()` macros work the same way for pseudolayers as they would for layers in pure QMK.
 
 * `O()` define a one shot key but it also supports pseudolayers!
 
-* `STR("...")` sends a string. Careful with quoting.
+* `STR('...')` sends a string. Careful with quoting.
 
 * Special chords like Command mode have their own codes like `CMD`.
 
@@ -232,9 +232,9 @@ The complete list of strings that these macros can accept is:
       }
   }
   $butterstick_rows("QWERTY",
-      "M(fnc_M1, 0, 0)", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
-      "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
-      "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/")
+      "M(fnc_M1, 0, 0), W, E, R, T, Y, U, I, O, P,\
+       A, S, D, F, G, H, J, K, L, ;,\
+       Z, X, C, V, B, N, M, \,, ., /")
   ```
 
   Since this feels like it would be the most common way to use this feature, I wrote a macro for this:
@@ -254,8 +254,8 @@ Macro `secret_chord` allows you to add a single chord while utilize the smart st
 
 ```c
 $secret_chord("QWERTY", "DF(ASETNIOP)",
-    "X", "", "", "", "", "", "", "", "", "X",
-    "X", "", "", "", "", "", "", "", "", "X")
+    "X, , , , , , , , , X,\
+     X, , , , , , , , , X")
 ```
 
 adds chord on the `QWERTY` pseudolayer that gets activated with `TOP1 + TOP0 + BOT1 + BOT0` and on activation permanently switches to the `ASETNIOP` layer.
@@ -264,14 +264,14 @@ I also have `asetniop_layer` (see [http://asetniop.com](asetniop.com)) macro to 
 
 ```c
 $asetniop_layer("ASETNIOP",
-    "A", "S", "E", "T", "N", "I", "O", "P",
-      "W", "D", "R", "B", "H", "L", ";",
-        "X", "C", "Y", "V", "U", "",
-          "F", "J", ",", "G", "M",
-            "Q", "K", "-", "BSPC",
-              "Z", ".", "'",
-                "[", "]",
-                  "/")
+    "A,  S,  E,  T,  N,  I,  O,  P,\
+       W,  D,  R,  B,  H,  L,  ;,\
+         X,  C,  Y,  V,  U,  ,\
+           F,  J, \,,  G,  M,\
+             Q,  K,  -,  BSPC,\
+               Z,  .,  ',\
+                 [,  ],\
+                   /")
 ```
 
 This macro can also parse strings like `butterstick_rows`.

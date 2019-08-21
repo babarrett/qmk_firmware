@@ -250,7 +250,7 @@ void process_ready_chords(void) {
 }
 
 void deactivate_active_chords(uint16_t keycode) {
-    uint32_t hash = ($(type))1 << (keycode - SAFE_RANGE);
+    $(type) hash = ($(type))1 << (keycode - SAFE_RANGE);
     bool broken;
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
