@@ -33,12 +33,12 @@ $secret_chord("ALWAYS_ON", "CLEAR_KB",
 $butterstick_rows("QWERTY",
     "Q, W, E, R, T, Y, U, I, O, P,\
      A, S, D, F, G, H, J, K, L, ;,\
-     Z, X, C, V, B, N, M, \,, ., /")
+     Z, X, C, V, B, N, M, ,, ., /")
 
 $butterstick_cols("QWERTY",
-    "    ESC,        ,     TAB, , O(RGUI), ,     INS,     DEL,     BSPC,\
-            ,        ,        , ,        , ,        ,        ,    ENTER,\
-     O(LSFT), O(LCTL), O(LALT), , O(LGUI), , O(RALT), O(RCTL),  O(RSFT)")
+    "    ESC,        ,     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
+            ,        ,        ,       ,        ,       ,        ,        ,    ENTER,\
+     O(LSFT), O(LCTL), O(LALT), O(NUM), O(LGUI), O(NUM), O(RALT), O(RCTL),  O(RSFT)")
 
 $secret_chord("QWERTY", "SPACE",
     " , , , , , , , , ,  ,\
@@ -49,9 +49,9 @@ $secret_chord("QWERTY", "MO(MOUSE)",
       ,  ,  ,  , , , , , , ")
 
 $butterstick_rows("NUM",
-    " 1,  2,  3,  4,  5,     6,  7,  8,   9,   0,\
-     F1, F2, F3, F4, F5,    F6, F7, F8,  F9, F10,\
-      `,  -,  =,  [,  ], SLASH,  ',   , F11, F12")
+    " 1,  2,  3,  4,  5,  6,  7,  8,   9,   0,\
+     F1, F2, F3, F4, F5, F6, F7, F8,  F9, F10,\
+      `,  -,  =,  [,  ],  \,  ',   , F11, F12")
 
 $butterstick_cols("NUM",
     "    ESC,        ,     TAB, , O(RGUI), ,     INS,     DEL,     BSPC,\
@@ -88,7 +88,7 @@ $asetniop_layer("ASETNIOP",
     "A,  S,  E,  T,  N,  I,  O,  P,\
        W,  D,  R,  B,  H,  L,  ;,\
          X,  C,  Y,  V,  U,  ,\
-           F,  J, \,,  G,  M,\
+           F,  J,  ,,  G,  M,\
              Q,  K,  -,  BSPC,\
                Z,  .,  ',\
                  [,  ],\
@@ -106,7 +106,7 @@ $butterstick_cols("ASETNIOP",
 
 $asetniop_layer("ASETNIOP_123",
     "1,  2,  3,  4,  7,  8,  9,  0,\
-        ,   ,  5,  =,  6,  SLASH, ;,\
+        ,   ,  5,  =,  6,  \,  ;,\
           ,   ,   ,   ,   ,   ,\
             ,   ,   ,   ,   ,\
               ,   ,   ,  BSPC,\

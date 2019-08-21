@@ -65,10 +65,8 @@ def top_level_split(s):
             balance += 1
         elif c == ')':
             balance -= 1
-        elif c == ',' and balance == 0 and s[i-1] != '\\':
+        elif c == ',' and balance == 0 and not s[i+1] == ',':
             part = part[:-1].strip()
-            if part == '\\,':
-                part = ','
             parts.append(part)
             part = ""
 
