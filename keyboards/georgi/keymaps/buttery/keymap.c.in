@@ -7,7 +7,7 @@
 $py(engine_path = "../../../../users/dennytom/chording_engine/")
 
 enum pseudolayers {
-    ALWAYS_ON, QWERTY, NUM, SYM, MOVE, MEDIA, GAME
+    ALWAYS_ON, QWERTY, NUM, SYM, MOVE, MEDIA, GAME, STENO
 };
 
 // Macros to simplify chord definitions
@@ -48,10 +48,10 @@ $secret_chord("ALWAYS_ON", "ESC",
            , X, ,             , X, ")
 
 $butterstick_rows("QWERTY",
-                "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
-                ESC,  A, R, S, T, D,         H, N, E, I, O, RGUI,\
-                LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
-KL(KC_BSPC, SYM),  KL(KC_SPC, NUM),  LSFT,         KK(ENTER, KC_RSFT),  KL(KC_SPC, NUM),  KL(KC_BSPC, SYM)")
+                   "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
+                    ESC,  A, R, S, T, D,         H, N, E, I, O, RGUI,\
+                    LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
+KL(KC_BSPC, SYM), KL(KC_SPC, NUM), LSFT,         KK(ENTER, KC_RSFT), KL(KC_SPC, NUM), KL(KC_BSPC, SYM)")
 
 $butterstick_cols("QWERTY",
     ",    , ,     ,     ,           ,       ,     ,     ,     , ,\
@@ -88,6 +88,11 @@ $secret_chord("QWERTY", "DF(GAME)",
     ", , ,  X, ,  ,         , ,  X, ,  , ,\
      , , X, X, X, ,         , X, X, X, , ,\
             ,  ,  ,         , , ")
+            
+$secret_chord("QWERTY", "DF(STENO,)",
+    ", , , X, X, ,         , X, X, , , ,\
+     , , , X, X, ,         , X, X, , , ,\
+           ,  ,  ,         ,  , ")
 
 $butterstick_rows("NUM",
     "KC_LPRN, 1,       2,        3,       4,  5,               6,  7,  8,       9,       0,       KC_RPRN,\
@@ -109,13 +114,13 @@ $secret_chord("NUM", "MK(RCTRL, RALT)",
 $secret_chord("NUM", "MK(LCTRL, LALT)",
     ", , ,  ,  ,   ,         , , , , , ,\
      , , X, X, X,  X,        , , , , , ,\
-              ,  ,  ,          , , ")
+              ,  ,  ,        , , ")
 
 $butterstick_rows("SYM",
     ", KC_GRV,   KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK,             KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, KC_QUES, RCTL,\
-    , KC_TILDE, KC_MINS, KC_QUOT, KC_COLN, KC_UNDS,             KC_BSLS, KC_EQL,  KC_DQUO, KC_PLUS, KC_BSLS, RGUI,\
-    , KC_EXLM,  KC_AT,   KC_HASH, KC_DLR,  KC_PERC,             KC_CIRC, KC_AMPR, KC_ASTR, KC_PIPE, KC_QUES, RALT,\
-                               BSPC,    SPACE,   ,                     ,       SPACE,   BSPC")
+     , KC_TILDE, KC_MINS, KC_QUOT, KC_COLN, KC_UNDS,             KC_BSLS, KC_EQL,  KC_DQUO, KC_PLUS, KC_BSLS, RGUI,\
+     , KC_EXLM,  KC_AT,   KC_HASH, KC_DLR,  KC_PERC,             KC_CIRC, KC_AMPR, KC_ASTR, KC_PIPE, KC_QUES, RALT,\
+                             BSPC,  SPACE,         ,                    ,   SPACE, BSPC")
 
 $butterstick_cols("SYM",
     ", , ,     ,     ,           ,       ,     ,     ,     , ,\
@@ -137,15 +142,21 @@ $butterstick_cols("MOVE",
 
 $butterstick_rows("MEDIA",
     ", , , , , ,              , KC_MPRV, KC_MPLY, KC_MPLY, KC_MNXT, KC_VOLU,\
-    , , , , , ,              , ,        ,        ,        ,        KC_MUTE,\
-    , , , , , ,              , ,        ,        ,        ,        KC_VOLD,\
-                , , ,              , ,        ")
+     , , , , , ,              , ,        ,        ,        ,        KC_MUTE,\
+     , , , , , ,              , ,        ,        ,        ,        KC_VOLD,\
+           , , ,              , ,        ")
 
 $butterstick_rows("GAME",
-                "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
-                 ESC,  A, R, S, T, D,         H, N, E, I, O, DF(QWERTY),\
-                 LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
-                    MO(NUM), KC_SPC, LSFT,         KK(ENTER, KC_RSFT), KL(KC_SPC, NUM), KL(KC_BSPC, SYM)")
+    "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
+     ESC,  A, R, S, T, D,         H, N, E, I, O, DF(QWERTY),\
+     LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
+   MO(NUM), KC_SPC, LSFT,         KK(ENTER, KC_RSFT), KL(KC_SPC, NUM), KL(KC_BSPC, SYM)")
+                    
+$butterstick_rows("STENO",
+    "DF(QWERTY), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1,              STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR,\
+     ,         ,       ,       ,       ,        ,              ,      ,       ,       ,       ,       ,        \
+     MO(SYM)   , STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,              STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,\
+                                    STN_A, STN_N1, STN_O,              STN_E, STN_N1, STN_U ")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
