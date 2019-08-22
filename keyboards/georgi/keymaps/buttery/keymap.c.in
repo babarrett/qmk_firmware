@@ -88,7 +88,7 @@ $secret_chord("QWERTY", "DF(GAME)",
     ", , ,  X, ,  ,         , ,  X, ,  , ,\
      , , X, X, X, ,         , X, X, X, , ,\
             ,  ,  ,         , , ")
-            
+
 $secret_chord("QWERTY", "DF(STENO,)",
     ", , , X, X, ,         , X, X, , , ,\
      , , , X, X, ,         , X, X, , , ,\
@@ -151,12 +151,6 @@ $butterstick_rows("GAME",
      ESC,  A, R, S, T, D,         H, N, E, I, O, DF(QWERTY),\
      LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
    MO(NUM), KC_SPC, LSFT,         KK(ENTER, KC_RSFT), KL(KC_SPC, NUM), KL(KC_BSPC, SYM)")
-                    
-$butterstick_rows("STENO",
-    "DF(QWERTY), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1,              STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR,\
-     ,         ,       ,       ,       ,        ,              ,      ,       ,       ,       ,       ,        \
-     MO(SYM)   , STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,              STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,\
-                                    STN_A, STN_O, STN_N1,              STN_N7, STN_E, STN_U ")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
