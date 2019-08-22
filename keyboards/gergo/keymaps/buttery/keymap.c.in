@@ -1,0 +1,68 @@
+#include QMK_KEYBOARD_H
+
+// use pyexpander to generate keymap.c:
+// python3 expander3.py -f keymap.c.in | cat -s > keymap.c
+// the preprocessor code is written to be readable not to produce nice output
+
+$py(engine_path = "../../../../users/dennytom/chording_engine/")
+
+enum pseudolayers {
+    ALWAYS_ON, QWERTY, NUM, SYM
+};
+
+// Macros to simplify chord definitions
+$include(engine_path + "macros.inc")
+
+// Keyboard states and settings
+$include("keyboard.inc")
+
+// The chord structure and chord functions (send key, switch pseudolayer, ...)
+$include(engine_path + "chord.inc")
+
+// Add all chords
+
+$secret_chord("ALWAYS_ON", "CLEAR_KB",
+    "",  "", "", "", "", "",                                  "", "", "", "", "",  "",
+    "X", "X", "", "", "", "", "",                         "", "", "", "", "", "X", "X",
+    "X", "X", "", "", "", "", "",     "",         "",     "", "", "", "", "", "X", "X",
+                          "", "", "", "",         "", "", "", "")
+
+$secret_chord("ALWAYS_ON", "CMD",
+    "", "", "", "", "", "",                                  "", "", "", "", "", "",
+    "X", "", "", "", "", "", "",                         "", "", "", "", "", "", "X",
+    "X", "", "", "", "", "", "",     "",         "",     "", "", "", "", "", "", "X",
+                         "", "", "", "",         "", "", "", "")
+
+$secret_chord("ALWAYS_ON", "RESET",
+    "",  "",  "", "", "", "",                                  "", "", "", "",  "",  "",
+    "X", "X", "X", "", "", "", "",                         "", "", "", "", "X", "X", "X",
+    "X", "X", "X", "", "", "", "",     "",         "",     "", "", "", "", "X", "X", "X",
+                           "", "", "", "",         "", "", "", "")
+
+$butterstick_rows("QWERTY",
+   "X", "Q", "W", "E", "R", "T",                                      "Y", "U", "I", "O", "P", "",
+   "", "", "", "", "", "",                                      "", "", "", "", "", "",
+   "X", "A", "S", "D", "F", "G", "X",                            "X", "H", "J", "K", "L", ";", "X",
+   "", "", "", "", "", "", "",                            "", "", "", "", "", "", "",
+   "X", "Z", "X", "C", "V", "B", "X",      "X",        "X",      "X", "N", "M", ",", ".", "/", "X",
+                            "X", "X", "X", "X",        "X", "X", "X", "X")
+
+
+$butterstick_rows("NUM",
+   "",   "1",  "2",  "3",   "4",   "5",                                               "6", "7", "8", "9", "0", "",
+   "",   "",   "",   "",    "",    "",                                                "", "", "", "", "", "",
+   "F1", "F2", "F3", "F4",  "F5",  "F6",  "MS_BTN1",                             "", "", "", "", "", "", "",
+   "",   "",   "",   "",    "",    "",    "",                                    "", "", "", "", "", "", "",
+   "F7", "F8", "F9", "F10", "F11", "F12", "MS_BTN2",        "",        "",      "", "", "", "", "", "", "",
+                                                "", "", "", "",        "", "", "", "")
+
+$butterstick_rows("SYM",
+   "", "", "", "", "", "",                                      "", "", "", "", "", "",
+   "", "", "", "", "", "",                                      "", "", "", "", "", "",
+   "", "", "", "", "", "", "",                            "", "", "", "", "", "", "",
+   "", "", "", "", "", "", "",                            "", "", "", "", "", "", "",
+   "", "", "", "", "", "", "",      "",        "",      "", "", "", "", "", "", "",
+                            "", "", "", "",        "", "", "", "")
+
+// Register all chords, load chording logic
+$include(engine_path + "chording_engine.inc")
