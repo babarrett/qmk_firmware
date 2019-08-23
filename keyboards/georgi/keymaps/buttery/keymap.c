@@ -1,5 +1,7 @@
 #include QMK_KEYBOARD_H
 
+#include "sten.h"
+#include "keymap_steno.h"
 // use pyexpander to generate keymap.c:
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
@@ -2879,7 +2881,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_63 = IDLE;
-    const struct Chord chord_63 PROGMEM = {H_TOP4 + H_TOP5 + H_TOP8 + H_TOP9 + H_BOT4 + H_BOT5 + H_BOT8 + H_BOT9, QWERTY, &state_63, NULL, STENO,, 0, perm_pseudolayer};
+    const struct Chord chord_63 PROGMEM = {H_TOP4 + H_TOP5 + H_TOP8 + H_TOP9 + H_BOT4 + H_BOT5 + H_BOT8 + H_BOT9, QWERTY, &state_63, NULL, STENO, 0, perm_pseudolayer};
     
 
             
@@ -7560,6 +7562,652 @@ void reset(const struct Chord* self) {
         
     
 
+    
+    
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+            
+                
+    
+    uint8_t state_238 = IDLE;
+    const struct Chord chord_238 PROGMEM = {H_TOP1, STENO, &state_238, NULL, QWERTY, 0, perm_pseudolayer};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_239 = IDLE;
+    const struct Chord chord_239 PROGMEM = {H_TOP2, STENO, &state_239, NULL, STN_S1, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_240 = IDLE;
+    const struct Chord chord_240 PROGMEM = {H_TOP3, STENO, &state_240, NULL, STN_TL, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_241 = IDLE;
+    const struct Chord chord_241 PROGMEM = {H_TOP4, STENO, &state_241, NULL, STN_PL, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_242 = IDLE;
+    const struct Chord chord_242 PROGMEM = {H_TOP5, STENO, &state_242, NULL, STN_HL, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_243 = IDLE;
+    const struct Chord chord_243 PROGMEM = {H_TOP6, STENO, &state_243, NULL, STN_ST1, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_244 = IDLE;
+    const struct Chord chord_244 PROGMEM = {H_TOP7, STENO, &state_244, NULL, STN_ST3, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_245 = IDLE;
+    const struct Chord chord_245 PROGMEM = {H_TOP8, STENO, &state_245, NULL, STN_FR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_246 = IDLE;
+    const struct Chord chord_246 PROGMEM = {H_TOP9, STENO, &state_246, NULL, STN_PR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_247 = IDLE;
+    const struct Chord chord_247 PROGMEM = {H_TOP10, STENO, &state_247, NULL, STN_LR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_248 = IDLE;
+    const struct Chord chord_248 PROGMEM = {H_TOP11, STENO, &state_248, NULL, STN_TR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_249 = IDLE;
+    const struct Chord chord_249 PROGMEM = {H_TOP12, STENO, &state_249, NULL, STN_DR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+            
+                
+    
+    uint8_t state_250 = IDLE;
+    const struct Chord chord_250 PROGMEM = {H_BOT1, STENO, &state_250, NULL, SYM, 0, temp_pseudolayer};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_251 = IDLE;
+    const struct Chord chord_251 PROGMEM = {H_BOT2, STENO, &state_251, NULL, STN_S2, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_252 = IDLE;
+    const struct Chord chord_252 PROGMEM = {H_BOT3, STENO, &state_252, NULL, STN_KL, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_253 = IDLE;
+    const struct Chord chord_253 PROGMEM = {H_BOT4, STENO, &state_253, NULL, STN_WL, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_254 = IDLE;
+    const struct Chord chord_254 PROGMEM = {H_BOT5, STENO, &state_254, NULL, STN_RL, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_255 = IDLE;
+    const struct Chord chord_255 PROGMEM = {H_BOT6, STENO, &state_255, NULL, STN_ST2, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_256 = IDLE;
+    const struct Chord chord_256 PROGMEM = {H_BOT7, STENO, &state_256, NULL, STN_ST4, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_257 = IDLE;
+    const struct Chord chord_257 PROGMEM = {H_BOT8, STENO, &state_257, NULL, STN_RR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_258 = IDLE;
+    const struct Chord chord_258 PROGMEM = {H_BOT9, STENO, &state_258, NULL, STN_BR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_259 = IDLE;
+    const struct Chord chord_259 PROGMEM = {H_BOT10, STENO, &state_259, NULL, STN_GR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_260 = IDLE;
+    const struct Chord chord_260 PROGMEM = {H_BOT11, STENO, &state_260, NULL, STN_SR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_261 = IDLE;
+    const struct Chord chord_261 PROGMEM = {H_BOT12, STENO, &state_261, NULL, STN_ZR, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_262 = IDLE;
+    const struct Chord chord_262 PROGMEM = {H_THU1, STENO, &state_262, NULL, STN_A, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_263 = IDLE;
+    const struct Chord chord_263 PROGMEM = {H_THU2, STENO, &state_263, NULL, STN_O, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_264 = IDLE;
+    const struct Chord chord_264 PROGMEM = {H_THU3, STENO, &state_264, NULL, STN_N1, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_265 = IDLE;
+    const struct Chord chord_265 PROGMEM = {H_THU4, STENO, &state_265, NULL, STN_N7, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_266 = IDLE;
+    const struct Chord chord_266 PROGMEM = {H_THU5, STENO, &state_266, NULL, STN_E, 0, single_dance};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+                
+    
+    uint8_t state_267 = IDLE;
+    const struct Chord chord_267 PROGMEM = {H_THU6, STENO, &state_267, NULL, STN_U, 0, single_dance};
+    
+
+            
+        
+    
+
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_0,
@@ -7800,6 +8448,36 @@ const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_235,
             &chord_236,
             &chord_237,
+            &chord_238,
+            &chord_239,
+            &chord_240,
+            &chord_241,
+            &chord_242,
+            &chord_243,
+            &chord_244,
+            &chord_245,
+            &chord_246,
+            &chord_247,
+            &chord_248,
+            &chord_249,
+            &chord_250,
+            &chord_251,
+            &chord_252,
+            &chord_253,
+            &chord_254,
+            &chord_255,
+            &chord_256,
+            &chord_257,
+            &chord_258,
+            &chord_259,
+            &chord_260,
+            &chord_261,
+            &chord_262,
+            &chord_263,
+            &chord_264,
+            &chord_265,
+            &chord_266,
+            &chord_267,
     
 };
 
@@ -7856,7 +8534,7 @@ bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
 }
 
 void kill_one_shots(void) {
-    for (int i = 0; i < 238; i++) {
+    for (int i = 0; i < 268; i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -7872,7 +8550,7 @@ void kill_one_shots(void) {
 }
 
 void process_finished_dances(void) {
-    for (int i = 0; i < 238; i++) {
+    for (int i = 0; i < 268; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -7898,7 +8576,7 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
         return;
     }
     
-    for (int i = 0; i < 238; i++) {
+    for (int i = 0; i < 268; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -7925,7 +8603,7 @@ uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
 }
 
 void remove_subchords(void) {
-    for (int i = 0; i < 238; i++) {
+    for (int i = 0; i < 268; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -7935,7 +8613,7 @@ void remove_subchords(void) {
             continue;
         }
         
-        for (int j = 0; j < 238; j++) {
+        for (int j = 0; j < 268; j++) {
             if (i == j) {continue;}
             
             struct Chord* chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
@@ -7962,7 +8640,7 @@ void process_ready_chords(void) {
     uint8_t first_keycode_index = 0;
     while (keycodes_buffer_array_min(&first_keycode_index)) {
         // find ready chords
-        for (int i = 0; i < 238; i++) {
+        for (int i = 0; i < 268; i++) {
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -8003,7 +8681,7 @@ void process_ready_chords(void) {
         // execute logic
         // this should be only one chord
         struct Chord* chord = NULL;
-        for (int i = 0; i < 238; i++) {
+        for (int i = 0; i < 268; i++) {
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -8047,7 +8725,7 @@ void process_ready_chords(void) {
 void deactivate_active_chords(uint16_t keycode) {
     uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
     bool broken;
-    for (int i = 0; i < 238; i++) {
+    for (int i = 0; i < 268; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -8162,7 +8840,7 @@ void matrix_scan_user(void) {
 void clear(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
-        for (int i = 0; i < 238; i++) {
+        for (int i = 0; i < 268; i++) {
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
