@@ -71,7 +71,9 @@ void kill_one_shots(void) {
         if (*chord->state == IN_ONE_SHOT) {
             *chord->state = RESTART;
             chord->function(chord);
-            *chord->state = IDLE;
+            if (*chord->state == RESTART) {
+                *chord->state = IDLE;
+            }
         }
     }
 }
@@ -91,9 +93,12 @@ void process_finished_dances(void) {
         if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
-            *chord->state = RESTART;
-            chord->function(chord);
-            *chord->state = IDLE;
+            if (*chord->state == FINISHED) {
+                *chord->state = RESTART;
+                if (*chord->state == RESTART) {
+                    *chord->state = IDLE;
+                }
+            }
         }
     }
 }
@@ -217,7 +222,9 @@ void process_ready_chords(void) {
             if (*chord->state == READY_LOCKED) {
                 *chord->state = RESTART;
                 chord->function(chord);
-                *chord->state = IDLE;
+                if (*chord->state == RESTART) {
+                    *chord->state = IDLE;
+                }
                 break;
             }
             
@@ -279,7 +286,9 @@ void deactivate_active_chords(uint16_t keycode) {
             case FINISHED_FROM_ACTIVE:
                 *chord->state = RESTART;
                 chord->function(chord);
-                *chord->state = IDLE;
+                if (*chord->state == RESTART) {
+                    *chord->state = IDLE;
+                }
                 kill_one_shots();
                 break;
             default:

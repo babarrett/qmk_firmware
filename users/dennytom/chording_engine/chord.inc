@@ -280,13 +280,22 @@ void lock(const struct Chord* self) {
 void one_shot_key(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
-            key_in(self->value1);
             break;
         case DEACTIVATED:
+            key_in(self->value1);
             *self->state = IN_ONE_SHOT;
             break;
+        case FINISHED:
+        case FINISHED_FROM_ACTIVE:
+            key_in(self->value1);
+            a_key_went_through = false;
+            break;
         case RESTART:
-            key_out(self->value1);
+            if (a_key_went_through) {
+                key_out(self->value1);
+            } else {
+                *self->state = IN_ONE_SHOT;
+            }
         default:
             break;
     }
@@ -295,13 +304,22 @@ void one_shot_key(const struct Chord* self) {
 void one_shot_layer(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
-            current_pseudolayer = self->value1;
             break;
         case DEACTIVATED:
+            current_pseudolayer = self->value1;
             *self->state = IN_ONE_SHOT;
             break;
+        case FINISHED:
+        case FINISHED_FROM_ACTIVE:
+            current_pseudolayer = self->value1;
+            a_key_went_through = false;
+            break;
         case RESTART:
-            current_pseudolayer = self->pseudolayer;
+            if (a_key_went_through) {
+                current_pseudolayer = self->pseudolayer;
+            } else {
+                *self->state = IN_ONE_SHOT;
+            }
         default:
             break;
     }
