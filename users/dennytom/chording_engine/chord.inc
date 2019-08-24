@@ -2,6 +2,7 @@ uint8_t current_pseudolayer = 1;
 bool lock_next = false;
 uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
+bool autoshift_mode = true;
 
 uint8_t keycodes_buffer_array[$(NUM_OF_KEYS)] = {
     $for(i in range(0, NUM_OF_KEYS))\
@@ -243,6 +244,46 @@ void key_key_dance(const struct Chord* self) {
             break;
         default:
             break;
+    }
+}
+
+void autoshift_dance_impl(const struct Chord* self) {
+    switch (*self->state) {
+        case ACTIVATED:
+            break;
+        case DEACTIVATED:
+            key_in(self->value1);
+            wait_ms(TAP_TIMEOUT);
+            key_out(self->value1);
+            
+            *self->state = IDLE;
+            break;
+        case FINISHED_FROM_ACTIVE:
+            key_in(KC_LSFT);
+            key_in(self->value1);
+            wait_ms(TAP_TIMEOUT);
+            key_out(self->value1);
+            key_out(KC_LSFT);
+            
+            *self->state = IDLE;
+            break;
+        default:
+            break;
+    }
+}
+
+void autoshift_dance(const struct Chord* self) {
+    if (autoshift_mode) {
+        autoshift_dance_impl(self);
+    } else {
+        single_dance(self);
+    }
+}
+
+void autoshift_toggle(const struct Chord* self){
+    if (*self->state == ACTIVATED) {
+        autoshift_mode = !autoshift_mode;
+        *self->state = IDLE;
     }
 }
 

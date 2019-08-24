@@ -8,6 +8,20 @@ $macro(KC, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
     $py(NUM_OF_CHORDS += 1)
 $endmacro
 
+$macro(AS, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE), 0, autoshift_dance};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
+$macro(AT, ON_PSEUDOLAYER, KEYCODES_HASH)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, 0, 0, autoshift_toggle};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
 $macro(KL, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE, TO_PSEUDOLAYER)
     $nonlocal(NUM_OF_CHORDS)
     uint8_t state_$(NUM_OF_CHORDS) = IDLE;
@@ -335,6 +349,8 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
         $if(len(split) == 1)
             $if(type == "LOCK")
                 $LOCK(PSEUDOLAYER, KEYCODES_HASH)
+            $elif(type == "AT")
+                $AT(PSEUDOLAYER, KEYCODES_HASH)
             $elif(type == "CMD")
                 $CMD(PSEUDOLAYER, KEYCODES_HASH)
             $elif(type == "LEAD")
@@ -380,6 +396,9 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $py(code1 = expand_keycode_fnc(val1))
                 $py(val2 = val.split(',')[1].strip())
                 $KL(PSEUDOLAYER, KEYCODES_HASH, code1, val2)
+            $elif(type == "AS")
+                $py(code = expand_keycode_fnc(val))
+                $AS(PSEUDOLAYER, KEYCODES_HASH, code)
             $elif(type == "MO")
                 $MO(PSEUDOLAYER, KEYCODES_HASH, val)
             $elif(type == "DF")

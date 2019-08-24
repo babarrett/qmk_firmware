@@ -23,7 +23,7 @@ $include(engine_path + "chord.inc")
 
 $butterstick_cols("ALWAYS_ON",
     "    ,    ,    ,    ,    ,    ,    ,    ,    ,\
-     LOCK,    ,    ,    , CMD,    ,    ,    ,    ,\
+     LOCK,  AT,    ,    , CMD,    ,    ,    ,    ,\
          ,    ,    ,    ,    ,    ,    ,    ,    ")
 
 $secret_chord("ALWAYS_ON", "CLEAR_KB",
@@ -31,9 +31,9 @@ $secret_chord("ALWAYS_ON", "CLEAR_KB",
      X, X, , , , , , , X, X")
 
 $butterstick_rows("QWERTY",
-    "Q, W, E, R, T, Y, U, I, O, P,\
-     A, S, D, F, G, H, J, K, L, ;,\
-     Z, X, C, V, B, N, M, ,, ., /")
+    "AS(Q), AS(W), AS(E), AS(R), AS(T), AS(Y), AS(U), AS(I),     AS(O), AS(P),\
+     AS(A), AS(S), AS(D), AS(F), AS(G), AS(H), AS(J), AS(K),     AS(L), AS(;),\
+     AS(Z), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
 
 $butterstick_cols("QWERTY",
     "    ESC,        ,     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
@@ -49,9 +49,9 @@ $secret_chord("QWERTY", "MO(MOUSE)",
       ,  ,  ,  , , , , , , ")
 
 $butterstick_rows("NUM",
-    " 1,  2,  3,  4,  5,  6,  7,  8,   9,   0,\
-     F1, F2, F3, F4, F5, F6, F7, F8,  F9, F10,\
-      `,  -,  =,  [,  ],  \,  ',   , F11, F12")
+    "AS(1), AS(2), AS(3), AS(4), AS(5), AS(6), AS(7), AS(8), AS(9), AS(0),\
+        F1,    F2,    F3,    F4,    F5,    F6,    F7,    F8,    F9,   F10,\
+     AS(`), AS(-), AS(=), AS([), AS(]), AS(\), AS('),      ,   F11,   F12")
 
 $butterstick_cols("NUM",
     "    ESC,        ,     TAB, , O(RGUI), ,     INS,     DEL,     BSPC,\
