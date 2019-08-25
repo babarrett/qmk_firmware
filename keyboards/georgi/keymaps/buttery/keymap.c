@@ -3668,7 +3668,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_101 = IDLE;
-    const struct Chord chord_101 PROGMEM = {H_THU2, NUM, &state_101, NULL, KC_SPACE, 0, single_dance};
+    const struct Chord chord_101 PROGMEM = {H_THU2, NUM, &state_101, NULL, KC_SPC, 0, single_dance};
     
 
             
@@ -3725,7 +3725,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_104 = IDLE;
-    const struct Chord chord_104 PROGMEM = {H_THU5, NUM, &state_104, NULL, KC_SPACE, 0, single_dance};
+    const struct Chord chord_104 PROGMEM = {H_THU5, NUM, &state_104, NULL, KC_SPC, 0, single_dance};
     
 
             

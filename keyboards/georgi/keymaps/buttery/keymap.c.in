@@ -50,10 +50,10 @@ $secret_chord("ALWAYS_ON", "ESC",
            , X, ,             , X, ")
 
 $butterstick_rows("COLEMAK",
-                   "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
-                    ESC,  A, R, S, T, D,         H, N, E, I, O, RGUI,\
-                    LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
-KL(KC_BSPC, SYM), KL(KC_SPC, NUM), LSFT,         KK(ENTER, KC_RSFT), KL(KC_SPC, NUM), KL(KC_BSPC, SYM)")
+              "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
+               ESC,  A, R, S, T, D,         H, N, E, I, O, RGUI,\
+               LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
+KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 $butterstick_cols("COLEMAK",
     ",    , ,     ,     ,           ,       ,     ,     ,     , ,\
@@ -97,10 +97,10 @@ $secret_chord("COLEMAK", "DF(STENO)",
             , , ,          , , ")
 
 $butterstick_rows("NUM",
-    "KC_LPRN, 1,       2,        3,       4,  5,               6,  7,  8,       9,       0,       KC_RPRN,\
-     KC_EQL,  KC_PLUS, KC_MINS,  KC_ASTR, /,  .,               ,,  /,  KC_ASTR, KC_MINS, KC_PLUS, KC_EQL,\
-     LSFT,    F1,      F2,        F3,     F4, F5,              F6, F7, F8,      F9,      F10,     RSFT,\
-                               BSPC, SPACE, RSFT,              ENTER, SPACE, BSPC")
+    "KC_LPRN, 1,       2,     3,       4,    5,               6,  7,  8,       9,    0,       KC_RPRN,\
+     EQL,     KC_PLUS, MINS,  KC_ASTR, /,    .,               ,,  /,  KC_ASTR, MINS, KC_PLUS, EQL,\
+     LSFT,    F1,      F2,    F3,      F4,   F5,              F6, F7, F8,      F9,   F10,     RSFT,\
+                                BSPC, SPC, RSFT,              ENTER, SPC, BSPC")
 
 $butterstick_cols("NUM",
     ", ,    ,     ,     ,       ,       ,     ,     ,     ,    ,\
@@ -144,15 +144,15 @@ $butterstick_cols("MOVE",
 
 $butterstick_rows("MEDIA",
     ", , , , , ,              , KC_MPRV, KC_MPLY, KC_MPLY, KC_MNXT, KC_VOLU,\
-     , , , , , ,              , ,        ,        ,        ,        KC_MUTE,\
-     , , , , , ,              , ,        ,        ,        ,        KC_VOLD,\
-           , , ,              , ,        ")
+     , , , , , ,              ,        ,        ,        ,        , KC_MUTE,\
+     , , , , , ,              ,        ,        ,        ,        , KC_VOLD,\
+           , , ,              , ,   ")
 
 $butterstick_rows("GAME",
     "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
      ESC,  A, R, S, T, D,         H, N, E, I, O, DF(COLEMAK),\
      LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
-   MO(NUM), KC_SPC, LSFT,         KK(ENTER, KC_RSFT), KL(KC_SPC, NUM), KL(KC_BSPC, SYM)")
+      MO(NUM), SPC, LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 
 $butterstick_rows("STENO",
