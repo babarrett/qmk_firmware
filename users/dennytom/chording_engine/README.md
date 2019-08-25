@@ -179,13 +179,18 @@ The complete list of strings that these macros can accept is:
 
 * `DF(X)`: Permanent switch to pseudolayer `X`.
 
-* `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) .
+* `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) . Both have retro tapping enabled.
 
 * Tap-holds
 
-  * `KK(X, Y)`: Send code `X` on tap and code `Y` on hold.
-  * `KL(X, Y)`: Send code `X` on tap and switch to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping).
+  * `KK(X, Y)`: Pulses code `X` on tap and code `Y` on hold.
+  * `KL(X, Y)`: Pulses code `X` on tap and switches to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping).
   * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
+
+* Autoshift
+
+  * `AS(X)`: Pulses code `X` on tap and Pulses left shift + `X` on hold. 
+  * `AT` : Toggles autoshift for all autoshift chords. If off, all `AS` chords act like `KC` chords.
 
 * `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
 

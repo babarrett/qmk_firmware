@@ -71,7 +71,9 @@ void kill_one_shots(void) {
         if (*chord->state == IN_ONE_SHOT) {
             *chord->state = RESTART;
             chord->function(chord);
-            *chord->state = IDLE;
+            if (*chord->state == RESTART) {
+                *chord->state = IDLE;
+            }
         }
     }
 }
@@ -86,14 +88,20 @@ void process_finished_dances(void) {
         if (*chord->state == ACTIVATED) {
             *chord->state = FINISHED_FROM_ACTIVE;
             chord->function(chord);
+            if (a_key_went_through) {
+                kill_one_shots();
+            }
         }
         
         if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
-            *chord->state = RESTART;
-            chord->function(chord);
-            *chord->state = IDLE;
+            if (*chord->state == FINISHED) {
+                *chord->state = RESTART;
+                if (*chord->state == RESTART) {
+                    *chord->state = IDLE;
+                }
+            }
         }
     }
 }
@@ -112,7 +120,9 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
         if (*chord->state == ACTIVATED && (chord->function == key_layer_dance || chord->function == key_key_dance)) {
             *chord->state = DEACTIVATED;
             chord->function(chord);
-            *chord->state = IDLE; // not necessary but let's keep it here for clarity
+            if (*chord->state == DEACTIVATED) {
+                *chord->state = IDLE; // not necessary but let's keep it here for clarity
+            }
         }
     }
 }
@@ -217,7 +227,9 @@ void process_ready_chords(void) {
             if (*chord->state == READY_LOCKED) {
                 *chord->state = RESTART;
                 chord->function(chord);
-                *chord->state = IDLE;
+                if (*chord->state == RESTART) {
+                    *chord->state = IDLE;
+                }
                 break;
             }
             
@@ -237,7 +249,12 @@ void process_ready_chords(void) {
                     lock_next = false;
                     *chord->state = FINISHED_FROM_ACTIVE;
                     chord->function(chord);
-                    *chord->state = LOCKED;
+                    if (*chord->state == FINISHED_FROM_ACTIVE) {
+                        *chord->state = LOCKED;
+                    }
+                    if (a_key_went_through) {
+                        kill_one_shots();
+                    }
                 }
                 break;
             }
@@ -279,7 +296,9 @@ void deactivate_active_chords(uint16_t keycode) {
             case FINISHED_FROM_ACTIVE:
                 *chord->state = RESTART;
                 chord->function(chord);
-                *chord->state = IDLE;
+                if (*chord->state == RESTART) {
+                    *chord->state = IDLE;
+                }
                 kill_one_shots();
                 break;
             default:
