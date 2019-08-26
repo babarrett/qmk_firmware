@@ -56,15 +56,15 @@ $butterstick_rows("COLEMAK",
 KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 $butterstick_cols("COLEMAK",
-    ",    , ,     ,     ,           ,       ,     ,     ,     , ,\
-     ,    , ,     ,     ,           ,       ,     ,     ,     , ,\
+    ",    ,     ,     ,     ,       ,           ,     ,     , , ,\
+     ,    ,     ,     ,     ,       ,           ,     ,     , , ,\
      INS, , LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, , ,\
-                       LCTL, MO(MOVE),   ,       TAB,  ")
+              LCTL, MO(MOVE),       ,        TAB,  ")
 
 $secret_chord("COLEMAK", "MO(MEDIA)",
     ", ,  ,  ,  ,  ,        , , , , , ,\
      , X, X, X, X, ,        , , , , , ,\
-                  ,  ,  ,        , , ")
+             ,  ,  ,        , , ")
 
 $secret_chord("COLEMAK", "MK(RCTRL, RALT)",
     ", , , , ,  ,            ,  ,  ,  , , ,\
@@ -84,7 +84,7 @@ $secret_chord("COLEMAK", "MK(RCTRL, RGUI)",
 $secret_chord("COLEMAK", "MK(LCTRL, LGUI)",
     ", , , ,  ,  ,         , , , , , ,\
      , , , X, X, X,        , , , , , ,\
-            ,  ,  ,         , , ")
+            ,  ,  ,        , , ")
 
 $secret_chord("COLEMAK", "DF(GAME)",
     ", , ,  X, ,  ,         , ,  X, ,  , ,\
@@ -103,10 +103,10 @@ $butterstick_rows("NUM",
                                 BSPC, SPC, RSFT,              ENTER, SPC, BSPC")
 
 $butterstick_cols("NUM",
-    ", ,    ,     ,     ,       ,       ,     ,     ,     ,    ,\
-     , ,    ,     ,     ,       ,       ,     ,     ,     ,    ,\
-     , F11, LALT, LGUI, LCTL,   ,       RCTL, RGUI, RALT, F12, ,\
-                  ,     ,       ,       ,     ")
+    ",    ,     ,     ,     ,       ,           ,     ,     ,    ,  ,\
+     ,    ,     ,     ,     ,       ,           ,     ,     ,    ,  ,\
+     , F11, LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, F12,  ,\
+                      ,     ,       ,           ,     ")
 
 $secret_chord("NUM", "MK(RCTRL, RALT)",
     ", , , , , ,            ,  ,  ,  , , ,\
@@ -125,10 +125,10 @@ $butterstick_rows("SYM",
                              BSPC,  SPACE,         ,                    ,   SPACE, BSPC")
 
 $butterstick_cols("SYM",
-    ", , ,     ,     ,           ,       ,     ,     ,     , ,\
-     , , ,     ,     ,           ,       ,     ,     ,     , ,\
+    ", ,     ,     ,     ,       ,           ,     ,     , , ,\
+     , ,     ,     ,     ,       ,           ,     ,     , , ,\
      , , LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, , ,\
-               ,     ,           ,       ,     ")
+                   ,     ,       ,           ,     ")
 
 $butterstick_rows("MOVE",
     ",     MK(LSFT, LCTL, LEFT), HOME, UP,   PGUP,  MK(LSFT, LCTL, RIGHT),             , ,     UP,   ,      , ,\
@@ -137,16 +137,16 @@ $butterstick_rows("MOVE",
                                       ,     ,      ,                                        , ,     ")
 
 $butterstick_cols("MOVE",
-    ", , ,     ,     ,           ,       ,     ,     ,     , ,\
-     , , ,     ,     ,           ,       ,     ,     ,     , ,\
+    ", ,     ,     ,     ,       ,           ,     ,     , , ,\
+     , ,     ,     ,     ,       ,           ,     ,     , , ,\
      , , LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, , ,\
-               ,     ,           ,       ,     ")
+                   ,     ,       ,           ,     ")
 
 $butterstick_rows("MEDIA",
     ", , , , , ,              , KC_MPRV, KC_MPLY, KC_MPLY, KC_MNXT, KC_VOLU,\
      , , , , , ,              ,        ,        ,        ,        , KC_MUTE,\
      , , , , , ,              ,        ,        ,        ,        , KC_VOLD,\
-           , , ,              , ,   ")
+           , , ,              ,        , ")
 
 $butterstick_rows("GAME",
     "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
@@ -157,9 +157,9 @@ $butterstick_rows("GAME",
 
 $butterstick_rows("STENO",
     "DF(COLEMAK), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1,              STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR,\
-     ,         ,       ,       ,       ,        ,              ,      ,       ,       ,       ,       ,        \
-     MO(SYM)   , STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,              STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,\
-                                    STN_A, STN_O, STN_N1,              STN_N7, STN_E, STN_U ")
+      ,         ,       ,       ,       ,       ,        ,                     ,       ,       ,       ,       ,        \
+      MO(SYM)   , STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,              STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,\
+                                     STN_A, STN_O, STN_N1,              STN_N7, STN_E, STN_U ")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
