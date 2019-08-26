@@ -173,6 +173,12 @@ void key_out(int16_t keycode) {
     }
 }
 
+void tap_key(int16_t keycode) {
+    key_in(keycode);
+    wait_ms(TAP_TIMEOUT);
+    key_out(keycode);
+}
+
 void single_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -196,28 +202,16 @@ void single_dance(const struct Chord* self) {
 void key_layer_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
-            break;
-        case DEACTIVATED:
-            key_in(self->value1);
-            wait_ms(TAP_TIMEOUT);
-            key_out(self->value1);
-            send_keyboard_report();
-            
-            *self->state = IDLE;
-            break;
-        case FINISHED:
-        case FINISHED_FROM_ACTIVE:
             current_pseudolayer = self->value2;
             a_key_went_through = false;
             break;
+        case DEACTIVATED:
         case RESTART:
             if (!a_key_went_through) {
-                key_in(self->value1);
-                wait_ms(TAP_TIMEOUT);
-                key_out(self->value1);
-                send_keyboard_report();
+                tap_key(self->value1);
             }
             current_pseudolayer = self->pseudolayer;
+            *self->state = IDLE; // does not have effect if the state was RESTART
             break;
         default:
             break;
@@ -229,10 +223,7 @@ void key_key_dance(const struct Chord* self) {
         case ACTIVATED:
             break;
         case DEACTIVATED:
-            key_in(self->value1);
-            wait_ms(TAP_TIMEOUT);
-            key_out(self->value1);
-            
+            tap_key(self->value1);
             *self->state = IDLE;
             break;
         case FINISHED:
@@ -252,17 +243,13 @@ void autoshift_dance_impl(const struct Chord* self) {
         case ACTIVATED:
             break;
         case DEACTIVATED:
-            key_in(self->value1);
-            wait_ms(TAP_TIMEOUT);
-            key_out(self->value1);
+            tap_key(self->value1);
             
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
             key_in(KC_LSFT);
-            key_in(self->value1);
-            wait_ms(TAP_TIMEOUT);
-            key_out(self->value1);
+            tap_key(self->value1);
             key_out(KC_LSFT);
             
             *self->state = IDLE;
