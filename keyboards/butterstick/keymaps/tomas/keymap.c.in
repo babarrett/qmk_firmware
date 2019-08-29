@@ -33,10 +33,10 @@ $secret_chord("ALWAYS_ON", "CLEAR_KB",
 $butterstick_rows("QWERTY",
     "AS(Q), AS(W), AS(E), AS(R), AS(T), AS(Y), AS(U), AS(I),     AS(O), AS(P),\
      AS(A), AS(S), AS(D), AS(F), AS(G), AS(H), AS(J), AS(K),     AS(L), AS(;),\
-     AS(Z), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
+     KL(KC_Z, NUM), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
 
 $butterstick_cols("QWERTY",
-    "    ESC,        ,     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
+    "    ESC, MO(MOV),     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
             ,        ,        ,       ,        ,       ,        ,        ,    ENTER,\
      O(LSFT), O(LCTL), O(LALT), O(NUM), O(LGUI), O(NUM), O(RALT), O(RCTL),  O(RSFT)")
 

@@ -149,12 +149,15 @@ void key_in(int16_t keycode) {
     if (command_mode == 1 && command_ind < $(COMMAND_MAX_LENGTH)) {
         command_buffer[command_ind] = keycode;
         command_ind++;
+        a_key_went_through = true;
     } else if (in_leader_mode && leader_ind < $(LEADER_MAX_LENGTH)) {
         leader_buffer[leader_ind] = keycode;
         leader_ind++;
+        a_key_went_through = true;
     } else if (dynamic_macro_mode && dynamic_macro_ind < $(DYNAMIC_MACRO_MAX_LENGTH)) {
         dynamic_macro_buffer[dynamic_macro_ind] = keycode;
         dynamic_macro_ind++;
+        a_key_went_through = true;
     } else {
         if (!handle_US_ANSI_shifted_keys(keycode, true)) {
             register_code(keycode);
