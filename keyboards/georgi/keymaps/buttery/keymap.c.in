@@ -9,7 +9,7 @@
 $py(engine_path = "../../../../users/dennytom/chording_engine/")
 
 enum pseudolayers {
-    ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, STENO
+    ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, STENO, QWERTY
 };
 
 // Macros to simplify chord definitions
@@ -96,6 +96,11 @@ $secret_chord("COLEMAK", "DF(STENO)",
      , , , X, X, ,         , X, X, , , ,\
             , , ,          , , ")
 
+$secret_chord("COLEMAK", "DF(QWERTY)",
+    ", X, X, X, X, X,         X, , , , , ,\
+     ,  ,  ,  ,  ,  ,          , , , , , ,\
+              ,  ,  ,          , , ")
+
 $butterstick_rows("NUM",
     "KC_LPRN, 1,       2,     3,       4,    5,               6,  7,  8,       9,    0,       KC_RPRN,\
      EQL,     KC_PLUS, MINS,  KC_ASTR, /,    .,               ,,  /,  KC_ASTR, MINS, KC_PLUS, EQL,\
@@ -160,6 +165,18 @@ $butterstick_rows("STENO",
       ,         ,       ,       ,       ,       ,        ,                     ,       ,       ,       ,       ,        \
       MO(SYM)   , STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,              STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,\
                                      STN_A, STN_O, STN_N1,              STN_N7, STN_E, STN_U ")
+
+$butterstick_rows("QWERTY",
+              "TAB,  Q, W, E, R, T,         Y, U, I, O, P, RCTL,\
+               ESC,  A, S, D, F, G,         H, J, K, L, ;, RGUI,\
+               LSFT, Z, X, C, V, B,         N, M, ,, ., /, DEL,\
+KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
+
+$butterstick_cols("QWERTY",
+    ",    ,     ,     ,     ,       ,           ,     ,     , , ,\
+     ,    ,     ,     ,     ,       ,           ,     ,     , , ,\
+     INS, , LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, , ,\
+              LCTL, MO(MOVE),       ,        TAB,  ")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
