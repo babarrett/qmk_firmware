@@ -9,7 +9,7 @@
 $py(engine_path = "../../../../users/dennytom/chording_engine/")
 
 enum pseudolayers {
-    ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, STENO, QWERTY
+    ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, GAME2, STENO, QWERTY
 };
 
 // Macros to simplify chord definitions
@@ -155,10 +155,15 @@ $butterstick_rows("MEDIA",
 
 $butterstick_rows("GAME",
     "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
-     ESC,  A, R, S, T, D,         H, N, E, I, O, DF(COLEMAK),\
+     ESC,   ,  ,  ,  ,  ,          ,  ,  ,  ,  , DF(COLEMAK),\
+     LSFT, A, R, S, T, D,         H, N, E, I, O, DEL,\
+    MO(GAME2), SPC, LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
+      
+$butterstick_rows("GAME2",
+    "TAB,  1, 2, 3, 4, 5,         6, 7, 8, 9, 0, RCTL,\
+     ESC,   ,  ,  ,  ,  ,          ,  ,  ,  ,  , DF(COLEMAK),\
      LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
       MO(NUM), SPC, LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
-
 
 $butterstick_rows("STENO",
     "DF(COLEMAK), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1,              STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR,\
