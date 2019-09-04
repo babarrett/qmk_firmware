@@ -254,7 +254,7 @@ $macro(MK, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                 $for(i in range(0, l))\
                     $py(val = DEFINITION.split(',')[i].strip())
                     $py(code = expand_keycode_fnc(val))
@@ -291,7 +291,7 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                 switch (*self->counter) {
                     $for(i in range(0, l))\
                         $py(val = DEFINITION.split(',')[i].strip())

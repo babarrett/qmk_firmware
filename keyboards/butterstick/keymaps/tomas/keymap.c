@@ -181,6 +181,7 @@ enum chord_states {
     READY,
     ACTIVATED,
     DEACTIVATED,
+    PRESS_FROM_ACTIVE,
     FINISHED_FROM_ACTIVE,
     IDLE_IN_DANCE,
     READY_IN_DANCE,
@@ -335,9 +336,6 @@ single_dance (const struct Chord *self) {
         key_out (self->value1);
         *self->state = IDLE;
         break;
-    case FINISHED:
-    case FINISHED_FROM_ACTIVE:
-        break;
     case RESTART:
         key_out (self->value1);
         break;
@@ -376,7 +374,7 @@ key_key_dance (const struct Chord *self) {
         *self->state = IDLE;
         break;
     case FINISHED:
-    case FINISHED_FROM_ACTIVE:
+    case PRESS_FROM_ACTIVE:
         key_in (self->value2);
         break;
     case RESTART:
@@ -390,19 +388,19 @@ key_key_dance (const struct Chord *self) {
 void
 autoshift_dance_impl (const struct Chord *self) {
     switch (*self->state) {
-    case ACTIVATED:
-        break;
     case DEACTIVATED:
+    case RESTART:
         tap_key (self->value1);
-
         *self->state = IDLE;
         break;
     case FINISHED_FROM_ACTIVE:
         key_in (KC_LSFT);
         tap_key (self->value1);
         key_out (KC_LSFT);
-
         *self->state = IDLE;
+        // the skip to IDLE is usually just a lag optimization,
+        // in this case it has a logic function, on a short
+        // press (still longer than a tap) the key does not get shifted
         break;
     default:
         break;
@@ -434,9 +432,6 @@ temp_pseudolayer (const struct Chord *self) {
         break;
     case DEACTIVATED:
         current_pseudolayer = self->pseudolayer;
-        break;
-    case FINISHED:
-    case FINISHED_FROM_ACTIVE:
         break;
     case RESTART:
         current_pseudolayer = self->pseudolayer;
@@ -470,7 +465,7 @@ one_shot_key (const struct Chord *self) {
         *self->state = IN_ONE_SHOT;
         break;
     case FINISHED:
-    case FINISHED_FROM_ACTIVE:
+    case PRESS_FROM_ACTIVE:
         key_in (self->value1);
         a_key_went_through = false;
         break;
@@ -495,7 +490,7 @@ one_shot_layer (const struct Chord *self) {
         *self->state = IN_ONE_SHOT;
         break;
     case FINISHED:
-    case FINISHED_FROM_ACTIVE:
+    case PRESS_FROM_ACTIVE:
         current_pseudolayer = self->value1;
         a_key_went_through = false;
         break;
@@ -1731,14 +1726,12 @@ process_finished_dances (void) {
         struct Chord *chord = &chord_storage;
 
         if (*chord->state == ACTIVATED) {
-            *chord->state = FINISHED_FROM_ACTIVE;
+            *chord->state = PRESS_FROM_ACTIVE;
             chord->function (chord);
             if (a_key_went_through) {
                 kill_one_shots ();
             }
-        }
-
-        if (*chord->state == IDLE_IN_DANCE) {
+        } else if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function (chord);
             if (*chord->state == FINISHED) {
@@ -1747,6 +1740,13 @@ process_finished_dances (void) {
                     *chord->state = IDLE;
                 }
             }
+        } else if (*chord->state == PRESS_FROM_ACTIVE) {
+            *chord->state = FINISHED_FROM_ACTIVE;
+            chord->function (chord);
+            if (a_key_went_through) {
+                kill_one_shots ();
+            }
+            dance_timer = timer_read ();
         }
     }
 }
@@ -1909,9 +1909,9 @@ process_ready_chords (void) {
 
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;
-                    *chord->state = FINISHED_FROM_ACTIVE;
+                    *chord->state = PRESS_FROM_ACTIVE;
                     chord->function (chord);
-                    if (*chord->state == FINISHED_FROM_ACTIVE) {
+                    if (*chord->state == PRESS_FROM_ACTIVE) {
                         *chord->state = LOCKED;
                     }
                     if (a_key_went_through) {
@@ -1957,6 +1957,7 @@ deactivate_active_chords (uint16_t keycode) {
                 kill_one_shots ();
             }
             break;
+        case PRESS_FROM_ACTIVE:
         case FINISHED_FROM_ACTIVE:
             *chord->state = RESTART;
             chord->function (chord);

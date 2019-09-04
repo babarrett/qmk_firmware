@@ -86,14 +86,12 @@ void process_finished_dances(void) {
         struct Chord* chord = &chord_storage;
         
         if (*chord->state == ACTIVATED) {
-            *chord->state = FINISHED_FROM_ACTIVE;
+            *chord->state = PRESS_FROM_ACTIVE;
             chord->function(chord);
             if (a_key_went_through) {
                 kill_one_shots();
             }
-        }
-        
-        if (*chord->state == IDLE_IN_DANCE) {
+        } else if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
             if (*chord->state == FINISHED) {
@@ -102,6 +100,13 @@ void process_finished_dances(void) {
                     *chord->state = IDLE;
                 }
             }
+        } else if (*chord->state == PRESS_FROM_ACTIVE) {
+            *chord->state = FINISHED_FROM_ACTIVE;
+            chord->function(chord);
+            if (a_key_went_through) {
+                kill_one_shots();
+            }
+            dance_timer = timer_read();
         }
     }
 }
@@ -247,9 +252,9 @@ void process_ready_chords(void) {
                 
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;
-                    *chord->state = FINISHED_FROM_ACTIVE;
+                    *chord->state = PRESS_FROM_ACTIVE;
                     chord->function(chord);
-                    if (*chord->state == FINISHED_FROM_ACTIVE) {
+                    if (*chord->state == PRESS_FROM_ACTIVE) {
                         *chord->state = LOCKED;
                     }
                     if (a_key_went_through) {
@@ -293,6 +298,7 @@ void deactivate_active_chords(uint16_t keycode) {
                     kill_one_shots();
                 }
                 break;
+            case PRESS_FROM_ACTIVE:
             case FINISHED_FROM_ACTIVE:
                 *chord->state = RESTART;
                 chord->function(chord);
