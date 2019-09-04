@@ -57,6 +57,13 @@ $macro(DF, ON_PSEUDOLAYER, KEYCODES_HASH, TO_PSEUDOLAYER)
     $py(NUM_OF_CHORDS += 1)
 $endmacro
 
+$macro(TO, ON_PSEUDOLAYER, KEYCODES_HASH, TO_PSEUDOLAYER)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(TO_PSEUDOLAYER), 0, switch_layer};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
 $macro(OSK, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
     $nonlocal(NUM_OF_CHORDS)
     uint8_t state_$(NUM_OF_CHORDS) = IDLE;
@@ -403,6 +410,8 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $MO(PSEUDOLAYER, KEYCODES_HASH, val)
             $elif(type == "DF")
                 $DF(PSEUDOLAYER, KEYCODES_HASH, val)
+            $elif(type == "TO")
+                $TO(PSEUDOLAYER, KEYCODES_HASH, val)
             $elif(type == "STR")
                 $STR(PSEUDOLAYER, KEYCODES_HASH, val)
             $endif

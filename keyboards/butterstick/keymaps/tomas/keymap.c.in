@@ -14,7 +14,16 @@ enum pseudolayers {
 $include(engine_path + "macros.inc")
 
 // Keyboard states and settings
+$py(custom_keymaps_array = True)
 $include("keyboard.inc")
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
+                         BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
+    // I don't game don't roast me thanks --germ
+    [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT,
+                         KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO(0))
+};
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 $include(engine_path + "chord.inc")
@@ -22,9 +31,9 @@ $include(engine_path + "chord.inc")
 // Add all chords
 
 $butterstick_cols("ALWAYS_ON",
-    "    ,    ,    ,    ,    ,    ,    ,    ,    ,\
-     LOCK,  AT,    ,    , CMD,    ,    ,    ,    ,\
-         ,    ,    ,    ,    ,    ,    ,    ,    ")
+    "    ,    ,      ,    ,    ,    ,    ,    ,    ,\
+     LOCK,  AT, TO(1),    , CMD,    ,    ,    ,    ,\
+         ,    ,      ,    ,    ,    ,    ,    ,    ")
 
 $secret_chord("ALWAYS_ON", "CLEAR_KB",
     "X, X, , , , , , , X, X,\
@@ -33,10 +42,10 @@ $secret_chord("ALWAYS_ON", "CLEAR_KB",
 $butterstick_rows("QWERTY",
     "AS(Q), AS(W), AS(E), AS(R), AS(T), AS(Y), AS(U), AS(I),     AS(O), AS(P),\
      AS(A), AS(S), AS(D), AS(F), AS(G), AS(H), AS(J), AS(K),     AS(L), AS(;),\
-     KL(KC_Z, NUM), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
+     AS(Z), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
 
 $butterstick_cols("QWERTY",
-    "    ESC, MO(MOV),     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
+    "   ESC, MO(MOV),     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
             ,        ,        ,       ,        ,       ,        ,        ,    ENTER,\
      O(LSFT), O(LCTL), O(LALT), O(NUM), O(LGUI), O(NUM), O(RALT), O(RCTL),  O(RSFT)")
 

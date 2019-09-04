@@ -297,6 +297,12 @@ void perm_pseudolayer(const struct Chord* self) {
     }
 }
 
+void switch_layer(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        layer_move(self->value1);
+    }
+}
+
 void lock(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         lock_next = true;

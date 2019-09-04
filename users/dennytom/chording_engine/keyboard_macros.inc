@@ -5,6 +5,7 @@ $macro(internal_keycodes, keycodes_string)
     $nonlocal(type)
     $nonlocal(NUM_OF_KEYS)
     $nonlocal(layout_name)
+    $nonlocal(custom_keymaps_array)
     $py(keycodes = keycodes_string.split(','))
     $py(NUM_OF_KEYS = len(keycodes))
     enum internal_keycodes {
@@ -17,14 +18,16 @@ $macro(internal_keycodes, keycodes_string)
         LAST_INTERNAL_KEYCODE = $(keycodes[-1].strip())
     };
     
-    const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-        [0] = $(layout_name)(
-            $for(i in range(0, len(keycodes)-1))\
-                $(keycodes[i].strip()),
-            $endfor\
-                $(keycodes[-1].strip())
-            )
-    };
+    $if(custom_keymaps_array == False)
+        const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+            [0] = $(layout_name)(
+                $for(i in range(0, len(keycodes)-1))\
+                    $(keycodes[i].strip()),
+                $endfor\
+                    $(keycodes[-1].strip())
+                ),
+        };
+    $endif
     
     // "Don't fuck with this, thanks." -- germ
     // Sorry, it has been fucked with.
