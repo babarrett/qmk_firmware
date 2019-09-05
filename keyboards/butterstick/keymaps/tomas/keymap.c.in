@@ -14,16 +14,8 @@ enum pseudolayers {
 $include(engine_path + "macros.inc")
 
 // Keyboard states and settings
-$py(custom_keymaps_array = True)
+$py(custom_keymaps_array = False)
 $include("keyboard.inc")
-
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-                         BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
-    // I don't game don't roast me thanks --germ
-    [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT,
-                         KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO(0))
-};
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 $include(engine_path + "chord.inc")

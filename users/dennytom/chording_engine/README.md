@@ -18,7 +18,7 @@ If you want to have a nice `keymap.c`, use some linter or formatter. I use `inde
 indent keymap.c -bad -bap -bbb -br -brf -brs -ce -i4 -l100 -nut -sob
 ```
 
-Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`.
+Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`. If you are using a different keyboard, you will have to also create your own `keyboard.inc`.
 
 ## Features Overview
 
@@ -78,7 +78,7 @@ in `keyboard.inc`. This macro gets expanded and creates the keycodes definitions
 
 *The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard.inc` is using the `internal_keycodes` macro to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing. If you want to add more QMK layers or have a mixed layer, you will have to modify the `internal_keycodes` macro or write it's content manually.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard_macros.inc` is using the `internal_keycodes` macro in to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing. If you want to add more QMK layers or have a mixed layer, you will have to modify the `internal_keycodes` macro or write it's content manually. To make that easier, you can set `custom_keymaps_array` to `True` and the keymap will expect you to define your own `keymaps[]` array. See the commented out example in my `keymap.c.in`.
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
@@ -104,7 +104,7 @@ void function_0(struct Chord* self) {
             unregister_code(self->value1);
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             break;
         case RESTART:
             unregister_code(self->value1);
@@ -121,8 +121,11 @@ All chords have to be added to `list_of_chord` array that gets regularly scanned
 * `ACTIVATED`: Analogous to a key being pressed (this includes repeated presses for tap-dance)
 * `DEACTIVATED`: Analogous to a key being depressed (also can be repeated)
 * `FINISHED`: Happens if the chord got deactivated and then the dance timer expired.
-* `FINISHED_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired. Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
+* `PRESS_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired. Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
+* `FINISHED_FROM_ACTIVE`:  Happens *after* `PRESS_FROM_HOLD` if the chord is still active when the dance timer expires for the second time. Useful if you want to recognize long presses, for example for autoshift functionality. Can be combined with the `counter` to recognize even longer presses.
 * `RESTART`: The dance is done. Happens immediately after `FINISHED` or on chord deactivation from `FINISHED_FROM_ACTIVE`. Anything you have to do to get the chord into `IDLE` mode happens here.
+
+The chords change states based on external and internal events. Anytime a chord's function is activated, it may change it's own state. Also, on certain events, the chording engine will trigger the functions of all chords in a specific state and *if the chords' state hasn't changed* it will then change it appropriately. In this folder is a diagram of the chord's state machine and it's state changes based on external events. The diagram assumes only a single chord, the chord can also be affected by other chords, but that is rare, study the code or contact me for details.
 
 ### Macros
 
@@ -178,6 +181,8 @@ The complete list of strings that these macros can accept is:
 * `MO(X)`: Temporary switch to pseudolayer `X`. Because only one pseudolayer can be active at any moment, this works by switching back to the pseudolayer the chord lives on on deactivation. If you chain `MO()`s on multiple pseudolayers and deactivate them in a random order, you might end up stranded on a pseudolayer. I recommend adding `CLEAR` somewhere on `ALWAYS_ON` pseudolayer just in case.
 
 * `DF(X)`: Permanent switch to pseudolayer `X`.
+
+* `TO(X)`: Switches the QMK layer to `X`.
 
 * `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) . Both have retro tapping enabled.
 

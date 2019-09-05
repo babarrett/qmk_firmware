@@ -43,6 +43,29 @@ enum internal_keycodes {
     LAST_INTERNAL_KEYCODE = BOT0
 };
 
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [0] = LAYOUT_butter (TOP1,
+                         TOP2,
+                         TOP3,
+                         TOP4,
+                         TOP5,
+                         TOP6,
+                         TOP7,
+                         TOP8,
+                         TOP9,
+                         TOP0,
+                         BOT1,
+                         BOT2,
+                         BOT3,
+                         BOT4,
+                         BOT5,
+                         BOT6,
+                         BOT7,
+                         BOT8,
+                         BOT9,
+                         BOT0),
+};
+
     // "Don't fuck with this, thanks." -- germ
     // Sorry, it has been fucked with.
 size_t keymapsCount = 1;
@@ -67,14 +90,6 @@ size_t keymapsCount = 1;
 #define H_BOT8 ((uint32_t) 1 << 17)
 #define H_BOT9 ((uint32_t) 1 << 18)
 #define H_BOT0 ((uint32_t) 1 << 19)
-
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0,
-                         BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
-    // I don't game don't roast me thanks --germ
-    [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT,
-                         KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO (0))
-};
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 uint8_t current_pseudolayer = 1;
