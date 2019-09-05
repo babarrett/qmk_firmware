@@ -1,23 +1,24 @@
 #include QMK_KEYBOARD_H
 
-#include "sten.h"
 #include "keymap_steno.h"
 // use pyexpander to generate keymap.c:
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
 enum pseudolayers {
-    ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, STENO, QWERTY
+    ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, GAME2, QWERTY
 };
 
 // Macros to simplify chord definitions
 
 // Keyboard states and settings
+
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
 #define TAP_TIMEOUT 50
 
+    
     
     
     
@@ -60,40 +61,7 @@ enum pseudolayers {
         LAST_INTERNAL_KEYCODE = THU6
     };
     
-    const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-        [0] = LAYOUT_georgi(
-                            TOP1,
-                            TOP2,
-                            TOP3,
-                            TOP4,
-                            TOP5,
-                            TOP6,
-                            TOP7,
-                            TOP8,
-                            TOP9,
-                            TOP10,
-                            TOP11,
-                            TOP12,
-                            BOT1,
-                            BOT2,
-                            BOT3,
-                            BOT4,
-                            BOT5,
-                            BOT6,
-                            BOT7,
-                            BOT8,
-                            BOT9,
-                            BOT10,
-                            BOT11,
-                            BOT12,
-                            THU1,
-                            THU2,
-                            THU3,
-                            THU4,
-                            THU5,
-                            THU6
-            )
-    };
+    
     
     // "Don't fuck with this, thanks." -- germ
     // Sorry, it has been fucked with.
@@ -133,6 +101,16 @@ enum pseudolayers {
             #define H_THU5 ((uint32_t) 1 << 28)
             #define H_THU6 ((uint32_t) 1 << 29)
     
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [0] = LAYOUT_georgi (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6,       TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
+                         BOT1, BOT2, BOT3, BOT4, BOT5, BOT6,       BOT7, BOT8, BOT9, BOT10, BOT11, BOT12,
+                                           THU1, THU2, THU3,       THU4, THU5, THU6),
+    // I don't game don't roast me thanks --germ
+    [1] = LAYOUT_georgi (  TO(0), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1,       STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR,
+                          STN_FN, STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,       STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,
+                                                     STN_A, STN_O, STN_N1,       STN_N2, STN_E, STN_U)
+};
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 uint8_t current_pseudolayer = 1;
@@ -228,6 +206,7 @@ enum chord_states {
     READY,
     ACTIVATED,
     DEACTIVATED,
+    PRESS_FROM_ACTIVE,
     FINISHED_FROM_ACTIVE,
     IDLE_IN_DANCE,
     READY_IN_DANCE,
@@ -376,9 +355,6 @@ void single_dance(const struct Chord* self) {
             key_out(self->value1);
             *self->state = IDLE;
             break;
-        case FINISHED:
-        case FINISHED_FROM_ACTIVE:
-            break;
         case RESTART:
             key_out(self->value1);
             break;
@@ -415,7 +391,7 @@ void key_key_dance(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             key_in(self->value2);
             break;
         case RESTART:
@@ -428,19 +404,19 @@ void key_key_dance(const struct Chord* self) {
 
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
-        case ACTIVATED:
-            break;
         case DEACTIVATED:
+        case RESTART:
             tap_key(self->value1);
-            
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
             key_in(KC_LSFT);
             tap_key(self->value1);
             key_out(KC_LSFT);
-            
             *self->state = IDLE;
+            // the skip to IDLE is usually just a lag optimization,
+            // in this case it has a logic function, on a short
+            // press (still longer than a tap) the key does not get shifted
             break;
         default:
             break;
@@ -470,9 +446,6 @@ void temp_pseudolayer(const struct Chord* self) {
         case DEACTIVATED:
             current_pseudolayer = self->pseudolayer;
             break;
-        case FINISHED:
-        case FINISHED_FROM_ACTIVE:
-            break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
             break;
@@ -484,6 +457,12 @@ void temp_pseudolayer(const struct Chord* self) {
 void perm_pseudolayer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         current_pseudolayer = self->value1;
+    }
+}
+
+void switch_layer(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        layer_move(self->value1);
     }
 }
 
@@ -502,7 +481,7 @@ void one_shot_key(const struct Chord* self) {
             *self->state = IN_ONE_SHOT;
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             key_in(self->value1);
             a_key_went_through = false;
             break;
@@ -526,7 +505,7 @@ void one_shot_layer(const struct Chord* self) {
             *self->state = IN_ONE_SHOT;
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             current_pseudolayer = self->value1;
             a_key_went_through = false;
             break;
@@ -2460,7 +2439,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_RCTRL);
@@ -2562,7 +2541,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LCTRL);
@@ -2662,7 +2641,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_RCTRL);
@@ -2762,7 +2741,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LCTRL);
@@ -2930,7 +2909,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_63 = IDLE;
-    const struct Chord chord_63 PROGMEM = {H_TOP4 + H_TOP5 + H_TOP8 + H_TOP9 + H_BOT4 + H_BOT5 + H_BOT8 + H_BOT9, COLEMAK, &state_63, NULL, STENO, 0, perm_pseudolayer};
+    const struct Chord chord_63 PROGMEM = {H_TOP4 + H_TOP5 + H_TOP8 + H_TOP9 + H_BOT4 + H_BOT5 + H_BOT8 + H_BOT9, COLEMAK, &state_63, NULL, 1, 0, switch_layer};
     
 
             
@@ -4214,7 +4193,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_RCTRL);
@@ -4316,7 +4295,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LCTRL);
@@ -5435,7 +5414,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LSFT);
@@ -5558,7 +5537,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LSFT);
@@ -5689,7 +5668,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LSFT);
@@ -5790,7 +5769,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LSFT);
@@ -5941,7 +5920,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LCTL);
@@ -6055,7 +6034,7 @@ void reset(const struct Chord* self) {
             case DEACTIVATED:
                 break;
             case FINISHED:
-            case FINISHED_FROM_ACTIVE:
+            case PRESS_FROM_ACTIVE:
                                     
                     
                     register_code(KC_LCTL);
@@ -7122,15 +7101,75 @@ void reset(const struct Chord* self) {
     
     
     
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
         
         
         
             
-                
+            
                 
     
     uint8_t state_210 = IDLE;
-    const struct Chord chord_210 PROGMEM = {H_TOP2 + H_BOT2, GAME, &state_210, NULL, KC_A, 0, single_dance};
+    const struct Chord chord_210 PROGMEM = {H_TOP12 + H_BOT12, GAME, &state_210, NULL, COLEMAK, 0, perm_pseudolayer};
     
 
             
@@ -7149,7 +7188,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_211 = IDLE;
-    const struct Chord chord_211 PROGMEM = {H_TOP3 + H_BOT3, GAME, &state_211, NULL, KC_R, 0, single_dance};
+    const struct Chord chord_211 PROGMEM = {H_BOT1, GAME, &state_211, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -7168,7 +7207,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_212 = IDLE;
-    const struct Chord chord_212 PROGMEM = {H_TOP4 + H_BOT4, GAME, &state_212, NULL, KC_S, 0, single_dance};
+    const struct Chord chord_212 PROGMEM = {H_BOT2, GAME, &state_212, NULL, KC_A, 0, single_dance};
     
 
             
@@ -7187,7 +7226,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_213 = IDLE;
-    const struct Chord chord_213 PROGMEM = {H_TOP5 + H_BOT5, GAME, &state_213, NULL, KC_T, 0, single_dance};
+    const struct Chord chord_213 PROGMEM = {H_BOT3, GAME, &state_213, NULL, KC_R, 0, single_dance};
     
 
             
@@ -7206,7 +7245,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_214 = IDLE;
-    const struct Chord chord_214 PROGMEM = {H_TOP6 + H_BOT6, GAME, &state_214, NULL, KC_D, 0, single_dance};
+    const struct Chord chord_214 PROGMEM = {H_BOT4, GAME, &state_214, NULL, KC_S, 0, single_dance};
     
 
             
@@ -7225,7 +7264,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_215 = IDLE;
-    const struct Chord chord_215 PROGMEM = {H_TOP7 + H_BOT7, GAME, &state_215, NULL, KC_H, 0, single_dance};
+    const struct Chord chord_215 PROGMEM = {H_BOT5, GAME, &state_215, NULL, KC_T, 0, single_dance};
     
 
             
@@ -7244,7 +7283,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_216 = IDLE;
-    const struct Chord chord_216 PROGMEM = {H_TOP8 + H_BOT8, GAME, &state_216, NULL, KC_N, 0, single_dance};
+    const struct Chord chord_216 PROGMEM = {H_BOT6, GAME, &state_216, NULL, KC_D, 0, single_dance};
     
 
             
@@ -7263,7 +7302,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_217 = IDLE;
-    const struct Chord chord_217 PROGMEM = {H_TOP9 + H_BOT9, GAME, &state_217, NULL, KC_E, 0, single_dance};
+    const struct Chord chord_217 PROGMEM = {H_BOT7, GAME, &state_217, NULL, KC_H, 0, single_dance};
     
 
             
@@ -7282,7 +7321,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_218 = IDLE;
-    const struct Chord chord_218 PROGMEM = {H_TOP10 + H_BOT10, GAME, &state_218, NULL, KC_I, 0, single_dance};
+    const struct Chord chord_218 PROGMEM = {H_BOT8, GAME, &state_218, NULL, KC_N, 0, single_dance};
     
 
             
@@ -7301,7 +7340,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_219 = IDLE;
-    const struct Chord chord_219 PROGMEM = {H_TOP11 + H_BOT11, GAME, &state_219, NULL, KC_O, 0, single_dance};
+    const struct Chord chord_219 PROGMEM = {H_BOT9, GAME, &state_219, NULL, KC_E, 0, single_dance};
     
 
             
@@ -7316,11 +7355,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
+                
                 
     
     uint8_t state_220 = IDLE;
-    const struct Chord chord_220 PROGMEM = {H_TOP12 + H_BOT12, GAME, &state_220, NULL, COLEMAK, 0, perm_pseudolayer};
+    const struct Chord chord_220 PROGMEM = {H_BOT10, GAME, &state_220, NULL, KC_I, 0, single_dance};
     
 
             
@@ -7339,7 +7378,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_221 = IDLE;
-    const struct Chord chord_221 PROGMEM = {H_BOT1, GAME, &state_221, NULL, KC_LSFT, 0, single_dance};
+    const struct Chord chord_221 PROGMEM = {H_BOT11, GAME, &state_221, NULL, KC_O, 0, single_dance};
     
 
             
@@ -7358,7 +7397,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_222 = IDLE;
-    const struct Chord chord_222 PROGMEM = {H_BOT2, GAME, &state_222, NULL, KC_Z, 0, single_dance};
+    const struct Chord chord_222 PROGMEM = {H_BOT12, GAME, &state_222, NULL, KC_DEL, 0, single_dance};
     
 
             
@@ -7373,11 +7412,11 @@ void reset(const struct Chord* self) {
         
         
             
-                
+            
                 
     
     uint8_t state_223 = IDLE;
-    const struct Chord chord_223 PROGMEM = {H_BOT3, GAME, &state_223, NULL, KC_X, 0, single_dance};
+    const struct Chord chord_223 PROGMEM = {H_THU1, GAME, &state_223, NULL, GAME2, 0, temp_pseudolayer};
     
 
             
@@ -7396,7 +7435,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_224 = IDLE;
-    const struct Chord chord_224 PROGMEM = {H_BOT4, GAME, &state_224, NULL, KC_C, 0, single_dance};
+    const struct Chord chord_224 PROGMEM = {H_THU2, GAME, &state_224, NULL, KC_SPC, 0, single_dance};
     
 
             
@@ -7415,7 +7454,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_225 = IDLE;
-    const struct Chord chord_225 PROGMEM = {H_BOT5, GAME, &state_225, NULL, KC_V, 0, single_dance};
+    const struct Chord chord_225 PROGMEM = {H_THU3, GAME, &state_225, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -7430,11 +7469,15 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
+                
                 
                 
     
     uint8_t state_226 = IDLE;
-    const struct Chord chord_226 PROGMEM = {H_BOT6, GAME, &state_226, NULL, KC_B, 0, single_dance};
+    const struct Chord chord_226 PROGMEM = {H_THU4, GAME, &state_226, NULL, KC_ENTER, KC_RSFT, key_key_dance};
     
 
             
@@ -7449,11 +7492,14 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_227 = IDLE;
-    const struct Chord chord_227 PROGMEM = {H_BOT7, GAME, &state_227, NULL, KC_K, 0, single_dance};
+    const struct Chord chord_227 PROGMEM = {H_THU5, GAME, &state_227, NULL, KC_SPC, NUM, key_layer_dance};
     
 
             
@@ -7468,15 +7514,22 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_228 = IDLE;
-    const struct Chord chord_228 PROGMEM = {H_BOT8, GAME, &state_228, NULL, KC_M, 0, single_dance};
+    const struct Chord chord_228 PROGMEM = {H_THU6, GAME, &state_228, NULL, KC_BSPC, SYM, key_layer_dance};
     
 
             
         
+    
+
+    
+    
     
 
     
@@ -7491,7 +7544,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_229 = IDLE;
-    const struct Chord chord_229 PROGMEM = {H_BOT9, GAME, &state_229, NULL, KC_COMMA, 0, single_dance};
+    const struct Chord chord_229 PROGMEM = {H_TOP1, GAME2, &state_229, NULL, KC_TAB, 0, single_dance};
     
 
             
@@ -7510,7 +7563,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_230 = IDLE;
-    const struct Chord chord_230 PROGMEM = {H_BOT10, GAME, &state_230, NULL, KC_DOT, 0, single_dance};
+    const struct Chord chord_230 PROGMEM = {H_TOP2, GAME2, &state_230, NULL, KC_1, 0, single_dance};
     
 
             
@@ -7529,7 +7582,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_231 = IDLE;
-    const struct Chord chord_231 PROGMEM = {H_BOT11, GAME, &state_231, NULL, KC_SLASH, 0, single_dance};
+    const struct Chord chord_231 PROGMEM = {H_TOP3, GAME2, &state_231, NULL, KC_2, 0, single_dance};
     
 
             
@@ -7548,7 +7601,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_232 = IDLE;
-    const struct Chord chord_232 PROGMEM = {H_BOT12, GAME, &state_232, NULL, KC_DEL, 0, single_dance};
+    const struct Chord chord_232 PROGMEM = {H_TOP4, GAME2, &state_232, NULL, KC_3, 0, single_dance};
     
 
             
@@ -7563,11 +7616,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
+                
                 
     
     uint8_t state_233 = IDLE;
-    const struct Chord chord_233 PROGMEM = {H_THU1, GAME, &state_233, NULL, NUM, 0, temp_pseudolayer};
+    const struct Chord chord_233 PROGMEM = {H_TOP5, GAME2, &state_233, NULL, KC_4, 0, single_dance};
     
 
             
@@ -7586,7 +7639,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_234 = IDLE;
-    const struct Chord chord_234 PROGMEM = {H_THU2, GAME, &state_234, NULL, KC_SPC, 0, single_dance};
+    const struct Chord chord_234 PROGMEM = {H_TOP6, GAME2, &state_234, NULL, KC_5, 0, single_dance};
     
 
             
@@ -7605,7 +7658,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_235 = IDLE;
-    const struct Chord chord_235 PROGMEM = {H_THU3, GAME, &state_235, NULL, KC_LSFT, 0, single_dance};
+    const struct Chord chord_235 PROGMEM = {H_TOP7, GAME2, &state_235, NULL, KC_6, 0, single_dance};
     
 
             
@@ -7620,15 +7673,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
-                
                 
                 
     
     uint8_t state_236 = IDLE;
-    const struct Chord chord_236 PROGMEM = {H_THU4, GAME, &state_236, NULL, KC_ENTER, KC_RSFT, key_key_dance};
+    const struct Chord chord_236 PROGMEM = {H_TOP8, GAME2, &state_236, NULL, KC_7, 0, single_dance};
     
 
             
@@ -7643,14 +7692,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
                 
                 
     
     uint8_t state_237 = IDLE;
-    const struct Chord chord_237 PROGMEM = {H_THU5, GAME, &state_237, NULL, KC_SPC, NUM, key_layer_dance};
+    const struct Chord chord_237 PROGMEM = {H_TOP9, GAME2, &state_237, NULL, KC_8, 0, single_dance};
     
 
             
@@ -7665,22 +7711,15 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
                 
                 
     
     uint8_t state_238 = IDLE;
-    const struct Chord chord_238 PROGMEM = {H_THU6, GAME, &state_238, NULL, KC_BSPC, SYM, key_layer_dance};
+    const struct Chord chord_238 PROGMEM = {H_TOP10, GAME2, &state_238, NULL, KC_9, 0, single_dance};
     
 
             
         
-    
-
-    
-    
     
 
     
@@ -7691,11 +7730,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
+                
                 
     
     uint8_t state_239 = IDLE;
-    const struct Chord chord_239 PROGMEM = {H_TOP1, STENO, &state_239, NULL, COLEMAK, 0, perm_pseudolayer};
+    const struct Chord chord_239 PROGMEM = {H_TOP11, GAME2, &state_239, NULL, KC_0, 0, single_dance};
     
 
             
@@ -7714,7 +7753,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_240 = IDLE;
-    const struct Chord chord_240 PROGMEM = {H_TOP2, STENO, &state_240, NULL, STN_S1, 0, single_dance};
+    const struct Chord chord_240 PROGMEM = {H_TOP12, GAME2, &state_240, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -7733,7 +7772,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_241 = IDLE;
-    const struct Chord chord_241 PROGMEM = {H_TOP3, STENO, &state_241, NULL, STN_TL, 0, single_dance};
+    const struct Chord chord_241 PROGMEM = {H_TOP1 + H_BOT1, GAME2, &state_241, NULL, KC_ESC, 0, single_dance};
     
 
             
@@ -7744,15 +7783,75 @@ void reset(const struct Chord* self) {
     
     
     
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
         
         
         
             
-                
+            
                 
     
     uint8_t state_242 = IDLE;
-    const struct Chord chord_242 PROGMEM = {H_TOP4, STENO, &state_242, NULL, STN_PL, 0, single_dance};
+    const struct Chord chord_242 PROGMEM = {H_TOP12 + H_BOT12, GAME2, &state_242, NULL, COLEMAK, 0, perm_pseudolayer};
     
 
             
@@ -7771,7 +7870,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_243 = IDLE;
-    const struct Chord chord_243 PROGMEM = {H_TOP5, STENO, &state_243, NULL, STN_HL, 0, single_dance};
+    const struct Chord chord_243 PROGMEM = {H_BOT1, GAME2, &state_243, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -7790,7 +7889,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_244 = IDLE;
-    const struct Chord chord_244 PROGMEM = {H_TOP6, STENO, &state_244, NULL, STN_ST1, 0, single_dance};
+    const struct Chord chord_244 PROGMEM = {H_BOT2, GAME2, &state_244, NULL, KC_Z, 0, single_dance};
     
 
             
@@ -7809,7 +7908,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_245 = IDLE;
-    const struct Chord chord_245 PROGMEM = {H_TOP7, STENO, &state_245, NULL, STN_ST3, 0, single_dance};
+    const struct Chord chord_245 PROGMEM = {H_BOT3, GAME2, &state_245, NULL, KC_X, 0, single_dance};
     
 
             
@@ -7828,7 +7927,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_246 = IDLE;
-    const struct Chord chord_246 PROGMEM = {H_TOP8, STENO, &state_246, NULL, STN_FR, 0, single_dance};
+    const struct Chord chord_246 PROGMEM = {H_BOT4, GAME2, &state_246, NULL, KC_C, 0, single_dance};
     
 
             
@@ -7847,7 +7946,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_247 = IDLE;
-    const struct Chord chord_247 PROGMEM = {H_TOP9, STENO, &state_247, NULL, STN_PR, 0, single_dance};
+    const struct Chord chord_247 PROGMEM = {H_BOT5, GAME2, &state_247, NULL, KC_V, 0, single_dance};
     
 
             
@@ -7866,7 +7965,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_248 = IDLE;
-    const struct Chord chord_248 PROGMEM = {H_TOP10, STENO, &state_248, NULL, STN_LR, 0, single_dance};
+    const struct Chord chord_248 PROGMEM = {H_BOT6, GAME2, &state_248, NULL, KC_B, 0, single_dance};
     
 
             
@@ -7885,7 +7984,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_249 = IDLE;
-    const struct Chord chord_249 PROGMEM = {H_TOP11, STENO, &state_249, NULL, STN_TR, 0, single_dance};
+    const struct Chord chord_249 PROGMEM = {H_BOT7, GAME2, &state_249, NULL, KC_K, 0, single_dance};
     
 
             
@@ -7904,7 +8003,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_250 = IDLE;
-    const struct Chord chord_250 PROGMEM = {H_TOP12, STENO, &state_250, NULL, STN_DR, 0, single_dance};
+    const struct Chord chord_250 PROGMEM = {H_BOT8, GAME2, &state_250, NULL, KC_M, 0, single_dance};
     
 
             
@@ -7915,87 +8014,15 @@ void reset(const struct Chord* self) {
     
     
     
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
         
         
         
             
-            
+                
                 
     
     uint8_t state_251 = IDLE;
-    const struct Chord chord_251 PROGMEM = {H_BOT1, STENO, &state_251, NULL, SYM, 0, temp_pseudolayer};
+    const struct Chord chord_251 PROGMEM = {H_BOT9, GAME2, &state_251, NULL, KC_COMMA, 0, single_dance};
     
 
             
@@ -8014,7 +8041,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_252 = IDLE;
-    const struct Chord chord_252 PROGMEM = {H_BOT2, STENO, &state_252, NULL, STN_S2, 0, single_dance};
+    const struct Chord chord_252 PROGMEM = {H_BOT10, GAME2, &state_252, NULL, KC_DOT, 0, single_dance};
     
 
             
@@ -8033,7 +8060,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_253 = IDLE;
-    const struct Chord chord_253 PROGMEM = {H_BOT3, STENO, &state_253, NULL, STN_KL, 0, single_dance};
+    const struct Chord chord_253 PROGMEM = {H_BOT11, GAME2, &state_253, NULL, KC_SLASH, 0, single_dance};
     
 
             
@@ -8052,7 +8079,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_254 = IDLE;
-    const struct Chord chord_254 PROGMEM = {H_BOT4, STENO, &state_254, NULL, STN_WL, 0, single_dance};
+    const struct Chord chord_254 PROGMEM = {H_BOT12, GAME2, &state_254, NULL, KC_DEL, 0, single_dance};
     
 
             
@@ -8067,11 +8094,11 @@ void reset(const struct Chord* self) {
         
         
             
-                
+            
                 
     
     uint8_t state_255 = IDLE;
-    const struct Chord chord_255 PROGMEM = {H_BOT5, STENO, &state_255, NULL, STN_RL, 0, single_dance};
+    const struct Chord chord_255 PROGMEM = {H_THU1, GAME2, &state_255, NULL, NUM, 0, temp_pseudolayer};
     
 
             
@@ -8090,7 +8117,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_256 = IDLE;
-    const struct Chord chord_256 PROGMEM = {H_BOT6, STENO, &state_256, NULL, STN_ST2, 0, single_dance};
+    const struct Chord chord_256 PROGMEM = {H_THU2, GAME2, &state_256, NULL, KC_SPC, 0, single_dance};
     
 
             
@@ -8109,7 +8136,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_257 = IDLE;
-    const struct Chord chord_257 PROGMEM = {H_BOT7, STENO, &state_257, NULL, STN_ST4, 0, single_dance};
+    const struct Chord chord_257 PROGMEM = {H_THU3, GAME2, &state_257, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -8124,11 +8151,15 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
+                
                 
                 
     
     uint8_t state_258 = IDLE;
-    const struct Chord chord_258 PROGMEM = {H_BOT8, STENO, &state_258, NULL, STN_RR, 0, single_dance};
+    const struct Chord chord_258 PROGMEM = {H_THU4, GAME2, &state_258, NULL, KC_ENTER, KC_RSFT, key_key_dance};
     
 
             
@@ -8143,11 +8174,14 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_259 = IDLE;
-    const struct Chord chord_259 PROGMEM = {H_BOT9, STENO, &state_259, NULL, STN_BR, 0, single_dance};
+    const struct Chord chord_259 PROGMEM = {H_THU5, GAME2, &state_259, NULL, KC_SPC, NUM, key_layer_dance};
     
 
             
@@ -8162,15 +8196,22 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_260 = IDLE;
-    const struct Chord chord_260 PROGMEM = {H_BOT10, STENO, &state_260, NULL, STN_GR, 0, single_dance};
+    const struct Chord chord_260 PROGMEM = {H_THU6, GAME2, &state_260, NULL, KC_BSPC, SYM, key_layer_dance};
     
 
             
         
+    
+
+    
+    
     
 
     
@@ -8185,7 +8226,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_261 = IDLE;
-    const struct Chord chord_261 PROGMEM = {H_BOT11, STENO, &state_261, NULL, STN_SR, 0, single_dance};
+    const struct Chord chord_261 PROGMEM = {H_TOP1, QWERTY, &state_261, NULL, KC_TAB, 0, single_dance};
     
 
             
@@ -8204,7 +8245,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_262 = IDLE;
-    const struct Chord chord_262 PROGMEM = {H_BOT12, STENO, &state_262, NULL, STN_ZR, 0, single_dance};
+    const struct Chord chord_262 PROGMEM = {H_TOP2, QWERTY, &state_262, NULL, KC_Q, 0, single_dance};
     
 
             
@@ -8223,7 +8264,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_263 = IDLE;
-    const struct Chord chord_263 PROGMEM = {H_THU1, STENO, &state_263, NULL, STN_A, 0, single_dance};
+    const struct Chord chord_263 PROGMEM = {H_TOP3, QWERTY, &state_263, NULL, KC_W, 0, single_dance};
     
 
             
@@ -8242,7 +8283,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_264 = IDLE;
-    const struct Chord chord_264 PROGMEM = {H_THU2, STENO, &state_264, NULL, STN_O, 0, single_dance};
+    const struct Chord chord_264 PROGMEM = {H_TOP4, QWERTY, &state_264, NULL, KC_E, 0, single_dance};
     
 
             
@@ -8261,7 +8302,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_265 = IDLE;
-    const struct Chord chord_265 PROGMEM = {H_THU3, STENO, &state_265, NULL, STN_N1, 0, single_dance};
+    const struct Chord chord_265 PROGMEM = {H_TOP5, QWERTY, &state_265, NULL, KC_R, 0, single_dance};
     
 
             
@@ -8280,7 +8321,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_266 = IDLE;
-    const struct Chord chord_266 PROGMEM = {H_THU4, STENO, &state_266, NULL, STN_N7, 0, single_dance};
+    const struct Chord chord_266 PROGMEM = {H_TOP6, QWERTY, &state_266, NULL, KC_T, 0, single_dance};
     
 
             
@@ -8299,7 +8340,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_267 = IDLE;
-    const struct Chord chord_267 PROGMEM = {H_THU5, STENO, &state_267, NULL, STN_E, 0, single_dance};
+    const struct Chord chord_267 PROGMEM = {H_TOP7, QWERTY, &state_267, NULL, KC_Y, 0, single_dance};
     
 
             
@@ -8318,15 +8359,11 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_268 = IDLE;
-    const struct Chord chord_268 PROGMEM = {H_THU6, STENO, &state_268, NULL, STN_U, 0, single_dance};
+    const struct Chord chord_268 PROGMEM = {H_TOP8, QWERTY, &state_268, NULL, KC_U, 0, single_dance};
     
 
             
         
-    
-
-    
-    
     
 
     
@@ -8341,7 +8378,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_269 = IDLE;
-    const struct Chord chord_269 PROGMEM = {H_TOP1, QWERTY, &state_269, NULL, KC_TAB, 0, single_dance};
+    const struct Chord chord_269 PROGMEM = {H_TOP9, QWERTY, &state_269, NULL, KC_I, 0, single_dance};
     
 
             
@@ -8360,7 +8397,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_270 = IDLE;
-    const struct Chord chord_270 PROGMEM = {H_TOP2, QWERTY, &state_270, NULL, KC_Q, 0, single_dance};
+    const struct Chord chord_270 PROGMEM = {H_TOP10, QWERTY, &state_270, NULL, KC_O, 0, single_dance};
     
 
             
@@ -8379,7 +8416,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_271 = IDLE;
-    const struct Chord chord_271 PROGMEM = {H_TOP3, QWERTY, &state_271, NULL, KC_W, 0, single_dance};
+    const struct Chord chord_271 PROGMEM = {H_TOP11, QWERTY, &state_271, NULL, KC_P, 0, single_dance};
     
 
             
@@ -8398,7 +8435,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_272 = IDLE;
-    const struct Chord chord_272 PROGMEM = {H_TOP4, QWERTY, &state_272, NULL, KC_E, 0, single_dance};
+    const struct Chord chord_272 PROGMEM = {H_TOP12, QWERTY, &state_272, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -8417,7 +8454,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_273 = IDLE;
-    const struct Chord chord_273 PROGMEM = {H_TOP5, QWERTY, &state_273, NULL, KC_R, 0, single_dance};
+    const struct Chord chord_273 PROGMEM = {H_TOP1 + H_BOT1, QWERTY, &state_273, NULL, KC_ESC, 0, single_dance};
     
 
             
@@ -8436,7 +8473,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_274 = IDLE;
-    const struct Chord chord_274 PROGMEM = {H_TOP6, QWERTY, &state_274, NULL, KC_T, 0, single_dance};
+    const struct Chord chord_274 PROGMEM = {H_TOP2 + H_BOT2, QWERTY, &state_274, NULL, KC_A, 0, single_dance};
     
 
             
@@ -8455,7 +8492,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_275 = IDLE;
-    const struct Chord chord_275 PROGMEM = {H_TOP7, QWERTY, &state_275, NULL, KC_Y, 0, single_dance};
+    const struct Chord chord_275 PROGMEM = {H_TOP3 + H_BOT3, QWERTY, &state_275, NULL, KC_S, 0, single_dance};
     
 
             
@@ -8474,7 +8511,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_276 = IDLE;
-    const struct Chord chord_276 PROGMEM = {H_TOP8, QWERTY, &state_276, NULL, KC_U, 0, single_dance};
+    const struct Chord chord_276 PROGMEM = {H_TOP4 + H_BOT4, QWERTY, &state_276, NULL, KC_D, 0, single_dance};
     
 
             
@@ -8493,7 +8530,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_277 = IDLE;
-    const struct Chord chord_277 PROGMEM = {H_TOP9, QWERTY, &state_277, NULL, KC_I, 0, single_dance};
+    const struct Chord chord_277 PROGMEM = {H_TOP5 + H_BOT5, QWERTY, &state_277, NULL, KC_F, 0, single_dance};
     
 
             
@@ -8512,7 +8549,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_278 = IDLE;
-    const struct Chord chord_278 PROGMEM = {H_TOP10, QWERTY, &state_278, NULL, KC_O, 0, single_dance};
+    const struct Chord chord_278 PROGMEM = {H_TOP6 + H_BOT6, QWERTY, &state_278, NULL, KC_G, 0, single_dance};
     
 
             
@@ -8531,7 +8568,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_279 = IDLE;
-    const struct Chord chord_279 PROGMEM = {H_TOP11, QWERTY, &state_279, NULL, KC_P, 0, single_dance};
+    const struct Chord chord_279 PROGMEM = {H_TOP7 + H_BOT7, QWERTY, &state_279, NULL, KC_H, 0, single_dance};
     
 
             
@@ -8550,7 +8587,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_280 = IDLE;
-    const struct Chord chord_280 PROGMEM = {H_TOP12, QWERTY, &state_280, NULL, KC_RCTL, 0, single_dance};
+    const struct Chord chord_280 PROGMEM = {H_TOP8 + H_BOT8, QWERTY, &state_280, NULL, KC_J, 0, single_dance};
     
 
             
@@ -8569,7 +8606,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_281 = IDLE;
-    const struct Chord chord_281 PROGMEM = {H_TOP1 + H_BOT1, QWERTY, &state_281, NULL, KC_ESC, 0, single_dance};
+    const struct Chord chord_281 PROGMEM = {H_TOP9 + H_BOT9, QWERTY, &state_281, NULL, KC_K, 0, single_dance};
     
 
             
@@ -8588,7 +8625,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_282 = IDLE;
-    const struct Chord chord_282 PROGMEM = {H_TOP2 + H_BOT2, QWERTY, &state_282, NULL, KC_A, 0, single_dance};
+    const struct Chord chord_282 PROGMEM = {H_TOP10 + H_BOT10, QWERTY, &state_282, NULL, KC_L, 0, single_dance};
     
 
             
@@ -8607,7 +8644,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_283 = IDLE;
-    const struct Chord chord_283 PROGMEM = {H_TOP3 + H_BOT3, QWERTY, &state_283, NULL, KC_S, 0, single_dance};
+    const struct Chord chord_283 PROGMEM = {H_TOP11 + H_BOT11, QWERTY, &state_283, NULL, KC_SCOLON, 0, single_dance};
     
 
             
@@ -8626,7 +8663,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_284 = IDLE;
-    const struct Chord chord_284 PROGMEM = {H_TOP4 + H_BOT4, QWERTY, &state_284, NULL, KC_D, 0, single_dance};
+    const struct Chord chord_284 PROGMEM = {H_TOP12 + H_BOT12, QWERTY, &state_284, NULL, KC_RGUI, 0, single_dance};
     
 
             
@@ -8645,7 +8682,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_285 = IDLE;
-    const struct Chord chord_285 PROGMEM = {H_TOP5 + H_BOT5, QWERTY, &state_285, NULL, KC_F, 0, single_dance};
+    const struct Chord chord_285 PROGMEM = {H_BOT1, QWERTY, &state_285, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -8664,7 +8701,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_286 = IDLE;
-    const struct Chord chord_286 PROGMEM = {H_TOP6 + H_BOT6, QWERTY, &state_286, NULL, KC_G, 0, single_dance};
+    const struct Chord chord_286 PROGMEM = {H_BOT2, QWERTY, &state_286, NULL, KC_Z, 0, single_dance};
     
 
             
@@ -8683,7 +8720,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_287 = IDLE;
-    const struct Chord chord_287 PROGMEM = {H_TOP7 + H_BOT7, QWERTY, &state_287, NULL, KC_H, 0, single_dance};
+    const struct Chord chord_287 PROGMEM = {H_BOT3, QWERTY, &state_287, NULL, KC_X, 0, single_dance};
     
 
             
@@ -8702,7 +8739,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_288 = IDLE;
-    const struct Chord chord_288 PROGMEM = {H_TOP8 + H_BOT8, QWERTY, &state_288, NULL, KC_J, 0, single_dance};
+    const struct Chord chord_288 PROGMEM = {H_BOT4, QWERTY, &state_288, NULL, KC_C, 0, single_dance};
     
 
             
@@ -8721,7 +8758,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_289 = IDLE;
-    const struct Chord chord_289 PROGMEM = {H_TOP9 + H_BOT9, QWERTY, &state_289, NULL, KC_K, 0, single_dance};
+    const struct Chord chord_289 PROGMEM = {H_BOT5, QWERTY, &state_289, NULL, KC_V, 0, single_dance};
     
 
             
@@ -8740,7 +8777,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_290 = IDLE;
-    const struct Chord chord_290 PROGMEM = {H_TOP10 + H_BOT10, QWERTY, &state_290, NULL, KC_L, 0, single_dance};
+    const struct Chord chord_290 PROGMEM = {H_BOT6, QWERTY, &state_290, NULL, KC_B, 0, single_dance};
     
 
             
@@ -8759,7 +8796,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_291 = IDLE;
-    const struct Chord chord_291 PROGMEM = {H_TOP11 + H_BOT11, QWERTY, &state_291, NULL, KC_SCOLON, 0, single_dance};
+    const struct Chord chord_291 PROGMEM = {H_BOT7, QWERTY, &state_291, NULL, KC_N, 0, single_dance};
     
 
             
@@ -8778,7 +8815,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_292 = IDLE;
-    const struct Chord chord_292 PROGMEM = {H_TOP12 + H_BOT12, QWERTY, &state_292, NULL, KC_RGUI, 0, single_dance};
+    const struct Chord chord_292 PROGMEM = {H_BOT8, QWERTY, &state_292, NULL, KC_M, 0, single_dance};
     
 
             
@@ -8797,7 +8834,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_293 = IDLE;
-    const struct Chord chord_293 PROGMEM = {H_BOT1, QWERTY, &state_293, NULL, KC_LSFT, 0, single_dance};
+    const struct Chord chord_293 PROGMEM = {H_BOT9, QWERTY, &state_293, NULL, KC_COMMA, 0, single_dance};
     
 
             
@@ -8816,7 +8853,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_294 = IDLE;
-    const struct Chord chord_294 PROGMEM = {H_BOT2, QWERTY, &state_294, NULL, KC_Z, 0, single_dance};
+    const struct Chord chord_294 PROGMEM = {H_BOT10, QWERTY, &state_294, NULL, KC_DOT, 0, single_dance};
     
 
             
@@ -8835,7 +8872,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_295 = IDLE;
-    const struct Chord chord_295 PROGMEM = {H_BOT3, QWERTY, &state_295, NULL, KC_X, 0, single_dance};
+    const struct Chord chord_295 PROGMEM = {H_BOT11, QWERTY, &state_295, NULL, KC_SLASH, 0, single_dance};
     
 
             
@@ -8854,7 +8891,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_296 = IDLE;
-    const struct Chord chord_296 PROGMEM = {H_BOT4, QWERTY, &state_296, NULL, KC_C, 0, single_dance};
+    const struct Chord chord_296 PROGMEM = {H_BOT12, QWERTY, &state_296, NULL, KC_DEL, 0, single_dance};
     
 
             
@@ -8869,11 +8906,14 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_297 = IDLE;
-    const struct Chord chord_297 PROGMEM = {H_BOT5, QWERTY, &state_297, NULL, KC_V, 0, single_dance};
+    const struct Chord chord_297 PROGMEM = {H_THU1, QWERTY, &state_297, NULL, KC_BSPC, SYM, key_layer_dance};
     
 
             
@@ -8888,11 +8928,14 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_298 = IDLE;
-    const struct Chord chord_298 PROGMEM = {H_BOT6, QWERTY, &state_298, NULL, KC_B, 0, single_dance};
+    const struct Chord chord_298 PROGMEM = {H_THU2, QWERTY, &state_298, NULL, KC_SPC, NUM, key_layer_dance};
     
 
             
@@ -8911,7 +8954,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_299 = IDLE;
-    const struct Chord chord_299 PROGMEM = {H_BOT7, QWERTY, &state_299, NULL, KC_N, 0, single_dance};
+    const struct Chord chord_299 PROGMEM = {H_THU3, QWERTY, &state_299, NULL, KC_LSFT, 0, single_dance};
     
 
             
@@ -8926,11 +8969,15 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
+                
                 
                 
     
     uint8_t state_300 = IDLE;
-    const struct Chord chord_300 PROGMEM = {H_BOT8, QWERTY, &state_300, NULL, KC_M, 0, single_dance};
+    const struct Chord chord_300 PROGMEM = {H_THU4, QWERTY, &state_300, NULL, KC_ENTER, KC_RSFT, key_key_dance};
     
 
             
@@ -8945,11 +8992,14 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_301 = IDLE;
-    const struct Chord chord_301 PROGMEM = {H_BOT9, QWERTY, &state_301, NULL, KC_COMMA, 0, single_dance};
+    const struct Chord chord_301 PROGMEM = {H_THU5, QWERTY, &state_301, NULL, KC_SPC, NUM, key_layer_dance};
     
 
             
@@ -8964,15 +9014,154 @@ void reset(const struct Chord* self) {
         
         
             
+            
+                
+                
                 
                 
     
     uint8_t state_302 = IDLE;
-    const struct Chord chord_302 PROGMEM = {H_BOT10, QWERTY, &state_302, NULL, KC_DOT, 0, single_dance};
+    const struct Chord chord_302 PROGMEM = {H_THU6, QWERTY, &state_302, NULL, KC_BSPC, SYM, key_layer_dance};
     
 
             
         
+    
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
     
 
     
@@ -8987,11 +9176,17 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_303 = IDLE;
-    const struct Chord chord_303 PROGMEM = {H_BOT11, QWERTY, &state_303, NULL, KC_SLASH, 0, single_dance};
+    const struct Chord chord_303 PROGMEM = {H_BOT1 + H_BOT2, QWERTY, &state_303, NULL, KC_INS, 0, single_dance};
     
 
             
         
+    
+
+    
+    
+    
+    
     
 
     
@@ -9006,7 +9201,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_304 = IDLE;
-    const struct Chord chord_304 PROGMEM = {H_BOT12, QWERTY, &state_304, NULL, KC_DEL, 0, single_dance};
+    const struct Chord chord_304 PROGMEM = {H_BOT3 + H_BOT4, QWERTY, &state_304, NULL, KC_LALT, 0, single_dance};
     
 
             
@@ -9021,14 +9216,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
                 
                 
     
     uint8_t state_305 = IDLE;
-    const struct Chord chord_305 PROGMEM = {H_THU1, QWERTY, &state_305, NULL, KC_BSPC, SYM, key_layer_dance};
+    const struct Chord chord_305 PROGMEM = {H_BOT4 + H_BOT5, QWERTY, &state_305, NULL, KC_LGUI, 0, single_dance};
     
 
             
@@ -9043,18 +9235,21 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
                 
                 
     
     uint8_t state_306 = IDLE;
-    const struct Chord chord_306 PROGMEM = {H_THU2, QWERTY, &state_306, NULL, KC_SPC, NUM, key_layer_dance};
+    const struct Chord chord_306 PROGMEM = {H_BOT5 + H_BOT6, QWERTY, &state_306, NULL, KC_LCTL, 0, single_dance};
     
 
             
         
+    
+
+    
+    
+    
+    
     
 
     
@@ -9069,7 +9264,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_307 = IDLE;
-    const struct Chord chord_307 PROGMEM = {H_THU3, QWERTY, &state_307, NULL, KC_LSFT, 0, single_dance};
+    const struct Chord chord_307 PROGMEM = {H_BOT7 + H_BOT8, QWERTY, &state_307, NULL, KC_RCTL, 0, single_dance};
     
 
             
@@ -9084,15 +9279,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
-                
                 
                 
     
     uint8_t state_308 = IDLE;
-    const struct Chord chord_308 PROGMEM = {H_THU4, QWERTY, &state_308, NULL, KC_ENTER, KC_RSFT, key_key_dance};
+    const struct Chord chord_308 PROGMEM = {H_BOT8 + H_BOT9, QWERTY, &state_308, NULL, KC_RGUI, 0, single_dance};
     
 
             
@@ -9107,14 +9298,11 @@ void reset(const struct Chord* self) {
         
         
             
-            
-                
-                
                 
                 
     
     uint8_t state_309 = IDLE;
-    const struct Chord chord_309 PROGMEM = {H_THU5, QWERTY, &state_309, NULL, KC_SPC, NUM, key_layer_dance};
+    const struct Chord chord_309 PROGMEM = {H_BOT9 + H_BOT10, QWERTY, &state_309, NULL, KC_RALT, 0, single_dance};
     
 
             
@@ -9125,158 +9313,31 @@ void reset(const struct Chord* self) {
     
     
     
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
         
         
         
             
-            
-                
-                
                 
                 
     
     uint8_t state_310 = IDLE;
-    const struct Chord chord_310 PROGMEM = {H_THU6, QWERTY, &state_310, NULL, KC_BSPC, SYM, key_layer_dance};
+    const struct Chord chord_310 PROGMEM = {H_THU1 + H_THU2, QWERTY, &state_310, NULL, KC_LCTL, 0, single_dance};
     
 
             
         
-    
-
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
     
 
     
@@ -9287,11 +9348,11 @@ void reset(const struct Chord* self) {
         
         
             
-                
+            
                 
     
     uint8_t state_311 = IDLE;
-    const struct Chord chord_311 PROGMEM = {H_BOT1 + H_BOT2, QWERTY, &state_311, NULL, KC_INS, 0, single_dance};
+    const struct Chord chord_311 PROGMEM = {H_THU2 + H_THU3, QWERTY, &state_311, NULL, MOVE, 0, temp_pseudolayer};
     
 
             
@@ -9316,183 +9377,7 @@ void reset(const struct Chord* self) {
                 
     
     uint8_t state_312 = IDLE;
-    const struct Chord chord_312 PROGMEM = {H_BOT3 + H_BOT4, QWERTY, &state_312, NULL, KC_LALT, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_313 = IDLE;
-    const struct Chord chord_313 PROGMEM = {H_BOT4 + H_BOT5, QWERTY, &state_313, NULL, KC_LGUI, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_314 = IDLE;
-    const struct Chord chord_314 PROGMEM = {H_BOT5 + H_BOT6, QWERTY, &state_314, NULL, KC_LCTL, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_315 = IDLE;
-    const struct Chord chord_315 PROGMEM = {H_BOT7 + H_BOT8, QWERTY, &state_315, NULL, KC_RCTL, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_316 = IDLE;
-    const struct Chord chord_316 PROGMEM = {H_BOT8 + H_BOT9, QWERTY, &state_316, NULL, KC_RGUI, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_317 = IDLE;
-    const struct Chord chord_317 PROGMEM = {H_BOT9 + H_BOT10, QWERTY, &state_317, NULL, KC_RALT, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_318 = IDLE;
-    const struct Chord chord_318 PROGMEM = {H_THU1 + H_THU2, QWERTY, &state_318, NULL, KC_LCTL, 0, single_dance};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-            
-                
-    
-    uint8_t state_319 = IDLE;
-    const struct Chord chord_319 PROGMEM = {H_THU2 + H_THU3, QWERTY, &state_319, NULL, MOVE, 0, temp_pseudolayer};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
-                
-                
-    
-    uint8_t state_320 = IDLE;
-    const struct Chord chord_320 PROGMEM = {H_THU4 + H_THU5, QWERTY, &state_320, NULL, KC_TAB, 0, single_dance};
+    const struct Chord chord_312 PROGMEM = {H_THU4 + H_THU5, QWERTY, &state_312, NULL, KC_TAB, 0, single_dance};
     
 
             
@@ -9820,14 +9705,6 @@ const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_310,
             &chord_311,
             &chord_312,
-            &chord_313,
-            &chord_314,
-            &chord_315,
-            &chord_316,
-            &chord_317,
-            &chord_318,
-            &chord_319,
-            &chord_320,
     
 };
 
@@ -9884,7 +9761,7 @@ bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
 }
 
 void kill_one_shots(void) {
-    for (int i = 0; i < 321; i++) {
+    for (int i = 0; i < 313; i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -9902,21 +9779,19 @@ void kill_one_shots(void) {
 }
 
 void process_finished_dances(void) {
-    for (int i = 0; i < 321; i++) {
+    for (int i = 0; i < 313; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         struct Chord* chord = &chord_storage;
         
         if (*chord->state == ACTIVATED) {
-            *chord->state = FINISHED_FROM_ACTIVE;
+            *chord->state = PRESS_FROM_ACTIVE;
             chord->function(chord);
             if (a_key_went_through) {
                 kill_one_shots();
             }
-        }
-        
-        if (*chord->state == IDLE_IN_DANCE) {
+        } else if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
             if (*chord->state == FINISHED) {
@@ -9925,6 +9800,13 @@ void process_finished_dances(void) {
                     *chord->state = IDLE;
                 }
             }
+        } else if (*chord->state == PRESS_FROM_ACTIVE) {
+            *chord->state = FINISHED_FROM_ACTIVE;
+            chord->function(chord);
+            if (a_key_went_through) {
+                kill_one_shots();
+            }
+            dance_timer = timer_read();
         }
     }
 }
@@ -9934,7 +9816,7 @@ void deactivate_active_taphold_chords(struct Chord* caller) {
         return;
     }
     
-    for (int i = 0; i < 321; i++) {
+    for (int i = 0; i < 313; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -9963,7 +9845,7 @@ uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
 }
 
 void remove_subchords(void) {
-    for (int i = 0; i < 321; i++) {
+    for (int i = 0; i < 313; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -9973,7 +9855,7 @@ void remove_subchords(void) {
             continue;
         }
         
-        for (int j = 0; j < 321; j++) {
+        for (int j = 0; j < 313; j++) {
             if (i == j) {continue;}
             
             struct Chord* chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
@@ -10000,7 +9882,7 @@ void process_ready_chords(void) {
     uint8_t first_keycode_index = 0;
     while (keycodes_buffer_array_min(&first_keycode_index)) {
         // find ready chords
-        for (int i = 0; i < 321; i++) {
+        for (int i = 0; i < 313; i++) {
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -10041,7 +9923,7 @@ void process_ready_chords(void) {
         // execute logic
         // this should be only one chord
         struct Chord* chord = NULL;
-        for (int i = 0; i < 321; i++) {
+        for (int i = 0; i < 313; i++) {
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -10070,9 +9952,9 @@ void process_ready_chords(void) {
                 
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;
-                    *chord->state = FINISHED_FROM_ACTIVE;
+                    *chord->state = PRESS_FROM_ACTIVE;
                     chord->function(chord);
-                    if (*chord->state == FINISHED_FROM_ACTIVE) {
+                    if (*chord->state == PRESS_FROM_ACTIVE) {
                         *chord->state = LOCKED;
                     }
                     if (a_key_went_through) {
@@ -10092,7 +9974,7 @@ void process_ready_chords(void) {
 void deactivate_active_chords(uint16_t keycode) {
     uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
     bool broken;
-    for (int i = 0; i < 321; i++) {
+    for (int i = 0; i < 313; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -10116,6 +9998,7 @@ void deactivate_active_chords(uint16_t keycode) {
                     kill_one_shots();
                 }
                 break;
+            case PRESS_FROM_ACTIVE:
             case FINISHED_FROM_ACTIVE:
                 *chord->state = RESTART;
                 chord->function(chord);
@@ -10209,7 +10092,7 @@ void matrix_scan_user(void) {
 void clear(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
-        for (int i = 0; i < 321; i++) {
+        for (int i = 0; i < 313; i++) {
             struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));

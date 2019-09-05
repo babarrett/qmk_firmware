@@ -43,6 +43,7 @@ enum chord_states {
     READY,
     ACTIVATED,
     DEACTIVATED,
+    PRESS_FROM_ACTIVE,
     FINISHED_FROM_ACTIVE,
     IDLE_IN_DANCE,
     READY_IN_DANCE,
@@ -191,9 +192,6 @@ void single_dance(const struct Chord* self) {
             key_out(self->value1);
             *self->state = IDLE;
             break;
-        case FINISHED:
-        case FINISHED_FROM_ACTIVE:
-            break;
         case RESTART:
             key_out(self->value1);
             break;
@@ -230,7 +228,7 @@ void key_key_dance(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             key_in(self->value2);
             break;
         case RESTART:
@@ -243,19 +241,19 @@ void key_key_dance(const struct Chord* self) {
 
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
-        case ACTIVATED:
-            break;
         case DEACTIVATED:
+        case RESTART:
             tap_key(self->value1);
-            
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
             key_in(KC_LSFT);
             tap_key(self->value1);
             key_out(KC_LSFT);
-            
             *self->state = IDLE;
+            // the skip to IDLE is usually just a lag optimization,
+            // in this case it has a logic function, on a short
+            // press (still longer than a tap) the key does not get shifted
             break;
         default:
             break;
@@ -285,9 +283,6 @@ void temp_pseudolayer(const struct Chord* self) {
         case DEACTIVATED:
             current_pseudolayer = self->pseudolayer;
             break;
-        case FINISHED:
-        case FINISHED_FROM_ACTIVE:
-            break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
             break;
@@ -299,6 +294,12 @@ void temp_pseudolayer(const struct Chord* self) {
 void perm_pseudolayer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         current_pseudolayer = self->value1;
+    }
+}
+
+void switch_layer(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        layer_move(self->value1);
     }
 }
 
@@ -317,7 +318,7 @@ void one_shot_key(const struct Chord* self) {
             *self->state = IN_ONE_SHOT;
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             key_in(self->value1);
             a_key_went_through = false;
             break;
@@ -341,7 +342,7 @@ void one_shot_layer(const struct Chord* self) {
             *self->state = IN_ONE_SHOT;
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             current_pseudolayer = self->value1;
             a_key_went_through = false;
             break;
