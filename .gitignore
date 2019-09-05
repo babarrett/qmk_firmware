@@ -83,3 +83,4 @@ keyboards/georgi/keymaps/buttery/pyexpander/__init__.py
 keyboards/georgi/keymaps/buttery/expander3.py
 keyboards/butterstick/keymaps/tomas/keymap2.c
 _tomas.sh
+notepad_session.session
