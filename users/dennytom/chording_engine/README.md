@@ -78,7 +78,27 @@ in `keyboard.inc`. This macro gets expanded and creates the keycodes definitions
 
 *The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard_macros.inc` is using the `internal_keycodes` macro in to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing. If you want to add more QMK layers or have a mixed layer, you will have to modify the `internal_keycodes` macro or write it's content manually. To make that easier, you can set `custom_keymaps_array` to `True` and the keymap will expect you to define your own `keymaps[]` array. See the commented out example in my `keymap.c.in`.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard_macros.inc` is using the `internal_keycodes` macro in to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing.
+
+If you want to add more QMK layers or have a mixed layer, you will have to write it manually. To make that easier, you can set `custom_keymaps_array` to `True` and define your own `keymaps[]` array. Your `keymap.c.in` then should look something like this:
+
+```c
+...
+$py(custom_keymaps_array = True)
+$include("keyboard.inc")
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
+    [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO(0))
+};
+...
+```
+
+This would be useful for a gaming layer (even though my chording engine has pretty low latency), or when you want to send advanced keycodes (steno, lights, sounds, etc).
+
+I provide a `TO()` macro that mimics QMK's layer switching `TO()` macro. I would not recommend implementing more complicated QMK layer switching functions unless necessary.
+
+### Chords
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
