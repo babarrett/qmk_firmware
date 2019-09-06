@@ -173,7 +173,7 @@ uint16_t dynamic_macro_buffer[] = {
     0,
 };
 
-uint8_t dynamic_macro_ind;
+uint8_t dynamic_macro_ind = 0;
 
 bool a_key_went_through = false;
 
@@ -358,6 +358,26 @@ key_layer_dance (const struct Chord *self) {
             tap_key (self->value1);
         }
         current_pseudolayer = self->pseudolayer;
+        *self->state = IDLE;    // does not have effect if the state was RESTART
+        break;
+    default:
+        break;
+    }
+}
+
+void
+key_mod_dance (const struct Chord *self) {
+    switch (*self->state) {
+    case ACTIVATED:
+        key_in (self->value2);
+        a_key_went_through = false;
+        break;
+    case DEACTIVATED:
+    case RESTART:
+        key_out (self->value2);
+        if (!a_key_went_through) {
+            tap_key (self->value1);
+        }
         *self->state = IDLE;    // does not have effect if the state was RESTART
         break;
     default:
@@ -2147,7 +2167,6 @@ matrix_scan_user (void) {
 
 }
 
-// for now here
 void
 clear (const struct Chord *self) {
     if (*self->state == ACTIVATED) {
@@ -2168,8 +2187,28 @@ clear (const struct Chord *self) {
 
         // switch to default pseudolayer
         current_pseudolayer = 1;
+        layer_move (0);
 
         // clear all keyboard states
         lock_next = false;
+        autoshift_mode = true;
+        last_chord = NULL;
+        keycode_index = 0;
+        command_mode = 0;
+        command_ind = 0;
+        for (int i; i < 5; i++) {
+            command_buffer[i] = 0;
+        }
+        in_leader_mode = false;
+        leader_ind = 0;
+        for (int i; i < 5; i++) {
+            leader_buffer[i] = 0;
+        }
+        dynamic_macro_mode = false;
+        dynamic_macro_ind = 0;
+        for (int i; i < 20; i++) {
+            dynamic_macro_buffer[i] = 0;
+        }
+        a_key_went_through = false;
     }
 }

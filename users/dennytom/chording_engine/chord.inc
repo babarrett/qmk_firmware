@@ -219,6 +219,25 @@ void key_layer_dance(const struct Chord* self) {
     }
 }
 
+void key_mod_dance(const struct Chord* self) {
+    switch (*self->state) {
+        case ACTIVATED:
+            key_in(self->value2);
+            a_key_went_through = false;
+            break;
+        case DEACTIVATED:
+        case RESTART:
+            key_out(self->value2);
+            if (!a_key_went_through) {
+                tap_key(self->value1);
+            }
+            *self->state = IDLE; // does not have effect if the state was RESTART
+            break;
+        default:
+            break;
+    }
+}
+
 void key_key_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:

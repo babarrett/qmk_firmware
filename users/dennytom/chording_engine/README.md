@@ -210,6 +210,7 @@ The complete list of strings that these macros can accept is:
 
   * `KK(X, Y)`: Pulses code `X` on tap and code `Y` on hold.
   * `KL(X, Y)`: Pulses code `X` on tap and switches to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping).
+  * `KM(X, Y)`: Same as `KK()` but meant for modifiers on hold. Instead of a timer to figure out tap-hold, uses retro tapping like behavior just like `KL()`.
   * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
 
 * Autoshift

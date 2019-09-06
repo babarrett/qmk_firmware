@@ -37,6 +37,13 @@ $macro(KK, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE1, KEYCODE2)
     $py(NUM_OF_CHORDS += 1)
 $endmacro
 
+$macro(KM, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE, TO_PSEUDOLAYER)
+    $nonlocal(NUM_OF_CHORDS)
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE), $(TO_PSEUDOLAYER), key_mod_dance};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
 $macro(MO, ON_PSEUDOLAYER, KEYCODES_HASH, TO_PSEUDOLAYER)
     $nonlocal(NUM_OF_CHORDS)
     uint8_t state_$(NUM_OF_CHORDS) = IDLE;
@@ -404,6 +411,12 @@ $macro(add_key, PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                 $py(code1 = expand_keycode_fnc(val1))
                 $py(val2 = val.split(',')[1].strip())
                 $KL(PSEUDOLAYER, KEYCODES_HASH, code1, val2)
+            $elif(type == "KM")
+                $py(val1 = val.split(',')[0].strip())
+                $py(code1 = expand_keycode_fnc(val1))
+                $py(val2 = val.split(',')[1].strip())
+                $py(code2 = expand_keycode_fnc(val2))
+                $KM(PSEUDOLAYER, KEYCODES_HASH, code1, code2)
             $elif(type == "AS")
                 $py(code = expand_keycode_fnc(val))
                 $AS(PSEUDOLAYER, KEYCODES_HASH, code)
