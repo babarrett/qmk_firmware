@@ -146,9 +146,9 @@ $butterstick_cols("SYM",
                    ,     ,       ,           ,     ")
 
 $butterstick_rows("MOVE",
-    ",     MK(LSFT, LCTL, LEFT), HOME, UP,   PGUP,  MK(LSFT, LCTL, RIGHT),             , ,     UP,   ,      , ,\
-     INS,  MK(LSFT, LEFT),       END,  ,     PGDN,  MK(LSFT, RIGHT),                   , LEFT, DOWN, RIGHT, , ,\
-     LSFT, MK(LCTL, LEFT),       LEFT, DOWN, RIGHT, MK(LCTL, RIGHT),                   , LEFT, DOWN, RIGHT, , RSFT,\
+    ",  MK(LSFT, LCTL, LEFT), HOME,   UP,  PGUP,  MK(LSFT, LCTL, RIGHT),             , ,     UP,   ,      , ,\
+        INS,  MK(LSFT, LEFT), LEFT, DOWN, RIGHT, MK(LSFT, RIGHT),                   , LEFT, DOWN, RIGHT, , ,\
+        LSFT, MK(LCTL, LEFT),  END, DOWN,  PGDN, MK(LCTL, RIGHT),                   , LEFT, DOWN, RIGHT, , RSFT,\
                                       ,     ,      ,                                        , ,     ")
 
 $butterstick_cols("MOVE",
