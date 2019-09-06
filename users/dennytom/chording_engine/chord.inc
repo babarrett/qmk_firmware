@@ -34,7 +34,7 @@ uint16_t dynamic_macro_buffer[] = {
         0,
     $endfor\
     };
-uint8_t dynamic_macro_ind;
+uint8_t dynamic_macro_ind = 0;
 
 bool a_key_went_through = false;
 
