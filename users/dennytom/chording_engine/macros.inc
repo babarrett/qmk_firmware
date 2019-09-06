@@ -11,7 +11,8 @@ $endmacro
 $macro(AS, ON_PSEUDOLAYER, KEYCODES_HASH, KEYCODE)
     $nonlocal(NUM_OF_CHORDS)
     uint8_t state_$(NUM_OF_CHORDS) = IDLE;
-    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), NULL, $(KEYCODE), 0, autoshift_dance};
+    uint8_t counter_$(NUM_OF_CHORDS) = 0;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(ON_PSEUDOLAYER), &state_$(NUM_OF_CHORDS), &counter_$(NUM_OF_CHORDS), $(KEYCODE), 0, autoshift_dance};
     $py(NUM_OF_CHORDS += 1)
 $endmacro
 

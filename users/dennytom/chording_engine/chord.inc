@@ -239,21 +239,31 @@ void key_key_dance(const struct Chord* self) {
     }
 }
 
+$nonlocal(LONG_PRESS_MULTIPLIER)
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
+        case ACTIVATED:
+            *self->counter = 0;
+            break;
         case DEACTIVATED:
         case RESTART:
             tap_key(self->value1);
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            key_in(KC_LSFT);
-            tap_key(self->value1);
-            key_out(KC_LSFT);
-            *self->state = IDLE;
-            // the skip to IDLE is usually just a lag optimization,
-            // in this case it has a logic function, on a short
-            // press (still longer than a tap) the key does not get shifted
+            if (*self->counter == $(LONG_PRESS_MULTIPLIER - 1)) {
+                key_in(KC_LSFT);
+                tap_key(self->value1);
+                key_out(KC_LSFT);
+                *self->state = IDLE;
+                // the skip to IDLE is usually just a lag optimization,
+                // in this case it has a logic function, on a short
+                // press (still longer than a tap) the key does not get shifted
+            } else {
+                *self->counter += 1;
+                *self->state = PRESS_FROM_ACTIVE;
+                dance_timer = timer_read();
+            }
             break;
         default:
             break;

@@ -1,10 +1,11 @@
 #define CHORD_TIMEOUT 100
-#define DANCE_TIMEOUT 500
+#define DANCE_TIMEOUT 200
 $py(COMMAND_MAX_LENGTH = 5)\
 #define LEADER_TIMEOUT 750
 $py(LEADER_MAX_LENGTH = 5)\
 #define TAP_TIMEOUT 50
 $py(DYNAMIC_MACRO_MAX_LENGTH = 20)\
+$py(LONG_PRESS_MULTIPLIER = 3)\
 $py(layout_name = "LAYOUT_butter")
 
 $include(engine_path + "keyboard_macros.inc")
