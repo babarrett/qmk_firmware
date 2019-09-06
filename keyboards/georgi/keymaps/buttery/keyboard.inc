@@ -5,6 +5,7 @@ $py(COMMAND_MAX_LENGTH = 5)\
 $py(LEADER_MAX_LENGTH = 5)\
 #define TAP_TIMEOUT 50
 $py(DYNAMIC_MACRO_MAX_LENGTH = 20)\
+$py(LONG_PRESS_MULTIPLIER = 3)\
 $py(layout_name = "LAYOUT_georgi")
 
 $include(engine_path + "keyboard_macros.inc")
@@ -14,7 +15,6 @@ $internal_keycodes("TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10,
 $macro(butterstick_rows, PSEUDOLAYER, INPUT_STRING)
     $nonlocal(NUM_OF_CHORDS)
     $py(separated_string = top_level_split(INPUT_STRING))
-    $nonlocal(NUM_OF_CHORDS)
 
     $add_key(PSEUDOLAYER, "H_TOP1", separated_string[0])
     $add_key(PSEUDOLAYER, "H_TOP2", separated_string[1])

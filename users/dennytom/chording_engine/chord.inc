@@ -34,7 +34,7 @@ uint16_t dynamic_macro_buffer[] = {
         0,
     $endfor\
     };
-uint8_t dynamic_macro_ind;
+uint8_t dynamic_macro_ind = 0;
 
 bool a_key_went_through = false;
 
@@ -219,6 +219,25 @@ void key_layer_dance(const struct Chord* self) {
     }
 }
 
+void key_mod_dance(const struct Chord* self) {
+    switch (*self->state) {
+        case ACTIVATED:
+            key_in(self->value2);
+            a_key_went_through = false;
+            break;
+        case DEACTIVATED:
+        case RESTART:
+            key_out(self->value2);
+            if (!a_key_went_through) {
+                tap_key(self->value1);
+            }
+            *self->state = IDLE; // does not have effect if the state was RESTART
+            break;
+        default:
+            break;
+    }
+}
+
 void key_key_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -239,21 +258,31 @@ void key_key_dance(const struct Chord* self) {
     }
 }
 
+$nonlocal(LONG_PRESS_MULTIPLIER)
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
+        case ACTIVATED:
+            *self->counter = 0;
+            break;
         case DEACTIVATED:
         case RESTART:
             tap_key(self->value1);
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            key_in(KC_LSFT);
-            tap_key(self->value1);
-            key_out(KC_LSFT);
-            *self->state = IDLE;
-            // the skip to IDLE is usually just a lag optimization,
-            // in this case it has a logic function, on a short
-            // press (still longer than a tap) the key does not get shifted
+            if (*self->counter == $(LONG_PRESS_MULTIPLIER - 1)) {
+                key_in(KC_LSFT);
+                tap_key(self->value1);
+                key_out(KC_LSFT);
+                *self->state = IDLE;
+                // the skip to IDLE is usually just a lag optimization,
+                // in this case it has a logic function, on a short
+                // press (still longer than a tap) the key does not get shifted
+            } else {
+                *self->counter += 1;
+                *self->state = PRESS_FROM_ACTIVE;
+                dance_timer = timer_read();
+            }
             break;
         default:
             break;

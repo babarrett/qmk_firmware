@@ -18,7 +18,7 @@ If you want to have a nice `keymap.c`, use some linter or formatter. I use `inde
 indent keymap.c -bad -bap -bbb -br -brf -brs -ce -i4 -l100 -nut -sob
 ```
 
-Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`.
+Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`. If you are using a different keyboard, you will have to also create your own `keyboard.inc`.
 
 ## Features Overview
 
@@ -78,7 +78,27 @@ in `keyboard.inc`. This macro gets expanded and creates the keycodes definitions
 
 *The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard.inc` is using the `internal_keycodes` macro to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing. If you want to add more QMK layers or have a mixed layer, you will have to modify the `internal_keycodes` macro or write it's content manually.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard_macros.inc` is using the `internal_keycodes` macro in to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing.
+
+If you want to add more QMK layers or have a mixed layer, you will have to write it manually. To make that easier, you can set `custom_keymaps_array` to `True` and define your own `keymaps[]` array. Your `keymap.c.in` then should look something like this:
+
+```c
+...
+$py(custom_keymaps_array = True)
+$include("keyboard.inc")
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
+    [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO(0))
+};
+...
+```
+
+This would be useful for a gaming layer (even though my chording engine has pretty low latency), or when you want to send advanced keycodes (steno, lights, sounds, etc).
+
+I provide a `TO()` macro that mimics QMK's layer switching `TO()` macro. I would not recommend implementing more complicated QMK layer switching functions unless necessary.
+
+### Chords
 
 Each chord is defined by a constant structure, a function and two non-constant `int` variables keeping the track of the chord's state:
 
@@ -104,7 +124,7 @@ void function_0(struct Chord* self) {
             unregister_code(self->value1);
             break;
         case FINISHED:
-        case FINISHED_FROM_ACTIVE:
+        case PRESS_FROM_ACTIVE:
             break;
         case RESTART:
             unregister_code(self->value1);
@@ -121,8 +141,11 @@ All chords have to be added to `list_of_chord` array that gets regularly scanned
 * `ACTIVATED`: Analogous to a key being pressed (this includes repeated presses for tap-dance)
 * `DEACTIVATED`: Analogous to a key being depressed (also can be repeated)
 * `FINISHED`: Happens if the chord got deactivated and then the dance timer expired.
-* `FINISHED_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired. Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
+* `PRESS_FROM_ACTIVE`: Happens if the chord was active when the dance timer expired. Meaning you at least once activated the chord and then kept holding it down. Useful to recognize taps and holds.
+* `FINISHED_FROM_ACTIVE`:  Happens *after* `PRESS_FROM_HOLD` if the chord is still active when the dance timer expires for the second time. Can be combined with the `counter` to recognize even longer presses. Useful if you want to recognize long presses, for example for autoshift functionality. In `keyboard.inc` you can set `LONG_PRESS_MULTIPLIER` to set how many times does dance timer have to expire for the autoshift to trigger.
 * `RESTART`: The dance is done. Happens immediately after `FINISHED` or on chord deactivation from `FINISHED_FROM_ACTIVE`. Anything you have to do to get the chord into `IDLE` mode happens here.
+
+The chords change states based on external and internal events. Anytime a chord's function is activated, it may change it's own state. Also, on certain events, the chording engine will trigger the functions of all chords in a specific state and *if the chords' state hasn't changed* it will then change it appropriately. In this folder is a diagram of the chord's state machine and it's state changes based on external events. The diagram assumes only a single chord, the chord can also be affected by other chords, but that is rare, study the code or contact me for details.
 
 ### Macros
 
@@ -179,12 +202,15 @@ The complete list of strings that these macros can accept is:
 
 * `DF(X)`: Permanent switch to pseudolayer `X`.
 
+* `TO(X)`: Switches the QMK layer to `X`.
+
 * `O(X)`: One-shot key `X` (if `X` starts with `"KC_"`) or one-shot layer `X` (otherwise) . Both have retro tapping enabled.
 
 * Tap-holds
 
   * `KK(X, Y)`: Pulses code `X` on tap and code `Y` on hold.
   * `KL(X, Y)`: Pulses code `X` on tap and switches to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping).
+  * `KM(X, Y)`: Same as `KK()` but meant for modifiers on hold. Instead of a timer to figure out tap-hold, uses retro tapping like behavior just like `KL()`.
   * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
 
 * Autoshift
