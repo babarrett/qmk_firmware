@@ -388,6 +388,7 @@ void matrix_scan_user(void) {
     
 }
 
+// for now here
 void clear(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
@@ -406,28 +407,8 @@ void clear(const struct Chord* self) {
         
         // switch to default pseudolayer
         current_pseudolayer = 1;
-        layer_move(0);
         
         // clear all keyboard states
         lock_next = false;
-        autoshift_mode = true;
-        last_chord = NULL;
-        keycode_index = 0;
-        command_mode = 0;
-        command_ind = 0;
-        for (int i; i < $(COMMAND_MAX_LENGTH); i++) {
-            command_buffer[i] = 0;
-        }
-        in_leader_mode = false;
-        leader_ind = 0;
-        for (int i; i < $(LEADER_MAX_LENGTH); i++) {
-            leader_buffer[i] = 0;
-        }
-        dynamic_macro_mode = false;
-        dynamic_macro_ind = 0;
-        for (int i; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
-            dynamic_macro_buffer[i] = 0;
-        }
-        a_key_went_through = false;
     }
 }
