@@ -173,7 +173,7 @@ uint16_t dynamic_macro_buffer[] = {
     0,
 };
 
-uint8_t dynamic_macro_ind = 0;
+uint8_t dynamic_macro_ind;
 
 bool a_key_went_through = false;
 
@@ -2167,6 +2167,7 @@ matrix_scan_user (void) {
 
 }
 
+// for now here
 void
 clear (const struct Chord *self) {
     if (*self->state == ACTIVATED) {
@@ -2179,6 +2180,10 @@ clear (const struct Chord *self) {
             struct Chord *chord = &chord_storage;
 
             *chord->state = IDLE;
+
+            if (chord->counter) {
+                *chord->counter = 0;
+            }
         }
 
         // clear keyboard
@@ -2187,28 +2192,18 @@ clear (const struct Chord *self) {
 
         // switch to default pseudolayer
         current_pseudolayer = 1;
-        layer_move (0);
 
         // clear all keyboard states
         lock_next = false;
         autoshift_mode = true;
-        last_chord = NULL;
-        keycode_index = 0;
         command_mode = 0;
-        command_ind = 0;
-        for (int i; i < 5; i++) {
-            command_buffer[i] = 0;
-        }
         in_leader_mode = false;
-        leader_ind = 0;
-        for (int i; i < 5; i++) {
-            leader_buffer[i] = 0;
-        }
         dynamic_macro_mode = false;
-        dynamic_macro_ind = 0;
+        a_key_went_through = false;
+
         for (int i; i < 20; i++) {
             dynamic_macro_buffer[i] = 0;
         }
-        a_key_went_through = false;
+
     }
 }

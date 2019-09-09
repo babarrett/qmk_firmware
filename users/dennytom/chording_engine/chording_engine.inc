@@ -399,6 +399,10 @@ void clear(const struct Chord* self) {
             struct Chord* chord = &chord_storage;
             
             *chord->state = IDLE;
+            
+            if (chord->counter) {
+                *chord->counter = 0;
+            }
         }
         
         // clear keyboard
@@ -410,5 +414,15 @@ void clear(const struct Chord* self) {
         
         // clear all keyboard states
         lock_next = false;
+        autoshift_mode = true;
+        command_mode = 0;
+        in_leader_mode = false;
+        dynamic_macro_mode = false;
+        a_key_went_through = false;
+
+        for (int i; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+            dynamic_macro_buffer[i] = 0;
+        }
+
     }
 }
