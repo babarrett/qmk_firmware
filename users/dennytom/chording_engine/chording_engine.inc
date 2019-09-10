@@ -4,11 +4,15 @@ const struct Chord* const list_of_chords[] PROGMEM = {
     $endfor
 };
 
+$if(len(list_of_leader_combos) > 0)
 const uint16_t leader_triggers[$(len(list_of_leader_combos))][$(LEADER_MAX_LENGTH)] PROGMEM = {
     $for(i in range(0, len(list_of_leader_combos)))\
         $(list_of_leader_combos[i][0]),
     $endfor
 };
+$else
+    const uint16_t** leader_triggers PROGMEM = NULL;
+$endif
 
 void (*leader_functions[]) (void) = {
     $for(i in range(0, len(list_of_leader_combos)))\
@@ -370,18 +374,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_scan_user(void) {
     bool chord_timer_expired = timer_elapsed(chord_timer) > CHORD_TIMEOUT;
-    bool dance_timer_expired = timer_elapsed(dance_timer) > DANCE_TIMEOUT;
-    bool leader_timer_expired = timer_elapsed(leader_timer) > LEADER_TIMEOUT;
-    
     if (chord_timer_expired && keycodes_buffer_array_min(NULL)) {
         process_ready_chords();
     }
+    
+    bool dance_timer_expired = timer_elapsed(dance_timer) > DANCE_TIMEOUT;
     if (dance_timer_expired) { // would love to have && in_dance but not sure how
         process_finished_dances();
     }
-    if (command_mode == 2) {
+    
+    bool in_command_mode = command_mode == 2;
+    if (in_command_mode) {
         process_command();
     }
+    
+    bool leader_timer_expired = timer_elapsed(leader_timer) > LEADER_TIMEOUT;
     if (leader_timer_expired && in_leader_mode) {
         process_leader();
     }

@@ -154,9 +154,16 @@ int16_t current_time;
 void register_code(int16_t keycode) {keyboard[keycode] = 1;};
 void unregister_code(int16_t keycode) {keyboard[keycode] = 0;};
 void send_keyboard_report(void) { /*still don't know what this does*/ };
-void wait_ms(int16_t ms) {current_time += ms;};
-int16_t timer_read(void) {return current_time;};
-int16_t timer_elapsed(int16_t timer) {return current_time - timer;};
+void matrix_scan_user (void);
+void wait_ms(uint16_t ms) {for (int i = 0; i < ms; i++) {current_time++; matrix_scan_user();}};
+uint16_t timer_read(void) {
+    uint16_t result = current_time;
+    return result;
+};
+uint16_t timer_elapsed(uint16_t timer) {
+    uint16_t result = current_time - timer;
+    return result;
+};
 void layer_move(int16_t layer) { /*ignoring for now*/ };
 void clear_keyboard(void) {for (int i = 0; i < SAFE_RANGE-1; i++) {keyboard[i] = 0;}};
 void reset_keyboard(void) { /*ignoring for now*/ };
@@ -200,8 +207,29 @@ static char * test_wait_ms() {
     return 0;
 }
 
+static char * test_KC_Q() {
+    current_time = 0;
+    wait_ms (500);
+    mu_assert ("error, 206", state_0 == IDLE);
+    process_record_user (TOP1, &pressed);
+    wait_ms (CHORD_TIMEOUT);
+    mu_assert ("error, 206", state_0 == IDLE);
+    wait_ms (1);
+    mu_assert ("error, 209", state_0 == ACTIVATED);
+    wait_ms (DANCE_TIMEOUT);
+    wait_ms (1);
+    mu_assert ("error, 211", state_0 == PRESS_FROM_ACTIVE);
+    wait_ms (DANCE_TIMEOUT);
+    wait_ms (1);
+    mu_assert ("error, 211", state_0 == FINISHED_FROM_ACTIVE);
+    process_record_user (TOP1, &depressed);
+    mu_assert ("error, 214", keyboard[KC_Q] == IDLE);
+    return 0;
+}
+
 static char * all_tests() {
     mu_run_test(test_wait_ms);
+    mu_run_test(test_KC_Q);
     return 0;
 }
 
