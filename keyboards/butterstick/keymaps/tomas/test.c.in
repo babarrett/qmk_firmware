@@ -27,6 +27,7 @@ $OSL("QWERTY", "H_BOT6 + H_BOT7", "NUM")
 $MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
 $DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
 $AS("QWERTY", "H_BOT1", "KC_Z")
+$KK("QWERTY", "H_BOT2", "KC_X", "KC_LCTL")
 $LOCK("QWERTY", "H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2")
 $CMD("QWERTY", "H_TOP5 + H_TOP6 + H_BOT5 + H_BOT6")
 
@@ -521,10 +522,42 @@ $TEST("command_mode")
     ASSERT_EQ(UINT, keyboard_history[5][KC_LSFT], 255);
 $END_TEST()
 
+// KK
+$TEST("key_key_dance_tap")
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(BOT2, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_X], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LCTL], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_X], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LCTL], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_X], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LCTL], 0);
+$END_TEST()
+
+$TEST("key_key_dance_hold")
+    $nonlocal(LONG_PRESS_MULTIPLIER)
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms(DANCE_TIMEOUT + 1);
+    process_record_user(BOT2, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_X], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LCTL], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_X], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LCTL], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_X], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LCTL], 0);
+$END_TEST()
+
 // TODO:
 // KL
 // KM
-// KK
 // LEADER
 // DYNAMIC MACRO
 
