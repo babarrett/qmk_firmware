@@ -190,16 +190,33 @@ enum keycodes {
     SAFE_RANGE
 };
 
-// this does not track history, maybe it should?
-// also now I do not have build up and tear down for every test and I really should
-bool keyboard[SAFE_RANGE-1];
+$py(HISTORY = 20)
 int16_t current_time;
+uint8_t keyboard_history[$(HISTORY)][SAFE_RANGE-1];
+int16_t time_history[$(HISTORY)];
+uint8_t history_index;
 
-void register_code(int16_t keycode) {keyboard[keycode] = 1;};
-void unregister_code(int16_t keycode) {keyboard[keycode] = 0;};
+void register_code(int16_t keycode) {
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[history_index][j] = keyboard_history[history_index-1][j];
+    }
+    keyboard_history[history_index][keycode] = 1;
+    time_history[history_index] = current_time;
+};
+void unregister_code(int16_t keycode) {
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[history_index][j] = keyboard_history[history_index-1][j];
+    }
+    keyboard_history[history_index][keycode] = 0;
+    time_history[history_index] = current_time;
+};
 void send_keyboard_report(void) { /*still don't know what this does*/ };
 void matrix_scan_user (void);
-void wait_ms(uint16_t ms) {current_time += ms;};
+void wait_ms(uint16_t ms) {
+    current_time += ms;
+};
 uint16_t timer_read(void) {
     uint16_t result = current_time;
     return result;
@@ -209,20 +226,43 @@ uint16_t timer_elapsed(uint16_t timer) {
     return result;
 };
 void layer_move(int16_t layer) { /*ignoring for now*/ };
-void clear_keyboard(void) {for (int i = 0; i < SAFE_RANGE-1; i++) {keyboard[i] = 0;}};
+void clear_keyboard(void) {
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[history_index][j] = 0;
+    }
+    time_history[history_index] = current_time;
+};
 void reset_keyboard(void) { /*ignoring for now*/ };
 
-void pause_ms(uint16_t ms) {for (int i = 0; i < ms; i++) {current_time++; matrix_scan_user();}};
+void pause_ms(uint16_t ms) {
+    for (int i = 0; i < ms; i++) {
+        current_time++;
+        matrix_scan_user();
+    }
+};
 
 $py(ALL_TESTS = [])
 
 $macro(TEST, NAME)
     $nonlocal(ALL_TESTS)
+    $nonlocal(HISTORY)
     $py(ALL_TESTS.append(NAME))
     static char * test_$(NAME)() { \
     char name[] = "$(NAME)"; \
     current_time = 0;
-    clear_keyboard();
+    history_index = 0;
+    
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < $(HISTORY); i++) {
+        for (int j = 0; j < SAFE_RANGE-1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
 $endmacro
 
 $macro(END_TEST)

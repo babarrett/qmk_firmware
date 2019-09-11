@@ -159,19 +159,29 @@ enum keycodes {
     SAFE_RANGE
 };
 
-// this does not track history, maybe it should?
-// also now I do not have build up and tear down for every test and I really should
-bool keyboard[SAFE_RANGE - 1];
 int16_t current_time;
+uint8_t keyboard_history[20][SAFE_RANGE - 1];
+int16_t time_history[20];
+uint8_t history_index;
 
 void
 register_code (int16_t keycode) {
-    keyboard[keycode] = 1;
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[history_index][j] = keyboard_history[history_index - 1][j];
+    }
+    keyboard_history[history_index][keycode] = 1;
+    time_history[history_index] = current_time;
 };
 
 void
 unregister_code (int16_t keycode) {
-    keyboard[keycode] = 0;
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[history_index][j] = keyboard_history[history_index - 1][j];
+    }
+    keyboard_history[history_index][keycode] = 0;
+    time_history[history_index] = current_time;
 };
 
 void
@@ -204,9 +214,12 @@ layer_move (int16_t layer) {    /*ignoring for now */
 
 void
 clear_keyboard (void) {
-    for (int i = 0; i < SAFE_RANGE - 1; i++) {
-        keyboard[i] = 0;
-}};
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[history_index][j] = 0;
+    }
+    time_history[history_index] = current_time;
+};
 
 void
 reset_keyboard (void) {         /*ignoring for now */
@@ -217,7 +230,8 @@ pause_ms (uint16_t ms) {
     for (int i = 0; i < ms; i++) {
         current_time++;
         matrix_scan_user ();
-}};
+    }
+};
 
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM
@@ -1336,7 +1350,18 @@ test_pause_ms () {
     char name[] = "pause_ms";
 
     current_time = 0;
-    clear_keyboard ();
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
 
     pause_ms (500);
     ASSERT_EQ (UINT, current_time, 500);
@@ -1350,7 +1375,18 @@ test_single_dance () {
     char name[] = "single_dance";
 
     current_time = 0;
-    clear_keyboard ();
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
 
     pause_ms (500);
     ASSERT_EQ (UINT, state_0, IDLE);
@@ -1379,7 +1415,18 @@ test_single_dance_fast () {
     char name[] = "single_dance_fast";
 
     current_time = 0;
-    clear_keyboard ();
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
 
     pause_ms (500);
     ASSERT_EQ (UINT, state_0, IDLE);
@@ -1396,6 +1443,37 @@ test_single_dance_fast () {
 }
 
 // I can not test this without keyboard tracking history
+
+static char *
+test_single_dance_faster () {
+    char name[] = "single_dance_faster";
+
+    current_time = 0;
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    pause_ms (500);
+    ASSERT_EQ (UINT, state_0, IDLE);
+    process_record_user (TOP1, &pressed);
+    pause_ms (1);
+    process_record_user (TOP1, &depressed);
+    ASSERT_EQ (UINT, keyboard_history[0][KC_Q], 0);
+    ASSERT_EQ (UINT, keyboard_history[1][KC_Q], 1);
+    ASSERT_EQ (UINT, keyboard_history[2][KC_Q], 0);
+
+    printf ("%s PASSED\n", name);
+    return 0;
+}
 
 // KL
 // KM
@@ -1423,6 +1501,8 @@ all_tests () {
 
     mu_run_test (test_single_dance_fast);
 
+    mu_run_test (test_single_dance_faster);
+
     return 0;
 }
 
@@ -1435,7 +1515,7 @@ main (int argc, char **argv) {
     } else {
         printf ("\nALL TESTS PASSED\n");
     }
-    printf ("Tests run: %d / %d\n", tests_run, 3);
+    printf ("Tests run: %d / %d\n", tests_run, 4);
 
     return result != 0;
 }

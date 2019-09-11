@@ -28,45 +28,47 @@ $TEST("pause_ms")
 $END_TEST()
 
 $TEST("single_dance")
-    pause_ms (500);
+    pause_ms(500);
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
-    pause_ms (CHORD_TIMEOUT);
+    pause_ms(CHORD_TIMEOUT);
     ASSERT_EQ(UINT, state_0, IDLE);
-    pause_ms (1);
+    pause_ms(1);
     ASSERT_EQ(UINT, state_0, ACTIVATED);
-    pause_ms (DANCE_TIMEOUT);
+    pause_ms(DANCE_TIMEOUT);
     ASSERT_EQ(UINT, state_0, ACTIVATED);
-    pause_ms (1);
+    pause_ms(1);
     ASSERT_EQ(UINT, state_0, PRESS_FROM_ACTIVE);
     pause_ms (DANCE_TIMEOUT);
     ASSERT_EQ(UINT, state_0, PRESS_FROM_ACTIVE);
-    pause_ms (1);
+    pause_ms(1);
     ASSERT_EQ(UINT, state_0, FINISHED_FROM_ACTIVE);
     process_record_user (TOP1, &depressed);
     ASSERT_EQ(UINT, state_0, IDLE);
 $END_TEST()
 
 $TEST("single_dance_fast")
-    pause_ms (500);
+    pause_ms(500);
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
-    pause_ms (CHORD_TIMEOUT);
+    pause_ms(CHORD_TIMEOUT);
     ASSERT_EQ(UINT, state_0, IDLE);
-    pause_ms (1);
+    pause_ms(1);
     ASSERT_EQ(UINT, state_0, ACTIVATED);
     process_record_user (TOP1, &depressed);
     ASSERT_EQ(UINT, state_0, IDLE);
 $END_TEST()
 
-// I can not test this without keyboard tracking history
-$# $TEST("single_dance_faster")
-$#     pause_ms (500);
-$#     ASSERT_EQ(UINT, state_0, IDLE);
-$#     process_record_user (TOP1, &pressed);
-$#     process_record_user (TOP1, &depressed);
-$#     ASSERT_EQ(UINT, state_0, ACTIVATED);
-$# $END_TEST()
+$TEST("single_dance_faster")
+    pause_ms(500);
+    ASSERT_EQ(UINT, state_0, IDLE);
+    process_record_user (TOP1, &pressed);
+    pause_ms(1);
+    process_record_user (TOP1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_Q], 0);
+$END_TEST()
 
 // KL
 // KM
