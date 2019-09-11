@@ -14,6 +14,10 @@
         } \
     } while (0)
 
+#define RED "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define NC "\033[0m"
+
 int tests_run = 0;
 
 enum ASSERT_TYPES {
@@ -29,13 +33,13 @@ char buffer[BUFF_SIZE];
         if (actual != expected) { \
             switch (type) { \
                 case UINT: \
-                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nvar %s\nactual = %u\nexpected = %u\n", name, __LINE__, #actual, actual, expected); \
+                    snprintf(buffer, BUFF_SIZE, "%s "RED"FAILED"NC"\nline %d\nvar %s\nactual = %u\nexpected = %u\n", name, __LINE__, #actual, actual, expected); \
                     break; \
                 case INT: \
-                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nvar %s\nactual = %d\nexpected = %d\n", name, __LINE__, #actual, actual, expected); \
+                    snprintf(buffer, BUFF_SIZE, "%s "RED"FAILED"NC"\nline %d\nvar %s\nactual = %d\nexpected = %d\n", name, __LINE__, #actual, actual, expected); \
                     break; \
                 default: \
-                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__); \
+                    snprintf(buffer, BUFF_SIZE, "%s "RED"FAILED"NC"\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__); \
                     break; \
             } \
             return buffer; \
@@ -251,9 +255,11 @@ $macro(TEST, NAME)
     static char * test_$(NAME)() { \
     char name[] = "$(NAME)"; \
     
-    uint8_t clear_state = ACTIVATED;
-    struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
-    clear_chord.function(&clear_chord);
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
+        clear_chord.function(&clear_chord);
+    } while (0);
     
     current_time = 0;
     history_index = 0;
@@ -271,7 +277,7 @@ $macro(TEST, NAME)
 $endmacro
 
 $macro(END_TEST)
-    printf("%s PASSED\n", name);
+    printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
 $endmacro
@@ -291,7 +297,7 @@ int main(int argc, char **argv) {
         printf("%s\n", result);
     }
     else {
-        printf("\nALL TESTS PASSED\n");
+        printf("\n"GREEN"ALL TESTS PASSED"NC"\n");
     }
     printf("Tests run: %d / %d\n", tests_run, $(len(ALL_TESTS)));
 

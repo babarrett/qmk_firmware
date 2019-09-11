@@ -18,6 +18,9 @@ $include(engine_path + "chord.inc")
 
 $KC("QWERTY", "H_TOP1", "KC_Q")
 $KC("QWERTY", "H_TOP2", "KC_W")
+$KC("QWERTY", "H_TOP3", "KC_E")
+$KC("QWERTY", "H_TOP1 + H_TOP2", "KC_ESC")
+$MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
@@ -28,8 +31,7 @@ $TEST("pause_ms")
 $END_TEST()
 
 // KC
-$TEST("single_dance")
-    pause_ms(500);
+$TEST("single_dance_held_states")
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user(TOP1, &pressed);
     pause_ms(CHORD_TIMEOUT);
@@ -48,8 +50,26 @@ $TEST("single_dance")
     ASSERT_EQ(UINT, state_0, IDLE);
 $END_TEST()
 
-$TEST("single_dance_fast")
-    pause_ms(500);
+$TEST("single_dance_held_codes")
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    pause_ms(1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    pause_ms(DANCE_TIMEOUT);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    pause_ms(1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    pause_ms(DANCE_TIMEOUT);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    pause_ms(1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    process_record_user(TOP1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+$END_TEST()
+
+$TEST("single_dance_tapped_states")
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user(TOP1, &pressed);
     pause_ms(CHORD_TIMEOUT);
@@ -60,8 +80,20 @@ $TEST("single_dance_fast")
     ASSERT_EQ(UINT, state_0, IDLE);
 $END_TEST()
 
-$TEST("single_dance_faster")
-    pause_ms(500);
+$TEST("single_dance_tapped_codes")
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    pause_ms(1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    process_record_user(TOP1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+$END_TEST()
+
+// I can not actually track the states if the tap is faster than chord timeout
+
+$TEST("single_dance_tapped_fast_codes")
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user(TOP1, &pressed);
     pause_ms(1);
@@ -71,14 +103,73 @@ $TEST("single_dance_faster")
     ASSERT_EQ(UINT, keyboard_history[2][KC_Q], 0);
 $END_TEST()
 
+$TEST("subchords_are_ignored")
+    ASSERT_EQ(UINT, state_0, IDLE);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1);
+    process_record_user(TOP2, &pressed);
+    pause_ms(CHORD_TIMEOUT+1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_W], 0);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_ESC], 1);
+$END_TEST()
+
+$TEST("multiple_chords_at_once")
+    ASSERT_EQ(UINT, state_0, IDLE);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1);
+    process_record_user(TOP3, &pressed);
+    pause_ms(CHORD_TIMEOUT+1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_E], 1);
+$END_TEST()
+
 // MO
+$TEST("momentary_layer")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT7, &pressed);
+    pause_ms(1);
+    process_record_user(BOT8, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    process_record_user(BOT7, &depressed);
+    pause_ms(1);
+    process_record_user(BOT8, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+$END_TEST()
+
+$TEST("momentary_layer_reset")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT7, &pressed);
+    pause_ms(1);
+    process_record_user(BOT8, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    pause_ms(DANCE_TIMEOUT+1);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    process_record_user(BOT7, &depressed);
+    pause_ms(1);
+    process_record_user(BOT8, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+$END_TEST()
+
+// AT
+$TEST("autoshift_toggle")
+    ASSERT_EQ(UINT, autoshift_mode, 1);
+    uint8_t state = ACTIVATED;
+    struct Chord chord PROGMEM = {0, QWERTY, &state, NULL, 0, 0, autoshift_toggle};
+    chord.function(&chord);
+    ASSERT_EQ(UINT, autoshift_mode, 0);
+    state = ACTIVATED;
+    chord.function(&chord);
+    ASSERT_EQ(UINT, autoshift_mode, 1);
+$END_TEST()
 
 // TODO:
 // KL
 // KM
 // KK
 // AS
-// AT
 // DF
 // TO
 // LOCK

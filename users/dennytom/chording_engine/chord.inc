@@ -311,6 +311,7 @@ void temp_pseudolayer(const struct Chord* self) {
             break;
         case DEACTIVATED:
             current_pseudolayer = self->pseudolayer;
+            *self->state = IDLE;
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
