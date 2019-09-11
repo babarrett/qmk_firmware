@@ -1,4 +1,18 @@
-#include "minunit.h"
+#define mu_assert(message, test)     do {         if (!(test)) {             return message;         }     } while (0)
+
+#define mu_run_test(test)     do {         char *message = test();         tests_run++;         if (message) {             return message;         }     } while (0)
+
+int tests_run = 0;
+
+enum ASSERT_TYPES {
+    UINT,
+    INT
+};
+
+#define BUFF_SIZE 1024
+char buffer[BUFF_SIZE];
+
+#define ASSERT_EQ(type, actual, expected)     do {         if (actual != expected) {             switch (type) {                 case UINT:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nactual = %u\nexpected = %u\n", name, __LINE__, actual, expected);                     break;                 case INT:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nactual = %d\nexpected = %d\n", name, __LINE__, actual, expected);                     break;                 default:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__);                     break;             }             return buffer;         }     } while (0)
 
 #include <stdio.h>
 #include <stdint.h>
@@ -197,10 +211,6 @@ clear_keyboard (void) {
 void
 reset_keyboard (void) {         /*ignoring for now */
 };
-
-// use pyexpander to generate keymap.c:
-// python3 expander3.py -f keymap.c.in | cat -s > keymap.c
-// the preprocessor code is written to be readable not to produce nice output
 
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM
@@ -838,142 +848,16 @@ reset (const struct Chord *self) {
     }
 }
 
-// Add all chords
-
 uint8_t state_0 = IDLE;
 const struct Chord chord_0 PROGMEM = { H_TOP1, QWERTY, &state_0, NULL, KC_Q, 0, single_dance };
 
 uint8_t state_1 = IDLE;
 const struct Chord chord_1 PROGMEM = { H_TOP2, QWERTY, &state_1, NULL, KC_W, 0, single_dance };
 
-uint8_t state_2 = IDLE;
-const struct Chord chord_2 PROGMEM = { H_TOP3, QWERTY, &state_2, NULL, KC_E, 0, single_dance };
-
-uint8_t state_3 = IDLE;
-const struct Chord chord_3 PROGMEM = { H_TOP4, QWERTY, &state_3, NULL, KC_R, 0, single_dance };
-
-uint8_t state_4 = IDLE;
-const struct Chord chord_4 PROGMEM = { H_TOP5, QWERTY, &state_4, NULL, KC_T, 0, single_dance };
-
-uint8_t state_5 = IDLE;
-const struct Chord chord_5 PROGMEM = { H_TOP6, QWERTY, &state_5, NULL, KC_Y, 0, single_dance };
-
-uint8_t state_6 = IDLE;
-const struct Chord chord_6 PROGMEM = { H_TOP7, QWERTY, &state_6, NULL, KC_U, 0, single_dance };
-
-uint8_t state_7 = IDLE;
-const struct Chord chord_7 PROGMEM = { H_TOP8, QWERTY, &state_7, NULL, KC_I, 0, single_dance };
-
-uint8_t state_8 = IDLE;
-const struct Chord chord_8 PROGMEM = { H_TOP9, QWERTY, &state_8, NULL, KC_O, 0, single_dance };
-
-uint8_t state_9 = IDLE;
-const struct Chord chord_9 PROGMEM = { H_TOP0, QWERTY, &state_9, NULL, KC_P, 0, single_dance };
-
-uint8_t state_10 = IDLE;
-const struct Chord chord_10 PROGMEM =
-    { H_TOP1 + H_BOT1, QWERTY, &state_10, NULL, KC_A, 0, single_dance };
-
-uint8_t state_11 = IDLE;
-const struct Chord chord_11 PROGMEM =
-    { H_TOP2 + H_BOT2, QWERTY, &state_11, NULL, KC_S, 0, single_dance };
-
-uint8_t state_12 = IDLE;
-const struct Chord chord_12 PROGMEM =
-    { H_TOP3 + H_BOT3, QWERTY, &state_12, NULL, KC_D, 0, single_dance };
-
-uint8_t state_13 = IDLE;
-const struct Chord chord_13 PROGMEM =
-    { H_TOP4 + H_BOT4, QWERTY, &state_13, NULL, KC_F, 0, single_dance };
-
-uint8_t state_14 = IDLE;
-const struct Chord chord_14 PROGMEM =
-    { H_TOP5 + H_BOT5, QWERTY, &state_14, NULL, KC_G, 0, single_dance };
-
-uint8_t state_15 = IDLE;
-const struct Chord chord_15 PROGMEM =
-    { H_TOP6 + H_BOT6, QWERTY, &state_15, NULL, KC_H, 0, single_dance };
-
-uint8_t state_16 = IDLE;
-const struct Chord chord_16 PROGMEM =
-    { H_TOP7 + H_BOT7, QWERTY, &state_16, NULL, KC_J, 0, single_dance };
-
-uint8_t state_17 = IDLE;
-const struct Chord chord_17 PROGMEM =
-    { H_TOP8 + H_BOT8, QWERTY, &state_17, NULL, KC_K, 0, single_dance };
-
-uint8_t state_18 = IDLE;
-const struct Chord chord_18 PROGMEM =
-    { H_TOP9 + H_BOT9, QWERTY, &state_18, NULL, KC_L, 0, single_dance };
-
-uint8_t state_19 = IDLE;
-const struct Chord chord_19 PROGMEM =
-    { H_TOP0 + H_BOT0, QWERTY, &state_19, NULL, KC_SCOLON, 0, single_dance };
-
-uint8_t state_20 = IDLE;
-const struct Chord chord_20 PROGMEM = { H_BOT1, QWERTY, &state_20, NULL, KC_Z, 0, single_dance };
-
-uint8_t state_21 = IDLE;
-const struct Chord chord_21 PROGMEM = { H_BOT2, QWERTY, &state_21, NULL, KC_X, 0, single_dance };
-
-uint8_t state_22 = IDLE;
-const struct Chord chord_22 PROGMEM = { H_BOT3, QWERTY, &state_22, NULL, KC_C, 0, single_dance };
-
-uint8_t state_23 = IDLE;
-const struct Chord chord_23 PROGMEM = { H_BOT4, QWERTY, &state_23, NULL, KC_V, 0, single_dance };
-
-uint8_t state_24 = IDLE;
-const struct Chord chord_24 PROGMEM = { H_BOT5, QWERTY, &state_24, NULL, KC_B, 0, single_dance };
-
-uint8_t state_25 = IDLE;
-const struct Chord chord_25 PROGMEM = { H_BOT6, QWERTY, &state_25, NULL, KC_N, 0, single_dance };
-
-uint8_t state_26 = IDLE;
-const struct Chord chord_26 PROGMEM = { H_BOT7, QWERTY, &state_26, NULL, KC_M, 0, single_dance };
-
-uint8_t state_27 = IDLE;
-const struct Chord chord_27 PROGMEM =
-    { H_BOT8, QWERTY, &state_27, NULL, KC_COMMA, 0, single_dance };
-
-uint8_t state_28 = IDLE;
-const struct Chord chord_28 PROGMEM = { H_BOT9, QWERTY, &state_28, NULL, KC_DOT, 0, single_dance };
-
-uint8_t state_29 = IDLE;
-const struct Chord chord_29 PROGMEM =
-    { H_BOT0, QWERTY, &state_29, NULL, KC_SLASH, 0, single_dance };
-
 // Register all chords, load chording logic
 const struct Chord *const list_of_chords[] PROGMEM = {
     &chord_0,
     &chord_1,
-    &chord_2,
-    &chord_3,
-    &chord_4,
-    &chord_5,
-    &chord_6,
-    &chord_7,
-    &chord_8,
-    &chord_9,
-    &chord_10,
-    &chord_11,
-    &chord_12,
-    &chord_13,
-    &chord_14,
-    &chord_15,
-    &chord_16,
-    &chord_17,
-    &chord_18,
-    &chord_19,
-    &chord_20,
-    &chord_21,
-    &chord_22,
-    &chord_23,
-    &chord_24,
-    &chord_25,
-    &chord_26,
-    &chord_27,
-    &chord_28,
-    &chord_29,
 
 };
 
@@ -1037,7 +921,7 @@ are_hashed_keycodes_in_array (uint32_t keycode_hash) {
 
 void
 kill_one_shots (void) {
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 2; i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -1057,7 +941,7 @@ kill_one_shots (void) {
 
 void
 process_finished_dances (void) {
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 2; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1070,6 +954,7 @@ process_finished_dances (void) {
             if (a_key_went_through) {
                 kill_one_shots ();
             }
+            dance_timer = timer_read ();
         } else if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function (chord);
@@ -1096,7 +981,7 @@ deactivate_active_taphold_chords (struct Chord *caller) {
         return;
     }
 
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 2; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1129,7 +1014,7 @@ keycodes_buffer_array_min (uint8_t * first_keycode_index) {
 
 void
 remove_subchords (void) {
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 2; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1142,7 +1027,7 @@ remove_subchords (void) {
             continue;
         }
 
-        for (int j = 0; j < 30; j++) {
+        for (int j = 0; j < 2; j++) {
             if (i == j) {
                 continue;
             }
@@ -1174,7 +1059,7 @@ process_ready_chords (void) {
 
     while (keycodes_buffer_array_min (&first_keycode_index)) {
         // find ready chords
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 2; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1218,7 +1103,7 @@ process_ready_chords (void) {
         // this should be only one chord
         struct Chord *chord = NULL;
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 2; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1271,7 +1156,7 @@ deactivate_active_chords (uint16_t keycode) {
     uint32_t hash = (uint32_t) 1 << (keycode - SAFE_RANGE);
     bool broken;
 
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 2; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1403,7 +1288,7 @@ void
 clear (const struct Chord *self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 2; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1439,41 +1324,102 @@ clear (const struct Chord *self) {
     }
 }
 
-int tests_run = 0;
-
 static char *
 test_wait_ms () {
+    char name[] = "wait_ms";
+
     current_time = 0;
+    clear_keyboard ();
+
     wait_ms (500);
-    mu_assert ("error, current_time != 500", current_time == 500);
+    ASSERT_EQ (UINT, current_time, 500);
+
+    printf ("%s PASSED\n", name);
     return 0;
 }
 
 static char *
-test_KC_Q () {
+test_single_dance () {
+    char name[] = "single_dance";
+
     current_time = 0;
+    clear_keyboard ();
+
     wait_ms (500);
-    mu_assert ("error, 206", state_0 == IDLE);
+    ASSERT_EQ (UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
     wait_ms (CHORD_TIMEOUT);
-    mu_assert ("error, 206", state_0 == IDLE);
+    ASSERT_EQ (UINT, state_0, IDLE);
     wait_ms (1);
-    mu_assert ("error, 209", state_0 == ACTIVATED);
+    ASSERT_EQ (UINT, state_0, ACTIVATED);
     wait_ms (DANCE_TIMEOUT);
+    ASSERT_EQ (UINT, state_0, ACTIVATED);
     wait_ms (1);
-    mu_assert ("error, 211", state_0 == PRESS_FROM_ACTIVE);
+    ASSERT_EQ (UINT, state_0, PRESS_FROM_ACTIVE);
     wait_ms (DANCE_TIMEOUT);
+    ASSERT_EQ (UINT, state_0, PRESS_FROM_ACTIVE);
     wait_ms (1);
-    mu_assert ("error, 211", state_0 == FINISHED_FROM_ACTIVE);
+    ASSERT_EQ (UINT, state_0, FINISHED_FROM_ACTIVE);
     process_record_user (TOP1, &depressed);
-    mu_assert ("error, 214", keyboard[KC_Q] == IDLE);
+    ASSERT_EQ (UINT, state_0, IDLE);
+
+    printf ("%s PASSED\n", name);
+    return 0;
+}
+
+static char *
+test_single_dance_fast () {
+    char name[] = "single_dance_fast";
+
+    current_time = 0;
+    clear_keyboard ();
+
+    wait_ms (500);
+    ASSERT_EQ (UINT, state_0, IDLE);
+    process_record_user (TOP1, &pressed);
+    wait_ms (CHORD_TIMEOUT);
+    ASSERT_EQ (UINT, state_0, IDLE);
+    wait_ms (1);
+    ASSERT_EQ (UINT, state_0, ACTIVATED);
+    process_record_user (TOP1, &depressed);
+    ASSERT_EQ (UINT, state_0, IDLE);
+
+    printf ("%s PASSED\n", name);
+    return 0;
+}
+
+static char *
+test_single_dance_interrupted () {
+    char name[] = "single_dance_interrupted";
+
+    current_time = 0;
+    clear_keyboard ();
+
+    wait_ms (500);
+    ASSERT_EQ (UINT, state_0, IDLE);
+    process_record_user (TOP1, &pressed);
+    wait_ms (CHORD_TIMEOUT);
+    ASSERT_EQ (UINT, state_0, IDLE);
+    wait_ms (1);
+    ASSERT_EQ (UINT, state_0, ACTIVATED);
+    process_record_user (TOP2, &pressed);
+    ASSERT_EQ (UINT, state_0, PRESS_FROM_ACTIVE);
+
+    printf ("%s PASSED\n", name);
     return 0;
 }
 
 static char *
 all_tests () {
+
     mu_run_test (test_wait_ms);
-    mu_run_test (test_KC_Q);
+
+    mu_run_test (test_single_dance);
+
+    mu_run_test (test_single_dance_fast);
+
+    mu_run_test (test_single_dance_interrupted);
+
     return 0;
 }
 
@@ -1484,9 +1430,9 @@ main (int argc, char **argv) {
     if (result != 0) {
         printf ("%s\n", result);
     } else {
-        printf ("ALL TESTS PASSED\n");
+        printf ("\nALL TESTS PASSED\n");
     }
-    printf ("Tests run: %d\n", tests_run);
+    printf ("Tests run: %d / %d\n", tests_run, 4);
 
     return result != 0;
 }

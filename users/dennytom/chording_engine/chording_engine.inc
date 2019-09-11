@@ -95,6 +95,7 @@ void process_finished_dances(void) {
             if (a_key_went_through) {
                 kill_one_shots();
             }
+            dance_timer = timer_read();
         } else if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
