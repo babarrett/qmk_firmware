@@ -29,10 +29,10 @@ char buffer[BUFF_SIZE];
         if (actual != expected) { \
             switch (type) { \
                 case UINT: \
-                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nactual = %u\nexpected = %u\n", name, __LINE__, actual, expected); \
+                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nvar %s\nactual = %u\nexpected = %u\n", name, __LINE__, #actual, actual, expected); \
                     break; \
                 case INT: \
-                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nactual = %d\nexpected = %d\n", name, __LINE__, actual, expected); \
+                    snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nvar %s\nactual = %d\nexpected = %d\n", name, __LINE__, #actual, actual, expected); \
                     break; \
                 default: \
                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__); \
@@ -250,6 +250,11 @@ $macro(TEST, NAME)
     $py(ALL_TESTS.append(NAME))
     static char * test_$(NAME)() { \
     char name[] = "$(NAME)"; \
+    
+    uint8_t clear_state = ACTIVATED;
+    struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
+    clear_chord.function(&clear_chord);
+    
     current_time = 0;
     history_index = 0;
     

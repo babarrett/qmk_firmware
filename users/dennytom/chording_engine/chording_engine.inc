@@ -428,7 +428,7 @@ void clear(const struct Chord* self) {
         dynamic_macro_mode = false;
         a_key_went_through = false;
 
-        for (int i; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+        for (int i = 0; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
             dynamic_macro_buffer[i] = 0;
         }
 

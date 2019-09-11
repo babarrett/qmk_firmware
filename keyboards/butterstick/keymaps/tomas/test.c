@@ -12,7 +12,7 @@ enum ASSERT_TYPES {
 #define BUFF_SIZE 1024
 char buffer[BUFF_SIZE];
 
-#define ASSERT_EQ(type, actual, expected)     do {         if (actual != expected) {             switch (type) {                 case UINT:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nactual = %u\nexpected = %u\n", name, __LINE__, actual, expected);                     break;                 case INT:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nactual = %d\nexpected = %d\n", name, __LINE__, actual, expected);                     break;                 default:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__);                     break;             }             return buffer;         }     } while (0)
+#define ASSERT_EQ(type, actual, expected)     do {         if (actual != expected) {             switch (type) {                 case UINT:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nvar %s\nactual = %u\nexpected = %u\n", name, __LINE__, #actual, actual, expected);                     break;                 case INT:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nvar %s\nactual = %d\nexpected = %d\n", name, __LINE__, #actual, actual, expected);                     break;                 default:                     snprintf(buffer, BUFF_SIZE, "%s FAILED\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__);                     break;             }             return buffer;         }     } while (0)
 
 #include <stdio.h>
 #include <stdint.h>
@@ -1338,7 +1338,7 @@ clear (const struct Chord *self) {
         dynamic_macro_mode = false;
         a_key_went_through = false;
 
-        for (int i; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             dynamic_macro_buffer[i] = 0;
         }
 
@@ -1348,6 +1348,9 @@ clear (const struct Chord *self) {
 static char *
 test_pause_ms () {
     char name[] = "pause_ms";
+    uint8_t clear_state = ACTIVATED;
+    struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+    clear_chord.function (&clear_chord);
 
     current_time = 0;
     history_index = 0;
@@ -1370,9 +1373,14 @@ test_pause_ms () {
     return 0;
 }
 
+// KC
+
 static char *
 test_single_dance () {
     char name[] = "single_dance";
+    uint8_t clear_state = ACTIVATED;
+    struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+    clear_chord.function (&clear_chord);
 
     current_time = 0;
     history_index = 0;
@@ -1413,6 +1421,9 @@ test_single_dance () {
 static char *
 test_single_dance_fast () {
     char name[] = "single_dance_fast";
+    uint8_t clear_state = ACTIVATED;
+    struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+    clear_chord.function (&clear_chord);
 
     current_time = 0;
     history_index = 0;
@@ -1442,11 +1453,12 @@ test_single_dance_fast () {
     return 0;
 }
 
-// I can not test this without keyboard tracking history
-
 static char *
 test_single_dance_faster () {
     char name[] = "single_dance_faster";
+    uint8_t clear_state = ACTIVATED;
+    struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+    clear_chord.function (&clear_chord);
 
     current_time = 0;
     history_index = 0;
@@ -1475,12 +1487,14 @@ test_single_dance_faster () {
     return 0;
 }
 
+// MO
+
+// TODO:
 // KL
 // KM
 // KK
 // AS
 // AT
-// MO
 // DF
 // TO
 // LOCK
