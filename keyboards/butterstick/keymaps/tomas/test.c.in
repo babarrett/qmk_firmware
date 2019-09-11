@@ -22,49 +22,67 @@ $KC("QWERTY", "H_TOP2", "KC_W")
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
 
-$TEST("wait_ms")
-    wait_ms(500);
+$TEST("pause_ms")
+    pause_ms(500);
     ASSERT_EQ(UINT, current_time, 500);
 $END_TEST()
 
 $TEST("single_dance")
-    wait_ms (500);
+    pause_ms (500);
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
-    wait_ms (CHORD_TIMEOUT);
+    pause_ms (CHORD_TIMEOUT);
     ASSERT_EQ(UINT, state_0, IDLE);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ(UINT, state_0, ACTIVATED);
-    wait_ms (DANCE_TIMEOUT);
+    pause_ms (DANCE_TIMEOUT);
     ASSERT_EQ(UINT, state_0, ACTIVATED);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ(UINT, state_0, PRESS_FROM_ACTIVE);
-    wait_ms (DANCE_TIMEOUT);
+    pause_ms (DANCE_TIMEOUT);
     ASSERT_EQ(UINT, state_0, PRESS_FROM_ACTIVE);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ(UINT, state_0, FINISHED_FROM_ACTIVE);
     process_record_user (TOP1, &depressed);
     ASSERT_EQ(UINT, state_0, IDLE);
 $END_TEST()
 
 $TEST("single_dance_fast")
-    wait_ms (500);
+    pause_ms (500);
     ASSERT_EQ(UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
-    wait_ms (CHORD_TIMEOUT);
+    pause_ms (CHORD_TIMEOUT);
     ASSERT_EQ(UINT, state_0, IDLE);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ(UINT, state_0, ACTIVATED);
     process_record_user (TOP1, &depressed);
     ASSERT_EQ(UINT, state_0, IDLE);
 $END_TEST()
 
+// I can not test this without keyboard tracking history
 $# $TEST("single_dance_faster")
-$#     wait_ms (500);
+$#     pause_ms (500);
 $#     ASSERT_EQ(UINT, state_0, IDLE);
 $#     process_record_user (TOP1, &pressed);
 $#     process_record_user (TOP1, &depressed);
-$#     ASSERT_EQ(UINT, state_0, IDLE);
+$#     ASSERT_EQ(UINT, state_0, ACTIVATED);
 $# $END_TEST()
+
+// KL
+// KM
+// KK
+// AS
+// AT
+// MO
+// DF
+// TO
+// LOCK
+// OSK
+// OSL
+// CMD
+// LEADER
+// DYNAMIC MACRO
+// CLEAR_KB
+// RESET
 
 $runner()

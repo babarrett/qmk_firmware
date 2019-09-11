@@ -159,6 +159,8 @@ enum keycodes {
     SAFE_RANGE
 };
 
+// this does not track history, maybe it should?
+// also now I do not have build up and tear down for every test and I really should
 bool keyboard[SAFE_RANGE - 1];
 int16_t current_time;
 
@@ -179,10 +181,8 @@ send_keyboard_report (void) {   /*still don't know what this does */
 void matrix_scan_user (void);
 void
 wait_ms (uint16_t ms) {
-    for (int i = 0; i < ms; i++) {
-        current_time++;
-        matrix_scan_user ();
-}};
+    current_time += ms;
+};
 
 uint16_t
 timer_read (void) {
@@ -211,6 +211,13 @@ clear_keyboard (void) {
 void
 reset_keyboard (void) {         /*ignoring for now */
 };
+
+void
+pause_ms (uint16_t ms) {
+    for (int i = 0; i < ms; i++) {
+        current_time++;
+        matrix_scan_user ();
+}};
 
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM
@@ -1325,13 +1332,13 @@ clear (const struct Chord *self) {
 }
 
 static char *
-test_wait_ms () {
-    char name[] = "wait_ms";
+test_pause_ms () {
+    char name[] = "pause_ms";
 
     current_time = 0;
     clear_keyboard ();
 
-    wait_ms (500);
+    pause_ms (500);
     ASSERT_EQ (UINT, current_time, 500);
 
     printf ("%s PASSED\n", name);
@@ -1345,20 +1352,20 @@ test_single_dance () {
     current_time = 0;
     clear_keyboard ();
 
-    wait_ms (500);
+    pause_ms (500);
     ASSERT_EQ (UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
-    wait_ms (CHORD_TIMEOUT);
+    pause_ms (CHORD_TIMEOUT);
     ASSERT_EQ (UINT, state_0, IDLE);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ (UINT, state_0, ACTIVATED);
-    wait_ms (DANCE_TIMEOUT);
+    pause_ms (DANCE_TIMEOUT);
     ASSERT_EQ (UINT, state_0, ACTIVATED);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ (UINT, state_0, PRESS_FROM_ACTIVE);
-    wait_ms (DANCE_TIMEOUT);
+    pause_ms (DANCE_TIMEOUT);
     ASSERT_EQ (UINT, state_0, PRESS_FROM_ACTIVE);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ (UINT, state_0, FINISHED_FROM_ACTIVE);
     process_record_user (TOP1, &depressed);
     ASSERT_EQ (UINT, state_0, IDLE);
@@ -1374,12 +1381,12 @@ test_single_dance_fast () {
     current_time = 0;
     clear_keyboard ();
 
-    wait_ms (500);
+    pause_ms (500);
     ASSERT_EQ (UINT, state_0, IDLE);
     process_record_user (TOP1, &pressed);
-    wait_ms (CHORD_TIMEOUT);
+    pause_ms (CHORD_TIMEOUT);
     ASSERT_EQ (UINT, state_0, IDLE);
-    wait_ms (1);
+    pause_ms (1);
     ASSERT_EQ (UINT, state_0, ACTIVATED);
     process_record_user (TOP1, &depressed);
     ASSERT_EQ (UINT, state_0, IDLE);
@@ -1388,37 +1395,33 @@ test_single_dance_fast () {
     return 0;
 }
 
-static char *
-test_single_dance_interrupted () {
-    char name[] = "single_dance_interrupted";
+// I can not test this without keyboard tracking history
 
-    current_time = 0;
-    clear_keyboard ();
-
-    wait_ms (500);
-    ASSERT_EQ (UINT, state_0, IDLE);
-    process_record_user (TOP1, &pressed);
-    wait_ms (CHORD_TIMEOUT);
-    ASSERT_EQ (UINT, state_0, IDLE);
-    wait_ms (1);
-    ASSERT_EQ (UINT, state_0, ACTIVATED);
-    process_record_user (TOP2, &pressed);
-    ASSERT_EQ (UINT, state_0, PRESS_FROM_ACTIVE);
-
-    printf ("%s PASSED\n", name);
-    return 0;
-}
+// KL
+// KM
+// KK
+// AS
+// AT
+// MO
+// DF
+// TO
+// LOCK
+// OSK
+// OSL
+// CMD
+// LEADER
+// DYNAMIC MACRO
+// CLEAR_KB
+// RESET
 
 static char *
 all_tests () {
 
-    mu_run_test (test_wait_ms);
+    mu_run_test (test_pause_ms);
 
     mu_run_test (test_single_dance);
 
     mu_run_test (test_single_dance_fast);
-
-    mu_run_test (test_single_dance_interrupted);
 
     return 0;
 }
@@ -1432,7 +1435,7 @@ main (int argc, char **argv) {
     } else {
         printf ("\nALL TESTS PASSED\n");
     }
-    printf ("Tests run: %d / %d\n", tests_run, 4);
+    printf ("Tests run: %d / %d\n", tests_run, 3);
 
     return result != 0;
 }

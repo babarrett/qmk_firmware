@@ -42,23 +42,6 @@ char buffer[BUFF_SIZE];
         } \
     } while (0)
 
-$py(ALL_TESTS = [])
-
-$macro(TEST, NAME)
-    $nonlocal(ALL_TESTS)
-    $py(ALL_TESTS.append(NAME))
-    static char * test_$(NAME)() { \
-    char name[] = "$(NAME)"; \
-    current_time = 0;
-    clear_keyboard();
-$endmacro
-
-$macro(END_TEST)
-    printf("%s PASSED\n", name);
-    return 0;
-}
-$endmacro
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -207,6 +190,8 @@ enum keycodes {
     SAFE_RANGE
 };
 
+// this does not track history, maybe it should?
+// also now I do not have build up and tear down for every test and I really should
 bool keyboard[SAFE_RANGE-1];
 int16_t current_time;
 
@@ -214,7 +199,7 @@ void register_code(int16_t keycode) {keyboard[keycode] = 1;};
 void unregister_code(int16_t keycode) {keyboard[keycode] = 0;};
 void send_keyboard_report(void) { /*still don't know what this does*/ };
 void matrix_scan_user (void);
-void wait_ms(uint16_t ms) {for (int i = 0; i < ms; i++) {current_time++; matrix_scan_user();}};
+void wait_ms(uint16_t ms) {current_time += ms;};
 uint16_t timer_read(void) {
     uint16_t result = current_time;
     return result;
@@ -226,6 +211,25 @@ uint16_t timer_elapsed(uint16_t timer) {
 void layer_move(int16_t layer) { /*ignoring for now*/ };
 void clear_keyboard(void) {for (int i = 0; i < SAFE_RANGE-1; i++) {keyboard[i] = 0;}};
 void reset_keyboard(void) { /*ignoring for now*/ };
+
+void pause_ms(uint16_t ms) {for (int i = 0; i < ms; i++) {current_time++; matrix_scan_user();}};
+
+$py(ALL_TESTS = [])
+
+$macro(TEST, NAME)
+    $nonlocal(ALL_TESTS)
+    $py(ALL_TESTS.append(NAME))
+    static char * test_$(NAME)() { \
+    char name[] = "$(NAME)"; \
+    current_time = 0;
+    clear_keyboard();
+$endmacro
+
+$macro(END_TEST)
+    printf("%s PASSED\n", name);
+    return 0;
+}
+$endmacro
 
 $macro(runner)
 $nonlocal(ALL_TESTS)
