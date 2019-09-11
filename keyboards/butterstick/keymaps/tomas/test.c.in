@@ -17,10 +17,13 @@ $include("keyboard.inc")
 $include(engine_path + "chord.inc")
 
 $KC("QWERTY", "H_TOP1", "KC_Q")
+$KC("NUM", "H_TOP1", "KC_1")
 $KC("QWERTY", "H_TOP2", "KC_W")
 $KC("QWERTY", "H_TOP3", "KC_E")
 $KC("QWERTY", "H_TOP1 + H_TOP2", "KC_ESC")
 $KC("QWERTY", "H_BOT1 + H_BOT2", "KC_LSFT")
+$OSK("QWERTY", "H_BOT2 + H_BOT3", "KC_LSFT")
+$OSL("QWERTY", "H_BOT6 + H_BOT7", "NUM")
 $MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
 $DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
 $AS("QWERTY", "H_BOT1", "KC_Z")
@@ -351,12 +354,112 @@ $TEST("lock")
     ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
 $END_TEST()
 
+// OSK
+$TEST("one_shot_key_tap")
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT2, &pressed);
+    process_record_user(BOT3, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT2, &depressed);
+    pause_ms(1);
+    process_record_user(BOT3, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    pause_ms(1000);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(TOP1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+$END_TEST()
+
+$TEST("one_shot_key_hold")
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT2, &pressed);
+    process_record_user(BOT3, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms(DANCE_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(TOP1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    
+    process_record_user(BOT2, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+$END_TEST()
+
+$TEST("one_shot_key_retrotapping")
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT2, &pressed);
+    process_record_user(BOT3, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms(DANCE_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    
+    pause_ms(1000);
+    
+    process_record_user(BOT2, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+$END_TEST()
+
+// OSL
+$TEST("one_shot_layer_tap")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT6, &pressed);
+    process_record_user(BOT7, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT6, &depressed);
+    pause_ms(1);
+    process_record_user(BOT7, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    pause_ms(1000);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(TOP1, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+$END_TEST()
+
+$TEST("one_shot_layer_hold")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT6, &pressed);
+    process_record_user(BOT7, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms(DANCE_TIMEOUT + 1);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(TOP1, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    
+    process_record_user(BOT6, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+$END_TEST()
+
+$TEST("one_shot_layer_retrotapping")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT6, &pressed);
+    process_record_user(BOT7, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms(DANCE_TIMEOUT + 1);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    
+    pause_ms(1000);
+    
+    process_record_user(BOT6, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+$END_TEST()
+
 // TODO:
 // KL
 // KM
 // KK
-// OSK
-// OSL
 // CMD
 // LEADER
 // DYNAMIC MACRO
