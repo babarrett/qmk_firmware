@@ -28,6 +28,7 @@ $MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
 $DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
 $AS("QWERTY", "H_BOT1", "KC_Z")
 $LOCK("QWERTY", "H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2")
+$CMD("QWERTY", "H_TOP5 + H_TOP6 + H_BOT5 + H_BOT6")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
@@ -456,11 +457,74 @@ $TEST("one_shot_layer_retrotapping")
     ASSERT_EQ(UINT, current_pseudolayer, NUM);
 $END_TEST()
 
+// CMD
+$TEST("command_mode")
+    // start recording
+    process_record_user(TOP5, &pressed);
+    process_record_user(TOP6, &pressed);
+    process_record_user(BOT5, &pressed);
+    process_record_user(BOT6, &pressed);
+    pause_ms(1);
+    process_record_user(TOP5, &depressed);
+    process_record_user(TOP6, &depressed);
+    process_record_user(BOT5, &depressed);
+    process_record_user(BOT6, &depressed);
+    
+    ASSERT_EQ(UINT, command_mode, 1);
+    
+    // record shift+q
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT1, &depressed);
+    process_record_user(BOT2, &depressed);
+    pause_ms(1000);
+    
+    process_record_user(TOP1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1000);
+    
+    
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    // execute
+    process_record_user(TOP5, &pressed);
+    process_record_user(TOP6, &pressed);
+    process_record_user(BOT5, &pressed);
+    process_record_user(BOT6, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    
+    ASSERT_EQ(UINT, command_mode, 0);
+    
+    // test history
+    ASSERT_EQ(UINT, keyboard_history[0][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[4][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[5][KC_Q], 255);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LSFT], 255);
+$END_TEST()
+
 // TODO:
 // KL
 // KM
 // KK
-// CMD
 // LEADER
 // DYNAMIC MACRO
 
