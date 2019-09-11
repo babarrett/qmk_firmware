@@ -21,6 +21,7 @@ $KC("QWERTY", "H_TOP2", "KC_W")
 $KC("QWERTY", "H_TOP3", "KC_E")
 $KC("QWERTY", "H_TOP1 + H_TOP2", "KC_ESC")
 $MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
+$DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
 $AS("QWERTY", "H_BOT1", "KC_Z")
 
 // Register all chords, load chording logic
@@ -154,6 +155,20 @@ $TEST("momentary_layer_reset")
     ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
 $END_TEST()
 
+// DF
+$TEST("permanent_layer")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    process_record_user(BOT9, &pressed);
+    pause_ms(1);
+    process_record_user(BOT0, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    process_record_user(BOT9, &depressed);
+    pause_ms(1);
+    process_record_user(BOT0, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+$END_TEST()
+
 // AT
 $TEST("autoshift_toggle")
     ASSERT_EQ(UINT, autoshift_mode, 1);
@@ -227,7 +242,6 @@ $END_TEST()
 // KL
 // KM
 // KK
-// DF
 // TO
 // LOCK
 // OSK

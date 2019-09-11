@@ -892,9 +892,13 @@ const struct Chord chord_4 PROGMEM =
     { H_BOT7 + H_BOT8, QWERTY, &state_4, NULL, NUM, 0, temp_pseudolayer };
 
 uint8_t state_5 = IDLE;
-uint8_t counter_5 = 0;
 const struct Chord chord_5 PROGMEM =
-    { H_BOT1, QWERTY, &state_5, &counter_5, KC_Z, 0, autoshift_dance };
+    { H_BOT9 + H_BOT0, QWERTY, &state_5, NULL, NUM, 0, perm_pseudolayer };
+
+uint8_t state_6 = IDLE;
+uint8_t counter_6 = 0;
+const struct Chord chord_6 PROGMEM =
+    { H_BOT1, QWERTY, &state_6, &counter_6, KC_Z, 0, autoshift_dance };
 
 // Register all chords, load chording logic
 const struct Chord *const list_of_chords[] PROGMEM = {
@@ -904,6 +908,7 @@ const struct Chord *const list_of_chords[] PROGMEM = {
     &chord_3,
     &chord_4,
     &chord_5,
+    &chord_6,
 
 };
 
@@ -967,7 +972,7 @@ are_hashed_keycodes_in_array (uint32_t keycode_hash) {
 
 void
 kill_one_shots (void) {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -987,7 +992,7 @@ kill_one_shots (void) {
 
 void
 process_finished_dances (void) {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1027,7 +1032,7 @@ deactivate_active_taphold_chords (struct Chord *caller) {
         return;
     }
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1060,7 +1065,7 @@ keycodes_buffer_array_min (uint8_t * first_keycode_index) {
 
 void
 remove_subchords (void) {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1073,7 +1078,7 @@ remove_subchords (void) {
             continue;
         }
 
-        for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < 7; j++) {
             if (i == j) {
                 continue;
             }
@@ -1105,7 +1110,7 @@ process_ready_chords (void) {
 
     while (keycodes_buffer_array_min (&first_keycode_index)) {
         // find ready chords
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1149,7 +1154,7 @@ process_ready_chords (void) {
         // this should be only one chord
         struct Chord *chord = NULL;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1202,7 +1207,7 @@ deactivate_active_chords (uint16_t keycode) {
     uint32_t hash = (uint32_t) 1 << (keycode - SAFE_RANGE);
     bool broken;
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1334,7 +1339,7 @@ void
 clear (const struct Chord *self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1760,6 +1765,47 @@ test_momentary_layer_reset () {
     return 0;
 }
 
+// DF
+
+static char *
+test_permanent_layer () {
+    char name[] = "permanent_layer";
+
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+        clear_chord.function (&clear_chord);
+    } while (0);
+
+    current_time = 0;
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    ASSERT_EQ (UINT, current_pseudolayer, QWERTY);
+    process_record_user (BOT9, &pressed);
+    pause_ms (1);
+    process_record_user (BOT0, &pressed);
+    pause_ms (CHORD_TIMEOUT + 1);
+    ASSERT_EQ (UINT, current_pseudolayer, NUM);
+    process_record_user (BOT9, &depressed);
+    pause_ms (1);
+    process_record_user (BOT0, &depressed);
+    ASSERT_EQ (UINT, current_pseudolayer, NUM);
+
+    printf ("%s " GREEN "PASSED" NC "\n", name);
+    return 0;
+}
+
 // AT
 
 static char *
@@ -1938,7 +1984,6 @@ test_autoshift_hold_off () {
 // KL
 // KM
 // KK
-// DF
 // TO
 // LOCK
 // OSK
@@ -1972,6 +2017,8 @@ all_tests () {
 
     mu_run_test (test_momentary_layer_reset);
 
+    mu_run_test (test_permanent_layer);
+
     mu_run_test (test_autoshift_toggle);
 
     mu_run_test (test_autoshift_tap);
@@ -1992,7 +2039,7 @@ main (int argc, char **argv) {
     } else {
         printf ("\n" GREEN "ALL TESTS PASSED" NC "\n");
     }
-    printf ("Tests run: %d / %d\n", tests_run, 14);
+    printf ("Tests run: %d / %d\n", tests_run, 15);
 
     return result != 0;
 }
