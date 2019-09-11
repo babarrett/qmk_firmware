@@ -21,6 +21,7 @@ $KC("QWERTY", "H_TOP2", "KC_W")
 $KC("QWERTY", "H_TOP3", "KC_E")
 $KC("QWERTY", "H_TOP1 + H_TOP2", "KC_ESC")
 $MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
+$AS("QWERTY", "H_BOT1", "KC_Z")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
@@ -108,7 +109,7 @@ $TEST("subchords_are_ignored")
     process_record_user(TOP1, &pressed);
     pause_ms(1);
     process_record_user(TOP2, &pressed);
-    pause_ms(CHORD_TIMEOUT+1);
+    pause_ms(CHORD_TIMEOUT + 1);
     ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 0);
     ASSERT_EQ(UINT, keyboard_history[history_index][KC_W], 0);
     ASSERT_EQ(UINT, keyboard_history[history_index][KC_ESC], 1);
@@ -119,7 +120,7 @@ $TEST("multiple_chords_at_once")
     process_record_user(TOP1, &pressed);
     pause_ms(1);
     process_record_user(TOP3, &pressed);
-    pause_ms(CHORD_TIMEOUT+1);
+    pause_ms(CHORD_TIMEOUT + 1);
     ASSERT_EQ(UINT, keyboard_history[history_index][KC_Q], 1);
     ASSERT_EQ(UINT, keyboard_history[history_index][KC_E], 1);
 $END_TEST()
@@ -145,7 +146,7 @@ $TEST("momentary_layer_reset")
     process_record_user(BOT8, &pressed);
     pause_ms(CHORD_TIMEOUT + 1);
     ASSERT_EQ(UINT, current_pseudolayer, NUM);
-    pause_ms(DANCE_TIMEOUT+1);
+    pause_ms(DANCE_TIMEOUT + 1);
     ASSERT_EQ(UINT, current_pseudolayer, NUM);
     process_record_user(BOT7, &depressed);
     pause_ms(1);
@@ -165,11 +166,67 @@ $TEST("autoshift_toggle")
     ASSERT_EQ(UINT, autoshift_mode, 1);
 $END_TEST()
 
+// AS
+$TEST("autoshift_tap")
+    process_record_user(BOT1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Z], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 0);
+$END_TEST()
+
+$TEST("autoshift_hold")
+    $nonlocal(LONG_PRESS_MULTIPLIER)
+    process_record_user(BOT1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms($(LONG_PRESS_MULTIPLIER) * (DANCE_TIMEOUT + 1));
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_Z], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[4][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LSFT], 0);
+$END_TEST()
+
+$TEST("autoshift_hold_off")
+    autoshift_mode = 0;
+    $nonlocal(LONG_PRESS_MULTIPLIER)
+    process_record_user(BOT1, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    pause_ms($(LONG_PRESS_MULTIPLIER) * (DANCE_TIMEOUT + 1));
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Z], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_Z], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 0);
+$END_TEST()
+
 // TODO:
 // KL
 // KM
 // KK
-// AS
 // DF
 // TO
 // LOCK
