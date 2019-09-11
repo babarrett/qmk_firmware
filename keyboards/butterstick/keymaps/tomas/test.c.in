@@ -20,12 +20,80 @@ $KC("QWERTY", "H_TOP1", "KC_Q")
 $KC("QWERTY", "H_TOP2", "KC_W")
 $KC("QWERTY", "H_TOP3", "KC_E")
 $KC("QWERTY", "H_TOP1 + H_TOP2", "KC_ESC")
+$KC("QWERTY", "H_BOT1 + H_BOT2", "KC_LSFT")
 $MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
 $DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
 $AS("QWERTY", "H_BOT1", "KC_Z")
+$LOCK("QWERTY", "H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
+
+// CLEAR_KB
+$TEST("clear")
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
+        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
+        struct Chord chord_storage;
+        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
+        struct Chord* chord = &chord_storage;
+        
+        *chord->state = READY;
+        
+        if (chord->counter) {
+            *chord->counter = 1;
+        }
+    }
+    
+    history_index++;
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[history_index][j] = 1;
+    }
+    
+    current_pseudolayer = 5;
+    lock_next = true;
+    autoshift_mode = false;
+    command_mode = 1;
+    in_leader_mode = true;
+    dynamic_macro_mode = true;
+    a_key_went_through = true;
+
+    for (int i = 0; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+        dynamic_macro_buffer[i] = 1;
+    }
+    
+    uint8_t clear_state = ACTIVATED;
+    struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
+    clear_chord.function(&clear_chord);
+    
+    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
+        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
+        struct Chord chord_storage;
+        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
+        struct Chord* chord = &chord_storage;
+        
+        ASSERT_EQ(UINT, *chord->state, IDLE);
+        
+        if (chord->counter) {
+            ASSERT_EQ(UINT, *chord->counter, 0);
+        }
+    }
+    
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        ASSERT_EQ(UINT, keyboard_history[history_index][j], 0);
+    }
+    
+    ASSERT_EQ(UINT, current_pseudolayer, 1);
+    ASSERT_EQ(UINT, lock_next, false);
+    ASSERT_EQ(UINT, autoshift_mode, true);
+    ASSERT_EQ(UINT, command_mode, 0);
+    ASSERT_EQ(UINT, in_leader_mode, false);
+    ASSERT_EQ(UINT, dynamic_macro_mode, false);
+    ASSERT_EQ(UINT, a_key_went_through, false);
+
+    for (int i = 0; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+        ASSERT_EQ(UINT, dynamic_macro_buffer[i], 0);
+    }
+$END_TEST()
 
 $TEST("pause_ms")
     pause_ms(500);
@@ -167,6 +235,8 @@ $TEST("permanent_layer")
     pause_ms(1);
     process_record_user(BOT0, &depressed);
     ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    pause_ms(1000);
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
 $END_TEST()
 
 // AT
@@ -238,18 +308,61 @@ $TEST("autoshift_hold_off")
     ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 0);
 $END_TEST()
 
+// LOCK
+$TEST("lock")
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    process_record_user(BOT1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    pause_ms(1);
+    process_record_user(BOT2, &depressed);
+    pause_ms(1);
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP2, &pressed);
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1);
+    process_record_user(TOP2, &depressed);
+    process_record_user(BOT1, &depressed);
+    process_record_user(BOT2, &depressed);
+    pause_ms(1);
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    process_record_user(BOT1, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 1);
+    pause_ms(1);
+    process_record_user(BOT2, &depressed);
+    pause_ms(1000);
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT2, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+    process_record_user(BOT1, &depressed);
+    pause_ms(1);
+    process_record_user(BOT2, &depressed);
+    pause_ms(1000);
+    ASSERT_EQ(UINT, keyboard_history[history_index][KC_LSFT], 0);
+$END_TEST()
+
 // TODO:
 // KL
 // KM
 // KK
-// TO
-// LOCK
 // OSK
 // OSL
 // CMD
 // LEADER
 // DYNAMIC MACRO
-// CLEAR_KB
+
+// These two are leaving the chording engine, they kinda have to be tested manually
+// TO
 // RESET
 
 $runner()
