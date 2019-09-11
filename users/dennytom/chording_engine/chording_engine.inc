@@ -253,7 +253,7 @@ void process_ready_chords(void) {
                 *chord->state = ACTIVATED;
                 chord->function(chord);
                 dance_timer = timer_read();
-                deactivate_active_taphold_chords(chord);
+                // deactivate_active_taphold_chords(chord);
                 
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;

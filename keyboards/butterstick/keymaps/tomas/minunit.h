@@ -285,7 +285,7 @@ $endmacro
 $macro(runner)
 $nonlocal(ALL_TESTS)
 static char * all_tests() {
-    $for(TEST in ALL_TESTS)
+    $for(TEST in ALL_TESTS)\
     mu_run_test(test_$(TEST));
     $endfor
     return 0;
