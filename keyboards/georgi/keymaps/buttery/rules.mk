@@ -18,7 +18,7 @@ NO_PRINT			 = yes
 CONSOLE_ENABLE		 = no
 DEBUG_MATRIX_SCAN_RATE   = no
 DEBUG_MATRIX		 = no
-ONLY_QWERTY		= yes
+ONLY_QWERTY		= no
 
 # A bunch of stuff that you shouldn't touch unless you
 # know what you're doing.
