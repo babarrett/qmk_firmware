@@ -29,6 +29,7 @@ $DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
 $AS("QWERTY", "H_BOT1", "KC_Z")
 $KK("QWERTY", "H_BOT2", "KC_X", "KC_LCTL")
 $KL("QWERTY", "H_BOT3", "KC_C", "NUM")
+$KM("QWERTY", "H_BOT4", "KC_V", "KC_LALT")
 $LOCK("QWERTY", "H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2")
 $CMD("QWERTY", "H_TOP5 + H_TOP6 + H_BOT5 + H_BOT6")
 
@@ -655,13 +656,150 @@ $TEST("key_layer_hold_slow_typist")
     ASSERT_EQ(UINT, keyboard_history[7][KC_1], 255);
 $END_TEST()
 
-// TODO:
 // KM
+$TEST("key_mod_tap")
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_V], 0);
+    process_record_user(BOT4, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_V], 0);
+    process_record_user(BOT4, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_V], 0);
+    pause_ms(1000);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_V], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LALT], 255);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_V], 255);
+$END_TEST()
+
+$TEST("key_mod_retrotapping")
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_V], 0);
+    process_record_user(BOT4, &pressed);
+    pause_ms(1000);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_V], 0);
+    process_record_user(BOT4, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_V], 0);
+    pause_ms(1000);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_V], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LALT], 255);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_V], 255);
+$END_TEST()
+
+$TEST("key_mod_hold_quick_typist")
+    process_record_user(BOT4, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    
+    pause_ms(1);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1);
+    
+    process_record_user(BOT4, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_LALT], 255);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_V], 255);
+$END_TEST()
+
+$TEST("key_mod_hold_slow_typist")
+    process_record_user(BOT4, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    
+    pause_ms(1000);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1000);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1000);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1000);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1000);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1000);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1000);
+    
+    process_record_user(BOT4, &depressed);
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    
+    ASSERT_EQ(UINT, keyboard_history[0][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[0][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_Q], 1);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_LALT], 1);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_LALT], 0);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_V], 0);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_Q], 0);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_LALT], 255);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_V], 255);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_Q], 255);
+$END_TEST()
+
+// TODO:
 // LEADER
 // DYNAMIC MACRO
 
 // These two are leaving the chording engine, they kinda have to be tested manually
 // TO
 // RESET
+
 
 $runner()

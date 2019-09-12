@@ -116,27 +116,6 @@ void process_finished_dances(void) {
     }
 }
 
-void deactivate_active_taphold_chords(struct Chord* caller) {
-    if (caller->function == key_layer_dance || caller->function == key_key_dance) {
-        return;
-    }
-    
-    for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
-        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
-        
-        if (*chord->state == ACTIVATED && (chord->function == key_layer_dance || chord->function == key_key_dance)) {
-            *chord->state = DEACTIVATED;
-            chord->function(chord);
-            if (*chord->state == DEACTIVATED) {
-                *chord->state = IDLE; // not necessary but let's keep it here for clarity
-            }
-        }
-    }
-}
-
 uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
     for (int i = 0; i < $(NUM_OF_KEYS); i++) {
         if (keycodes_buffer_array[i] == 1) {
@@ -253,7 +232,6 @@ void process_ready_chords(void) {
                 *chord->state = ACTIVATED;
                 chord->function(chord);
                 dance_timer = timer_read();
-                // deactivate_active_taphold_chords(chord);
                 
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;
