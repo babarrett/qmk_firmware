@@ -794,6 +794,7 @@ $TEST("key_mod_hold_slow_typist")
 $END_TEST()
 
 // TODO:
+// a chord with a counter
 // LEADER
 // DYNAMIC MACRO
 

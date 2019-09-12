@@ -3048,6 +3048,7 @@ test_key_mod_hold_slow_typist () {
 }
 
 // TODO:
+// a chord with a counter
 // LEADER
 // DYNAMIC MACRO
 
