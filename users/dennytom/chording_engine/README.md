@@ -230,7 +230,7 @@ The complete list of strings that these macros can accept is:
       SEND(KC_LALT);
       SEND(KC_DEL);
   }
-  $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", fnc_L1)
+  $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "fnc_L1")
   ```
 
   This is the only instance the function called is not associated to a chord. That is why the function `fnc_L1` does not accept any inputs.

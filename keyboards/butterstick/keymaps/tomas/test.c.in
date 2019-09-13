@@ -16,22 +16,30 @@ $include("keyboard.inc")
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 $include(engine_path + "chord.inc")
 
-$KC("QWERTY", "H_TOP1", "KC_Q")
-$KC("NUM", "H_TOP1", "KC_1")
-$KC("QWERTY", "H_TOP2", "KC_W")
-$KC("QWERTY", "H_TOP3", "KC_E")
-$KC("QWERTY", "H_TOP1 + H_TOP2", "KC_ESC")
-$KC("QWERTY", "H_BOT1 + H_BOT2", "KC_LSFT")
-$OSK("QWERTY", "H_BOT2 + H_BOT3", "KC_LSFT")
-$OSL("QWERTY", "H_BOT6 + H_BOT7", "NUM")
-$MO("QWERTY", "H_BOT7 + H_BOT8", "NUM")
-$DF("QWERTY", "H_BOT9 + H_BOT0", "NUM")
-$AS("QWERTY", "H_BOT1", "KC_Z")
-$KK("QWERTY", "H_BOT2", "KC_X", "KC_LCTL")
-$KL("QWERTY", "H_BOT3", "KC_C", "NUM")
-$KM("QWERTY", "H_BOT4", "KC_V", "KC_LALT")
-$LOCK("QWERTY", "H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2")
-$CMD("QWERTY", "H_TOP5 + H_TOP6 + H_BOT5 + H_BOT6")
+void fnc_L1(void) {
+    key_in(KC_A);
+}
+$add_leader_combo("{KC_O, KC_P, 0, 0, 0}", "fnc_L1")
+
+void fnc_L2(void) {
+    key_in(KC_S);
+}
+$add_leader_combo("{KC_P, KC_O, 0, 0, 0}", "fnc_L2")
+
+$butterstick_rows("QWERTY",
+    "Q, W, E, R, T, Y, U, I, O, P,\
+     A, S, D, F, G, H, J, K, L, ;,\
+     AS(Z), KK(X, LCTL), KL(C, NUM), KM(V, LALT), B, N, M, COMMA, ., /")
+
+$butterstick_cols("QWERTY",
+    " ESC,        , , ,    ,       ,        , ,         ,\
+     LOCK,    LEAD, , , CMD,       ,        , ,         ,\
+     LSFT, O(LSFT), , ,    , O(NUM), MO(NUM), ,  DF(NUM)")
+
+$butterstick_rows("NUM",
+    " 1,  2,  3,  4,  5,  6,  7,  8,   9,   0,\
+     F1, F2, F3, F4, F5, F6, F7, F8,  F9, F10,\
+      `,  -,  =,  [,  ],  \,  ',   , F11, F12")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
@@ -793,9 +801,100 @@ $TEST("key_mod_hold_slow_typist")
     ASSERT_EQ(UINT, keyboard_history[9][KC_Q], 255);
 $END_TEST()
 
+// LEADER
+$TEST("leader_triggers_global")
+    uint8_t state = ACTIVATED;
+    struct Chord chord PROGMEM = {0, QWERTY, &state, NULL, 0, 0, leader};
+    chord.function(&chord);
+
+    ASSERT_EQ(UINT, in_leader_mode, 1);
+$END_TEST()
+
+$TEST("leader_no_follow")
+    uint8_t state = ACTIVATED;
+    struct Chord chord PROGMEM = {0, QWERTY, &state, NULL, 0, 0, leader};
+    chord.function(&chord);
+    
+    ASSERT_EQ(UINT, in_leader_mode, 1);
+
+    pause_ms(1000);
+    
+    ASSERT_EQ(UINT, in_leader_mode, 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_O], 255);
+$END_TEST()
+
+$TEST("leader_wrong_follow")
+    process_record_user(TOP2, &pressed);
+    process_record_user(TOP3, &pressed);
+    process_record_user(BOT2, &pressed);
+    process_record_user(BOT3, &pressed);
+    pause_ms(1);
+    process_record_user(TOP2, &depressed);
+    process_record_user(TOP3, &depressed);
+    process_record_user(BOT2, &depressed);
+    process_record_user(BOT3, &depressed);
+
+    ASSERT_EQ(UINT, in_leader_mode, 1);
+
+    pause_ms(1);
+    process_record_user(TOP1, &pressed);
+    pause_ms(1);
+    process_record_user(TOP1, &depressed);
+    pause_ms(1);
+    process_record_user(TOP2, &pressed);
+    pause_ms(1);
+    process_record_user(TOP2, &depressed);
+    
+    pause_ms(LEADER_TIMEOUT);
+    pause_ms(1);
+    
+    ASSERT_EQ(UINT, in_leader_mode, 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_Q], 255);
+$END_TEST()
+
+$TEST("leader_correct_follow")
+    process_record_user(TOP2, &pressed);
+    process_record_user(TOP3, &pressed);
+    process_record_user(BOT2, &pressed);
+    process_record_user(BOT3, &pressed);
+    pause_ms(1);
+    process_record_user(TOP2, &depressed);
+    process_record_user(TOP3, &depressed);
+    process_record_user(BOT2, &depressed);
+    process_record_user(BOT3, &depressed);
+
+    ASSERT_EQ(UINT, in_leader_mode, 1);
+
+    pause_ms(1);
+    process_record_user(TOP0, &pressed);
+    pause_ms(1);
+    process_record_user(TOP0, &depressed);
+    pause_ms(1);
+    process_record_user(TOP9, &pressed);
+    pause_ms(1);
+    process_record_user(TOP9, &depressed);
+    
+    pause_ms(LEADER_TIMEOUT);
+    ASSERT_EQ(UINT, in_leader_mode, 1);
+    
+    pause_ms(1);    
+    ASSERT_EQ(UINT, in_leader_mode, 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_O], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_P], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_A], 0);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_S], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_O], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_P], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_A], 0);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_S], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[5][KC_Q], 255);
+$END_TEST()
+
 // TODO:
 // a chord with a counter
-// LEADER
 // DYNAMIC MACRO
 
 // These two are leaving the chording engine, they kinda have to be tested manually

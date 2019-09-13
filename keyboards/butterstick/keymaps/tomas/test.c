@@ -547,7 +547,9 @@ void
 key_out (int16_t keycode) {
     if (command_mode == 0) {
         if (!handle_US_ANSI_shifted_keys (keycode, false)) {
-            unregister_code (keycode);
+            if (command_mode == 0 && in_leader_mode == false && dynamic_macro_mode == false) {
+                unregister_code (keycode);
+            }
         }
         send_keyboard_report ();
     }
@@ -874,66 +876,257 @@ reset (const struct Chord *self) {
     }
 }
 
+void
+fnc_L1 (void) {
+    key_in (KC_A);
+}
+
+void
+fnc_L2 (void) {
+    key_in (KC_S);
+}
+
 uint8_t state_0 = IDLE;
 const struct Chord chord_0 PROGMEM = { H_TOP1, QWERTY, &state_0, NULL, KC_Q, 0, single_dance };
 
 uint8_t state_1 = IDLE;
-const struct Chord chord_1 PROGMEM = { H_TOP1, NUM, &state_1, NULL, KC_1, 0, single_dance };
+const struct Chord chord_1 PROGMEM = { H_TOP2, QWERTY, &state_1, NULL, KC_W, 0, single_dance };
 
 uint8_t state_2 = IDLE;
-const struct Chord chord_2 PROGMEM = { H_TOP2, QWERTY, &state_2, NULL, KC_W, 0, single_dance };
+const struct Chord chord_2 PROGMEM = { H_TOP3, QWERTY, &state_2, NULL, KC_E, 0, single_dance };
 
 uint8_t state_3 = IDLE;
-const struct Chord chord_3 PROGMEM = { H_TOP3, QWERTY, &state_3, NULL, KC_E, 0, single_dance };
+const struct Chord chord_3 PROGMEM = { H_TOP4, QWERTY, &state_3, NULL, KC_R, 0, single_dance };
 
 uint8_t state_4 = IDLE;
-const struct Chord chord_4 PROGMEM =
-    { H_TOP1 + H_TOP2, QWERTY, &state_4, NULL, KC_ESC, 0, single_dance };
+const struct Chord chord_4 PROGMEM = { H_TOP5, QWERTY, &state_4, NULL, KC_T, 0, single_dance };
 
 uint8_t state_5 = IDLE;
-const struct Chord chord_5 PROGMEM =
-    { H_BOT1 + H_BOT2, QWERTY, &state_5, NULL, KC_LSFT, 0, single_dance };
+const struct Chord chord_5 PROGMEM = { H_TOP6, QWERTY, &state_5, NULL, KC_Y, 0, single_dance };
 
 uint8_t state_6 = IDLE;
-const struct Chord chord_6 PROGMEM =
-    { H_BOT2 + H_BOT3, QWERTY, &state_6, NULL, KC_LSFT, 0, one_shot_key };
+const struct Chord chord_6 PROGMEM = { H_TOP7, QWERTY, &state_6, NULL, KC_U, 0, single_dance };
 
 uint8_t state_7 = IDLE;
-const struct Chord chord_7 PROGMEM =
-    { H_BOT6 + H_BOT7, QWERTY, &state_7, NULL, NUM, 0, one_shot_layer };
+const struct Chord chord_7 PROGMEM = { H_TOP8, QWERTY, &state_7, NULL, KC_I, 0, single_dance };
 
 uint8_t state_8 = IDLE;
-const struct Chord chord_8 PROGMEM =
-    { H_BOT7 + H_BOT8, QWERTY, &state_8, NULL, NUM, 0, temp_pseudolayer };
+const struct Chord chord_8 PROGMEM = { H_TOP9, QWERTY, &state_8, NULL, KC_O, 0, single_dance };
 
 uint8_t state_9 = IDLE;
-const struct Chord chord_9 PROGMEM =
-    { H_BOT9 + H_BOT0, QWERTY, &state_9, NULL, NUM, 0, perm_pseudolayer };
+const struct Chord chord_9 PROGMEM = { H_TOP0, QWERTY, &state_9, NULL, KC_P, 0, single_dance };
 
 uint8_t state_10 = IDLE;
-uint8_t counter_10 = 0;
 const struct Chord chord_10 PROGMEM =
-    { H_BOT1, QWERTY, &state_10, &counter_10, KC_Z, 0, autoshift_dance };
+    { H_TOP1 + H_BOT1, QWERTY, &state_10, NULL, KC_A, 0, single_dance };
 
 uint8_t state_11 = IDLE;
 const struct Chord chord_11 PROGMEM =
-    { H_BOT2, QWERTY, &state_11, NULL, KC_X, KC_LCTL, key_key_dance };
+    { H_TOP2 + H_BOT2, QWERTY, &state_11, NULL, KC_S, 0, single_dance };
 
 uint8_t state_12 = IDLE;
 const struct Chord chord_12 PROGMEM =
-    { H_BOT3, QWERTY, &state_12, NULL, KC_C, NUM, key_layer_dance };
+    { H_TOP3 + H_BOT3, QWERTY, &state_12, NULL, KC_D, 0, single_dance };
 
 uint8_t state_13 = IDLE;
 const struct Chord chord_13 PROGMEM =
-    { H_BOT4, QWERTY, &state_13, NULL, KC_V, KC_LALT, key_mod_dance };
+    { H_TOP4 + H_BOT4, QWERTY, &state_13, NULL, KC_F, 0, single_dance };
 
 uint8_t state_14 = IDLE;
 const struct Chord chord_14 PROGMEM =
-    { H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2, QWERTY, &state_14, NULL, 0, 0, lock };
+    { H_TOP5 + H_BOT5, QWERTY, &state_14, NULL, KC_G, 0, single_dance };
 
 uint8_t state_15 = IDLE;
 const struct Chord chord_15 PROGMEM =
-    { H_TOP5 + H_TOP6 + H_BOT5 + H_BOT6, QWERTY, &state_15, NULL, 0, 0, command };
+    { H_TOP6 + H_BOT6, QWERTY, &state_15, NULL, KC_H, 0, single_dance };
+
+uint8_t state_16 = IDLE;
+const struct Chord chord_16 PROGMEM =
+    { H_TOP7 + H_BOT7, QWERTY, &state_16, NULL, KC_J, 0, single_dance };
+
+uint8_t state_17 = IDLE;
+const struct Chord chord_17 PROGMEM =
+    { H_TOP8 + H_BOT8, QWERTY, &state_17, NULL, KC_K, 0, single_dance };
+
+uint8_t state_18 = IDLE;
+const struct Chord chord_18 PROGMEM =
+    { H_TOP9 + H_BOT9, QWERTY, &state_18, NULL, KC_L, 0, single_dance };
+
+uint8_t state_19 = IDLE;
+const struct Chord chord_19 PROGMEM =
+    { H_TOP0 + H_BOT0, QWERTY, &state_19, NULL, KC_SCOLON, 0, single_dance };
+
+uint8_t state_20 = IDLE;
+uint8_t counter_20 = 0;
+const struct Chord chord_20 PROGMEM =
+    { H_BOT1, QWERTY, &state_20, &counter_20, KC_Z, 0, autoshift_dance };
+
+uint8_t state_21 = IDLE;
+const struct Chord chord_21 PROGMEM =
+    { H_BOT2, QWERTY, &state_21, NULL, KC_X, KC_LCTL, key_key_dance };
+
+uint8_t state_22 = IDLE;
+const struct Chord chord_22 PROGMEM =
+    { H_BOT3, QWERTY, &state_22, NULL, KC_C, NUM, key_layer_dance };
+
+uint8_t state_23 = IDLE;
+const struct Chord chord_23 PROGMEM =
+    { H_BOT4, QWERTY, &state_23, NULL, KC_V, KC_LALT, key_mod_dance };
+
+uint8_t state_24 = IDLE;
+const struct Chord chord_24 PROGMEM = { H_BOT5, QWERTY, &state_24, NULL, KC_B, 0, single_dance };
+
+uint8_t state_25 = IDLE;
+const struct Chord chord_25 PROGMEM = { H_BOT6, QWERTY, &state_25, NULL, KC_N, 0, single_dance };
+
+uint8_t state_26 = IDLE;
+const struct Chord chord_26 PROGMEM = { H_BOT7, QWERTY, &state_26, NULL, KC_M, 0, single_dance };
+
+uint8_t state_27 = IDLE;
+const struct Chord chord_27 PROGMEM =
+    { H_BOT8, QWERTY, &state_27, NULL, KC_COMMA, 0, single_dance };
+
+uint8_t state_28 = IDLE;
+const struct Chord chord_28 PROGMEM = { H_BOT9, QWERTY, &state_28, NULL, KC_DOT, 0, single_dance };
+
+uint8_t state_29 = IDLE;
+const struct Chord chord_29 PROGMEM =
+    { H_BOT0, QWERTY, &state_29, NULL, KC_SLASH, 0, single_dance };
+
+uint8_t state_30 = IDLE;
+const struct Chord chord_30 PROGMEM =
+    { H_TOP1 + H_TOP2, QWERTY, &state_30, NULL, KC_ESC, 0, single_dance };
+
+uint8_t state_31 = IDLE;
+const struct Chord chord_31 PROGMEM =
+    { H_TOP1 + H_BOT1 + H_TOP2 + H_BOT2, QWERTY, &state_31, NULL, 0, 0, lock };
+
+uint8_t state_32 = IDLE;
+const struct Chord chord_32 PROGMEM =
+    { H_TOP2 + H_BOT2 + H_TOP3 + H_BOT3, QWERTY, &state_32, NULL, 0, 0, leader };
+
+uint8_t state_33 = IDLE;
+const struct Chord chord_33 PROGMEM =
+    { H_TOP5 + H_BOT5 + H_TOP6 + H_BOT6, QWERTY, &state_33, NULL, 0, 0, command };
+
+uint8_t state_34 = IDLE;
+const struct Chord chord_34 PROGMEM =
+    { H_BOT1 + H_BOT2, QWERTY, &state_34, NULL, KC_LSFT, 0, single_dance };
+
+uint8_t state_35 = IDLE;
+const struct Chord chord_35 PROGMEM =
+    { H_BOT2 + H_BOT3, QWERTY, &state_35, NULL, KC_LSFT, 0, one_shot_key };
+
+uint8_t state_36 = IDLE;
+const struct Chord chord_36 PROGMEM =
+    { H_BOT6 + H_BOT7, QWERTY, &state_36, NULL, NUM, 0, one_shot_layer };
+
+uint8_t state_37 = IDLE;
+const struct Chord chord_37 PROGMEM =
+    { H_BOT7 + H_BOT8, QWERTY, &state_37, NULL, NUM, 0, temp_pseudolayer };
+
+uint8_t state_38 = IDLE;
+const struct Chord chord_38 PROGMEM =
+    { H_BOT9 + H_BOT0, QWERTY, &state_38, NULL, NUM, 0, perm_pseudolayer };
+
+uint8_t state_39 = IDLE;
+const struct Chord chord_39 PROGMEM = { H_TOP1, NUM, &state_39, NULL, KC_1, 0, single_dance };
+
+uint8_t state_40 = IDLE;
+const struct Chord chord_40 PROGMEM = { H_TOP2, NUM, &state_40, NULL, KC_2, 0, single_dance };
+
+uint8_t state_41 = IDLE;
+const struct Chord chord_41 PROGMEM = { H_TOP3, NUM, &state_41, NULL, KC_3, 0, single_dance };
+
+uint8_t state_42 = IDLE;
+const struct Chord chord_42 PROGMEM = { H_TOP4, NUM, &state_42, NULL, KC_4, 0, single_dance };
+
+uint8_t state_43 = IDLE;
+const struct Chord chord_43 PROGMEM = { H_TOP5, NUM, &state_43, NULL, KC_5, 0, single_dance };
+
+uint8_t state_44 = IDLE;
+const struct Chord chord_44 PROGMEM = { H_TOP6, NUM, &state_44, NULL, KC_6, 0, single_dance };
+
+uint8_t state_45 = IDLE;
+const struct Chord chord_45 PROGMEM = { H_TOP7, NUM, &state_45, NULL, KC_7, 0, single_dance };
+
+uint8_t state_46 = IDLE;
+const struct Chord chord_46 PROGMEM = { H_TOP8, NUM, &state_46, NULL, KC_8, 0, single_dance };
+
+uint8_t state_47 = IDLE;
+const struct Chord chord_47 PROGMEM = { H_TOP9, NUM, &state_47, NULL, KC_9, 0, single_dance };
+
+uint8_t state_48 = IDLE;
+const struct Chord chord_48 PROGMEM = { H_TOP0, NUM, &state_48, NULL, KC_0, 0, single_dance };
+
+uint8_t state_49 = IDLE;
+const struct Chord chord_49 PROGMEM =
+    { H_TOP1 + H_BOT1, NUM, &state_49, NULL, KC_F1, 0, single_dance };
+
+uint8_t state_50 = IDLE;
+const struct Chord chord_50 PROGMEM =
+    { H_TOP2 + H_BOT2, NUM, &state_50, NULL, KC_F2, 0, single_dance };
+
+uint8_t state_51 = IDLE;
+const struct Chord chord_51 PROGMEM =
+    { H_TOP3 + H_BOT3, NUM, &state_51, NULL, KC_F3, 0, single_dance };
+
+uint8_t state_52 = IDLE;
+const struct Chord chord_52 PROGMEM =
+    { H_TOP4 + H_BOT4, NUM, &state_52, NULL, KC_F4, 0, single_dance };
+
+uint8_t state_53 = IDLE;
+const struct Chord chord_53 PROGMEM =
+    { H_TOP5 + H_BOT5, NUM, &state_53, NULL, KC_F5, 0, single_dance };
+
+uint8_t state_54 = IDLE;
+const struct Chord chord_54 PROGMEM =
+    { H_TOP6 + H_BOT6, NUM, &state_54, NULL, KC_F6, 0, single_dance };
+
+uint8_t state_55 = IDLE;
+const struct Chord chord_55 PROGMEM =
+    { H_TOP7 + H_BOT7, NUM, &state_55, NULL, KC_F7, 0, single_dance };
+
+uint8_t state_56 = IDLE;
+const struct Chord chord_56 PROGMEM =
+    { H_TOP8 + H_BOT8, NUM, &state_56, NULL, KC_F8, 0, single_dance };
+
+uint8_t state_57 = IDLE;
+const struct Chord chord_57 PROGMEM =
+    { H_TOP9 + H_BOT9, NUM, &state_57, NULL, KC_F9, 0, single_dance };
+
+uint8_t state_58 = IDLE;
+const struct Chord chord_58 PROGMEM =
+    { H_TOP0 + H_BOT0, NUM, &state_58, NULL, KC_F10, 0, single_dance };
+
+uint8_t state_59 = IDLE;
+const struct Chord chord_59 PROGMEM = { H_BOT1, NUM, &state_59, NULL, KC_GRAVE, 0, single_dance };
+
+uint8_t state_60 = IDLE;
+const struct Chord chord_60 PROGMEM = { H_BOT2, NUM, &state_60, NULL, KC_MINUS, 0, single_dance };
+
+uint8_t state_61 = IDLE;
+const struct Chord chord_61 PROGMEM = { H_BOT3, NUM, &state_61, NULL, KC_EQUAL, 0, single_dance };
+
+uint8_t state_62 = IDLE;
+const struct Chord chord_62 PROGMEM =
+    { H_BOT4, NUM, &state_62, NULL, KC_LBRACKET, 0, single_dance };
+
+uint8_t state_63 = IDLE;
+const struct Chord chord_63 PROGMEM =
+    { H_BOT5, NUM, &state_63, NULL, KC_RBRACKET, 0, single_dance };
+
+uint8_t state_64 = IDLE;
+const struct Chord chord_64 PROGMEM = { H_BOT6, NUM, &state_64, NULL, KC_BSLASH, 0, single_dance };
+
+uint8_t state_65 = IDLE;
+const struct Chord chord_65 PROGMEM = { H_BOT7, NUM, &state_65, NULL, KC_QUOTE, 0, single_dance };
+
+uint8_t state_66 = IDLE;
+const struct Chord chord_66 PROGMEM = { H_BOT9, NUM, &state_66, NULL, KC_F11, 0, single_dance };
+
+uint8_t state_67 = IDLE;
+const struct Chord chord_67 PROGMEM = { H_BOT0, NUM, &state_67, NULL, KC_F12, 0, single_dance };
 
 // Register all chords, load chording logic
 const struct Chord *const list_of_chords[] PROGMEM = {
@@ -953,12 +1146,70 @@ const struct Chord *const list_of_chords[] PROGMEM = {
     &chord_13,
     &chord_14,
     &chord_15,
+    &chord_16,
+    &chord_17,
+    &chord_18,
+    &chord_19,
+    &chord_20,
+    &chord_21,
+    &chord_22,
+    &chord_23,
+    &chord_24,
+    &chord_25,
+    &chord_26,
+    &chord_27,
+    &chord_28,
+    &chord_29,
+    &chord_30,
+    &chord_31,
+    &chord_32,
+    &chord_33,
+    &chord_34,
+    &chord_35,
+    &chord_36,
+    &chord_37,
+    &chord_38,
+    &chord_39,
+    &chord_40,
+    &chord_41,
+    &chord_42,
+    &chord_43,
+    &chord_44,
+    &chord_45,
+    &chord_46,
+    &chord_47,
+    &chord_48,
+    &chord_49,
+    &chord_50,
+    &chord_51,
+    &chord_52,
+    &chord_53,
+    &chord_54,
+    &chord_55,
+    &chord_56,
+    &chord_57,
+    &chord_58,
+    &chord_59,
+    &chord_60,
+    &chord_61,
+    &chord_62,
+    &chord_63,
+    &chord_64,
+    &chord_65,
+    &chord_66,
+    &chord_67,
 
 };
 
-const uint16_t **leader_triggers PROGMEM = NULL;
+const uint16_t leader_triggers[2][5] PROGMEM = {
+    {KC_O, KC_P, 0, 0, 0},
+    {KC_P, KC_O, 0, 0, 0},
+
+};
 
 void (*leader_functions[]) (void) = {
+    fnc_L1,
+    fnc_L2,
 
 };
 
@@ -1016,7 +1267,7 @@ are_hashed_keycodes_in_array (uint32_t keycode_hash) {
 
 void
 kill_one_shots (void) {
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 68; i++) {
         // const struct Chord* chord = list_of_chords[i];
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
@@ -1036,7 +1287,7 @@ kill_one_shots (void) {
 
 void
 process_finished_dances (void) {
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 68; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1085,7 +1336,7 @@ keycodes_buffer_array_min (uint8_t * first_keycode_index) {
 
 void
 remove_subchords (void) {
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 68; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1098,7 +1349,7 @@ remove_subchords (void) {
             continue;
         }
 
-        for (int j = 0; j < 16; j++) {
+        for (int j = 0; j < 68; j++) {
             if (i == j) {
                 continue;
             }
@@ -1130,7 +1381,7 @@ process_ready_chords (void) {
 
     while (keycodes_buffer_array_min (&first_keycode_index)) {
         // find ready chords
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 68; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1174,7 +1425,7 @@ process_ready_chords (void) {
         // this should be only one chord
         struct Chord *chord = NULL;
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 68; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1226,7 +1477,7 @@ deactivate_active_chords (uint16_t keycode) {
     uint32_t hash = (uint32_t) 1 << (keycode - SAFE_RANGE);
     bool broken;
 
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 68; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1292,7 +1543,7 @@ process_command (void) {
 void
 process_leader (void) {
     in_leader_mode = false;
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 2; i++) {
         uint16_t trigger[5];
 
         memcpy_P (trigger, leader_triggers[i], 5 * sizeof (uint16_t));
@@ -1358,7 +1609,7 @@ void
 clear (const struct Chord *self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 68; i++) {
             struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
             struct Chord chord_storage;
 
@@ -1420,7 +1671,7 @@ test_clear () {
         time_history[i] = -1;
     }
 
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 68; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -1455,7 +1706,7 @@ test_clear () {
     struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
     clear_chord.function (&clear_chord);
 
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 68; i++) {
         struct Chord *chord_ptr = (struct Chord *) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
 
@@ -3047,9 +3298,205 @@ test_key_mod_hold_slow_typist () {
     return 0;
 }
 
+// LEADER
+
+static char *
+test_leader_triggers_global () {
+    char name[] = "leader_triggers_global";
+
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+        clear_chord.function (&clear_chord);
+    } while (0);
+
+    current_time = 0;
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    uint8_t state = ACTIVATED;
+    struct Chord chord PROGMEM = { 0, QWERTY, &state, NULL, 0, 0, leader };
+    chord.function (&chord);
+
+    ASSERT_EQ (UINT, in_leader_mode, 1);
+
+    printf ("%s " GREEN "PASSED" NC "\n", name);
+    return 0;
+}
+
+static char *
+test_leader_no_follow () {
+    char name[] = "leader_no_follow";
+
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+        clear_chord.function (&clear_chord);
+    } while (0);
+
+    current_time = 0;
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    uint8_t state = ACTIVATED;
+    struct Chord chord PROGMEM = { 0, QWERTY, &state, NULL, 0, 0, leader };
+    chord.function (&chord);
+
+    ASSERT_EQ (UINT, in_leader_mode, 1);
+
+    pause_ms (1000);
+
+    ASSERT_EQ (UINT, in_leader_mode, 0);
+    ASSERT_EQ (UINT, keyboard_history[1][KC_O], 255);
+
+    printf ("%s " GREEN "PASSED" NC "\n", name);
+    return 0;
+}
+
+static char *
+test_leader_wrong_follow () {
+    char name[] = "leader_wrong_follow";
+
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+        clear_chord.function (&clear_chord);
+    } while (0);
+
+    current_time = 0;
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    process_record_user (TOP2, &pressed);
+    process_record_user (TOP3, &pressed);
+    process_record_user (BOT2, &pressed);
+    process_record_user (BOT3, &pressed);
+    pause_ms (1);
+    process_record_user (TOP2, &depressed);
+    process_record_user (TOP3, &depressed);
+    process_record_user (BOT2, &depressed);
+    process_record_user (BOT3, &depressed);
+
+    ASSERT_EQ (UINT, in_leader_mode, 1);
+
+    pause_ms (1);
+    process_record_user (TOP1, &pressed);
+    pause_ms (1);
+    process_record_user (TOP1, &depressed);
+    pause_ms (1);
+    process_record_user (TOP2, &pressed);
+    pause_ms (1);
+    process_record_user (TOP2, &depressed);
+
+    pause_ms (LEADER_TIMEOUT);
+    pause_ms (1);
+
+    ASSERT_EQ (UINT, in_leader_mode, 0);
+    ASSERT_EQ (UINT, keyboard_history[1][KC_Q], 255);
+
+    printf ("%s " GREEN "PASSED" NC "\n", name);
+    return 0;
+}
+
+static char *
+test_leader_correct_follow () {
+    char name[] = "leader_correct_follow";
+
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = { 0, QWERTY, &clear_state, NULL, 0, 0, clear };
+        clear_chord.function (&clear_chord);
+    } while (0);
+
+    current_time = 0;
+    history_index = 0;
+
+    for (int j = 0; j < SAFE_RANGE - 1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE - 1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    process_record_user (TOP2, &pressed);
+    process_record_user (TOP3, &pressed);
+    process_record_user (BOT2, &pressed);
+    process_record_user (BOT3, &pressed);
+    pause_ms (1);
+    process_record_user (TOP2, &depressed);
+    process_record_user (TOP3, &depressed);
+    process_record_user (BOT2, &depressed);
+    process_record_user (BOT3, &depressed);
+
+    ASSERT_EQ (UINT, in_leader_mode, 1);
+
+    pause_ms (1);
+    process_record_user (TOP0, &pressed);
+    pause_ms (1);
+    process_record_user (TOP0, &depressed);
+    pause_ms (1);
+    process_record_user (TOP9, &pressed);
+    pause_ms (1);
+    process_record_user (TOP9, &depressed);
+
+    pause_ms (LEADER_TIMEOUT);
+    ASSERT_EQ (UINT, in_leader_mode, 1);
+
+    pause_ms (1);
+    ASSERT_EQ (UINT, in_leader_mode, 0);
+
+    ASSERT_EQ (UINT, keyboard_history[1][KC_O], 0);
+    ASSERT_EQ (UINT, keyboard_history[1][KC_P], 0);
+    ASSERT_EQ (UINT, keyboard_history[1][KC_A], 0);
+    ASSERT_EQ (UINT, keyboard_history[1][KC_S], 1);
+
+    ASSERT_EQ (UINT, keyboard_history[2][KC_O], 0);
+    ASSERT_EQ (UINT, keyboard_history[2][KC_P], 0);
+    ASSERT_EQ (UINT, keyboard_history[2][KC_A], 0);
+    ASSERT_EQ (UINT, keyboard_history[2][KC_S], 0);
+
+    ASSERT_EQ (UINT, keyboard_history[5][KC_Q], 255);
+
+    printf ("%s " GREEN "PASSED" NC "\n", name);
+    return 0;
+}
+
 // TODO:
 // a chord with a counter
-// LEADER
 // DYNAMIC MACRO
 
 // These two are leaving the chording engine, they kinda have to be tested manually
@@ -3092,6 +3539,10 @@ all_tests () {
     mu_run_test (test_key_mod_retrotapping);
     mu_run_test (test_key_mod_hold_quick_typist);
     mu_run_test (test_key_mod_hold_slow_typist);
+    mu_run_test (test_leader_triggers_global);
+    mu_run_test (test_leader_no_follow);
+    mu_run_test (test_leader_wrong_follow);
+    mu_run_test (test_leader_correct_follow);
 
     return 0;
 }
@@ -3105,7 +3556,7 @@ main (int argc, char **argv) {
     } else {
         printf ("\n" GREEN "ALL TESTS PASSED" NC "\n");
     }
-    printf ("Tests run: %d / %d\n", tests_run, 34);
+    printf ("Tests run: %d / %d\n", tests_run, 38);
 
     return result != 0;
 }

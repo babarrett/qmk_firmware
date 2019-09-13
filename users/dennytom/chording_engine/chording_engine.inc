@@ -11,7 +11,7 @@ const uint16_t leader_triggers[$(len(list_of_leader_combos))][$(LEADER_MAX_LENGT
     $endfor
 };
 $else
-    const uint16_t** leader_triggers PROGMEM = NULL;
+    const uint16_t** const leader_triggers PROGMEM = NULL;
 $endif
 
 void (*leader_functions[]) (void) = {
