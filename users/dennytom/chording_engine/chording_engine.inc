@@ -403,6 +403,7 @@ void clear(const struct Chord* self) {
         autoshift_mode = true;
         command_mode = 0;
         in_leader_mode = false;
+        leader_ind = 0;
         dynamic_macro_mode = false;
         a_key_went_through = false;
 

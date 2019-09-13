@@ -18,11 +18,13 @@ $include(engine_path + "chord.inc")
 
 void fnc_L1(void) {
     key_in(KC_A);
+    clear_keyboard();
 }
 $add_leader_combo("{KC_O, KC_P, 0, 0, 0}", "fnc_L1")
 
 void fnc_L2(void) {
     key_in(KC_S);
+    clear_keyboard();
 }
 $add_leader_combo("{KC_P, KC_O, 0, 0, 0}", "fnc_L2")
 
@@ -102,6 +104,7 @@ $TEST("clear")
     ASSERT_EQ(UINT, autoshift_mode, true);
     ASSERT_EQ(UINT, command_mode, 0);
     ASSERT_EQ(UINT, in_leader_mode, false);
+    ASSERT_EQ(UINT, leader_ind, 0);
     ASSERT_EQ(UINT, dynamic_macro_mode, false);
     ASSERT_EQ(UINT, a_key_went_through, false);
 

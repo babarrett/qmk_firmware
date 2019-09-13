@@ -879,11 +879,13 @@ reset (const struct Chord *self) {
 void
 fnc_L1 (void) {
     key_in (KC_A);
+    clear_keyboard ();
 }
 
 void
 fnc_L2 (void) {
     key_in (KC_S);
+    clear_keyboard ();
 }
 
 uint8_t state_0 = IDLE;
@@ -1635,6 +1637,7 @@ clear (const struct Chord *self) {
         autoshift_mode = true;
         command_mode = 0;
         in_leader_mode = false;
+        leader_ind = 0;
         dynamic_macro_mode = false;
         a_key_went_through = false;
 
@@ -1729,6 +1732,7 @@ test_clear () {
     ASSERT_EQ (UINT, autoshift_mode, true);
     ASSERT_EQ (UINT, command_mode, 0);
     ASSERT_EQ (UINT, in_leader_mode, false);
+    ASSERT_EQ (UINT, leader_ind, 0);
     ASSERT_EQ (UINT, dynamic_macro_mode, false);
     ASSERT_EQ (UINT, a_key_went_through, false);
 
