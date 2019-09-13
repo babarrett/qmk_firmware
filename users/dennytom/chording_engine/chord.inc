@@ -270,7 +270,7 @@ void autoshift_dance_impl(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            if (*self->counter == $(LONG_PRESS_MULTIPLIER - 1)) {
+            if (*self->counter == $(LONG_PRESS_MULTIPLIER - 2)) {
                 key_in(KC_LSFT);
                 tap_key(self->value1);
                 key_out(KC_LSFT);
@@ -311,6 +311,7 @@ void temp_pseudolayer(const struct Chord* self) {
             break;
         case DEACTIVATED:
             current_pseudolayer = self->pseudolayer;
+            *self->state = IDLE;
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;

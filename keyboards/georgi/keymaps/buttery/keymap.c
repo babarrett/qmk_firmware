@@ -432,7 +432,7 @@ void autoshift_dance_impl(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            if (*self->counter == 2) {
+            if (*self->counter == 1) {
                 key_in(KC_LSFT);
                 tap_key(self->value1);
                 key_out(KC_LSFT);
@@ -473,6 +473,7 @@ void temp_pseudolayer(const struct Chord* self) {
             break;
         case DEACTIVATED:
             current_pseudolayer = self->pseudolayer;
+            *self->state = IDLE;
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
@@ -9630,9 +9631,7 @@ const struct Chord* const list_of_chords[] PROGMEM = {
     
 };
 
-const uint16_t leader_triggers[0][5] PROGMEM = {
-    
-};
+    const uint16_t** leader_triggers PROGMEM = NULL;
 
 void (*leader_functions[]) (void) = {
     
@@ -9713,6 +9712,7 @@ void process_finished_dances(void) {
             if (a_key_went_through) {
                 kill_one_shots();
             }
+            dance_timer = timer_read();
         } else if (*chord->state == IDLE_IN_DANCE) {
             *chord->state = FINISHED;
             chord->function(chord);
@@ -9729,27 +9729,6 @@ void process_finished_dances(void) {
                 kill_one_shots();
             }
             dance_timer = timer_read();
-        }
-    }
-}
-
-void deactivate_active_taphold_chords(struct Chord* caller) {
-    if (caller->function == key_layer_dance || caller->function == key_key_dance) {
-        return;
-    }
-    
-    for (int i = 0; i < 306; i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
-        memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
-        
-        if (*chord->state == ACTIVATED && (chord->function == key_layer_dance || chord->function == key_key_dance)) {
-            *chord->state = DEACTIVATED;
-            chord->function(chord);
-            if (*chord->state == DEACTIVATED) {
-                *chord->state = IDLE; // not necessary but let's keep it here for clarity
-            }
         }
     }
 }
@@ -9870,7 +9849,6 @@ void process_ready_chords(void) {
                 *chord->state = ACTIVATED;
                 chord->function(chord);
                 dance_timer = timer_read();
-                deactivate_active_taphold_chords(chord);
                 
                 if (lock_next && lock_next == lock_next_prev_state) {
                     lock_next = false;
@@ -9992,18 +9970,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_scan_user(void) {
     bool chord_timer_expired = timer_elapsed(chord_timer) > CHORD_TIMEOUT;
-    bool dance_timer_expired = timer_elapsed(dance_timer) > DANCE_TIMEOUT;
-    bool leader_timer_expired = timer_elapsed(leader_timer) > LEADER_TIMEOUT;
-    
     if (chord_timer_expired && keycodes_buffer_array_min(NULL)) {
         process_ready_chords();
     }
+    
+    bool dance_timer_expired = timer_elapsed(dance_timer) > DANCE_TIMEOUT;
     if (dance_timer_expired) { // would love to have && in_dance but not sure how
         process_finished_dances();
     }
-    if (command_mode == 2) {
+    
+    bool in_command_mode = command_mode == 2;
+    if (in_command_mode) {
         process_command();
     }
+    
+    bool leader_timer_expired = timer_elapsed(leader_timer) > LEADER_TIMEOUT;
     if (leader_timer_expired && in_leader_mode) {
         process_leader();
     }
@@ -10042,7 +10023,7 @@ void clear(const struct Chord* self) {
         dynamic_macro_mode = false;
         a_key_went_through = false;
 
-        for (int i; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             dynamic_macro_buffer[i] = 0;
         }
 

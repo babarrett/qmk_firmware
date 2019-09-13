@@ -34,9 +34,9 @@ $include(engine_path + "chord.inc")
 // Add all chords
 
 $butterstick_cols("ALWAYS_ON",
-    ", , , , ,      ,      , , , , ,\
-     , , , , ,       LEAD,   , , , , ,\
-     , , , , ,       ,       , , , , ,\
+    ", , , , ,       ,      , , , , ,\
+     , , , , ,   LEAD ,     , , , , ,\
+     , , , , ,       ,      , , , , ,\
            , ,       ,       , ")
 
 $secret_chord("ALWAYS_ON", "CLEAR_KB",
