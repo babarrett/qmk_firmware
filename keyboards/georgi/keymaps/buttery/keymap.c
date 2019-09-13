@@ -5,11 +5,71 @@
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
+
+
 enum pseudolayers {
     ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, GAME2, QWERTY
 };
 
 // Macros to simplify chord definitions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Keyboard states and settings
 
@@ -17,6 +77,15 @@ enum pseudolayers {
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
 #define TAP_TIMEOUT 50
+
+
+
+
+
+
+
+
+
 
     
     
@@ -101,6 +170,14 @@ enum pseudolayers {
             #define H_THU5 ((uint32_t) 1 << 28)
             #define H_THU6 ((uint32_t) 1 << 29)
     
+
+
+
+
+
+
+
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_georgi (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6,       TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
@@ -334,7 +411,9 @@ void key_in(int16_t keycode) {
 void key_out(int16_t keycode) {
     if (command_mode == 0) {
         if (!handle_US_ANSI_shifted_keys(keycode, false)) {
-            unregister_code(keycode);
+            if (command_mode == 0 && in_leader_mode == false && dynamic_macro_mode == false) {
+                unregister_code(keycode);
+            }
         }
         send_keyboard_report();
     }
@@ -420,6 +499,7 @@ void key_key_dance(const struct Chord* self) {
             break;
     }
 }
+
 
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
@@ -637,6 +717,7 @@ void reset(const struct Chord* self) {
 }
 
 // Add all chords
+
 
     
     
@@ -882,6 +963,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -953,6 +1037,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -1015,6 +1101,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -1095,6 +1183,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -1154,6 +1244,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -1972,6 +2064,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -2334,6 +2429,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -2397,6 +2495,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -2500,6 +2600,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -2602,6 +2704,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -2701,6 +2805,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -2802,6 +2908,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -2873,6 +2981,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -2946,6 +3056,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -3013,6 +3125,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -3711,6 +3825,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -4047,6 +4164,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -4149,6 +4269,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -4250,6 +4372,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -4987,6 +5111,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -5296,6 +5423,9 @@ void reset(const struct Chord* self) {
     
     
     
+
+
+
 
     
     
@@ -6123,6 +6253,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -6432,6 +6565,9 @@ void reset(const struct Chord* self) {
     
     
     
+
+
+
 
     
     
@@ -6778,6 +6914,9 @@ void reset(const struct Chord* self) {
     
     
     
+
+
+
 
     
     
@@ -7460,6 +7599,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
 
@@ -8140,6 +8282,9 @@ void reset(const struct Chord* self) {
             
         
     
+
+
+
 
     
     
@@ -8958,6 +9103,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -9320,6 +9468,8 @@ void reset(const struct Chord* self) {
     
     
 
+
+
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_0,
@@ -9631,7 +9781,9 @@ const struct Chord* const list_of_chords[] PROGMEM = {
     
 };
 
-    const uint16_t** leader_triggers PROGMEM = NULL;
+
+    const uint16_t** const leader_triggers PROGMEM = NULL;
+
 
 void (*leader_functions[]) (void) = {
     
