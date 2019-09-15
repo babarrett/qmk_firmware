@@ -5,11 +5,71 @@
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
+
+
 enum pseudolayers {
     ALWAYS_ON, COLEMAK, NUM, SYM, MOVE, MEDIA, GAME, GAME2, QWERTY
 };
 
 // Macros to simplify chord definitions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Keyboard states and settings
 
@@ -17,6 +77,15 @@ enum pseudolayers {
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
 #define TAP_TIMEOUT 50
+
+
+
+
+
+
+
+
+
 
     
     
@@ -101,6 +170,14 @@ enum pseudolayers {
             #define H_THU5 ((uint32_t) 1 << 28)
             #define H_THU6 ((uint32_t) 1 << 29)
     
+
+
+
+
+
+
+
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_georgi (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6,       TOP7, TOP8, TOP9, TOP10, TOP11, TOP12,
@@ -423,6 +500,7 @@ void key_key_dance(const struct Chord* self) {
     }
 }
 
+
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -488,18 +566,21 @@ void temp_pseudolayer(const struct Chord* self) {
 void perm_pseudolayer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         current_pseudolayer = self->value1;
+        *self->state = IDLE;
     }
 }
 
 void switch_layer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         layer_move(self->value1);
+        *self->state = IDLE;
     }
 }
 
 void lock(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         lock_next = true;
+        *self->state = IDLE;
     }
 }
 
@@ -554,6 +635,7 @@ void one_shot_layer(const struct Chord* self) {
 void command(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         command_mode++;
+        *self->state = IDLE;
     }
 }
 
@@ -568,6 +650,7 @@ bool identical(uint16_t* buffer1, uint16_t* buffer2) {
 void leader(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         in_leader_mode = true;
+        *self->state = IDLE;
     }
 }
 
@@ -577,6 +660,7 @@ void dynamic_macro_record(const struct Chord* self) {
             dynamic_macro_buffer[i] = 0;
         }
         dynamic_macro_mode = true;
+        *self->state = IDLE;
     }
 }
 
@@ -586,6 +670,7 @@ void dynamic_macro_next(const struct Chord* self) {
             dynamic_macro_buffer[dynamic_macro_ind] = 0;
             dynamic_macro_ind++;
         }
+        *self->state = IDLE;
     }
 }
 
@@ -594,6 +679,7 @@ void dynamic_macro_end(const struct Chord* self) {
         if (dynamic_macro_mode) {
             dynamic_macro_mode = false;
         }
+        *self->state = IDLE;
     }
 }
 
@@ -602,22 +688,23 @@ void dynamic_macro_play(const struct Chord* self) {
         int ind_start = 0;
         while (ind_start < 20) {
             for (int i = ind_start; i < 20; i++) {
-                register_code(dynamic_macro_buffer[i]);
                 if (dynamic_macro_buffer[i] == 0) {
                     break;
                 }
+                register_code(dynamic_macro_buffer[i]);
             }
             send_keyboard_report();
             wait_ms(TAP_TIMEOUT);
             for (int i = ind_start; i < 20; i++) {
-                    unregister_code(dynamic_macro_buffer[i]);
                 if (dynamic_macro_buffer[i] == 0) {
                     ind_start = i + 1;
                     break;
                 }
+                unregister_code(dynamic_macro_buffer[i]);
             }
             send_keyboard_report();
         }
+        *self->state = IDLE;
     }
 }
 
@@ -639,6 +726,7 @@ void reset(const struct Chord* self) {
 }
 
 // Add all chords
+
 
     
     
@@ -884,6 +972,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -955,6 +1046,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -1017,6 +1110,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -1097,6 +1192,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -1156,6 +1253,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -1974,6 +2073,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -2336,6 +2438,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -2399,6 +2504,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -2502,6 +2609,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -2604,6 +2713,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -2703,6 +2814,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -2804,6 +2917,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -2875,6 +2990,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -2948,6 +3065,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -3015,6 +3134,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -3713,6 +3834,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -4049,6 +4173,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -4151,6 +4278,8 @@ void reset(const struct Chord* self) {
 
     
 
+
+
     
     
     
@@ -4252,6 +4381,8 @@ void reset(const struct Chord* self) {
     
 
     
+
+
 
     
     
@@ -4989,6 +5120,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -5298,6 +5432,9 @@ void reset(const struct Chord* self) {
     
     
     
+
+
+
 
     
     
@@ -6125,6 +6262,9 @@ void reset(const struct Chord* self) {
     
     
 
+
+
+
     
     
     
@@ -6434,6 +6574,9 @@ void reset(const struct Chord* self) {
     
     
     
+
+
+
 
     
     
@@ -6780,6 +6923,9 @@ void reset(const struct Chord* self) {
     
     
     
+
+
+
 
     
     
@@ -7462,6 +7608,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
 
@@ -8142,6 +8291,9 @@ void reset(const struct Chord* self) {
             
         
     
+
+
+
 
     
     
@@ -8960,6 +9112,9 @@ void reset(const struct Chord* self) {
         
     
 
+
+
+
     
     
     
@@ -9322,6 +9477,8 @@ void reset(const struct Chord* self) {
     
     
 
+
+
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_0,
@@ -9633,7 +9790,9 @@ const struct Chord* const list_of_chords[] PROGMEM = {
     
 };
 
+
     const uint16_t** const leader_triggers PROGMEM = NULL;
+
 
 void (*leader_functions[]) (void) = {
     
@@ -9684,12 +9843,14 @@ bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
 }
 
 void kill_one_shots(void) {
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < 306; i++) {
-        // const struct Chord* chord = list_of_chords[i];
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         if (*chord->state == IN_ONE_SHOT) {
             *chord->state = RESTART;
@@ -9702,11 +9863,14 @@ void kill_one_shots(void) {
 }
 
 void process_finished_dances(void) {
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < 306; i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         if (*chord->state == ACTIVATED) {
             *chord->state = PRESS_FROM_ACTIVE;
@@ -9748,23 +9912,28 @@ uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
 }
 
 void remove_subchords(void) {
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < 306; i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         if (!(*chord->state == READY || *chord->state == READY_IN_DANCE || *chord->state == READY_LOCKED)) {
             continue;
         }
         
+        struct Chord chord_storage_2;
+        struct Chord* chord_ptr_2;
+        struct Chord* chord_2;
         for (int j = 0; j < 306; j++) {
             if (i == j) {continue;}
             
-            struct Chord* chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
-            struct Chord chord_storage_2;
+            chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
             memcpy_P(&chord_storage_2, chord_ptr_2, sizeof(struct Chord));
-            struct Chord* chord_2 = &chord_storage_2;
+            chord_2 = &chord_storage_2;
             
             if (are_hashed_keycodes_in_sound(chord_2->keycodes_hash, chord->keycodes_hash)) {
                 if (*chord_2->state == READY) {
@@ -9785,11 +9954,14 @@ void process_ready_chords(void) {
     uint8_t first_keycode_index = 0;
     while (keycodes_buffer_array_min(&first_keycode_index)) {
         // find ready chords
+        struct Chord chord_storage;
+        struct Chord* chord_ptr;
+        struct Chord* chord;
+        
         for (int i = 0; i < 306; i++) {
-            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-            struct Chord chord_storage;
+            chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-            struct Chord* chord = &chord_storage;
+            chord = &chord_storage;
             
             // if the chord does not contain the first keycode
             bool contains_first_keycode = ((uint32_t) 1 << first_keycode_index) & chord->keycodes_hash;
@@ -9825,10 +9997,8 @@ void process_ready_chords(void) {
         
         // execute logic
         // this should be only one chord
-        struct Chord* chord = NULL;
         for (int i = 0; i < 306; i++) {
-            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-            struct Chord chord_storage;
+            chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
             
@@ -9876,11 +10046,14 @@ void process_ready_chords(void) {
 void deactivate_active_chords(uint16_t keycode) {
     uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
     bool broken;
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < 306; i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         broken = are_hashed_keycodes_in_sound(hash, chord->keycodes_hash);
         if (!broken) {
@@ -9997,11 +10170,14 @@ void matrix_scan_user(void) {
 void clear(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
+        struct Chord chord_storage;
+        struct Chord* chord_ptr;
+        struct Chord* chord;
+        
         for (int i = 0; i < 306; i++) {
-            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-            struct Chord chord_storage;
+            chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-            struct Chord* chord = &chord_storage;
+            chord = &chord_storage;
             
             *chord->state = IDLE;
             
