@@ -326,18 +326,21 @@ void temp_pseudolayer(const struct Chord* self) {
 void perm_pseudolayer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         current_pseudolayer = self->value1;
+        *self->state = IDLE;
     }
 }
 
 void switch_layer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         layer_move(self->value1);
+        *self->state = IDLE;
     }
 }
 
 void lock(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         lock_next = true;
+        *self->state = IDLE;
     }
 }
 
@@ -392,6 +395,7 @@ void one_shot_layer(const struct Chord* self) {
 void command(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         command_mode++;
+        *self->state = IDLE;
     }
 }
 
@@ -406,6 +410,7 @@ bool identical(uint16_t* buffer1, uint16_t* buffer2) {
 void leader(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         in_leader_mode = true;
+        *self->state = IDLE;
     }
 }
 
@@ -415,6 +420,7 @@ void dynamic_macro_record(const struct Chord* self) {
             dynamic_macro_buffer[i] = 0;
         }
         dynamic_macro_mode = true;
+        *self->state = IDLE;
     }
 }
 
@@ -424,6 +430,7 @@ void dynamic_macro_next(const struct Chord* self) {
             dynamic_macro_buffer[dynamic_macro_ind] = 0;
             dynamic_macro_ind++;
         }
+        *self->state = IDLE;
     }
 }
 
@@ -432,6 +439,7 @@ void dynamic_macro_end(const struct Chord* self) {
         if (dynamic_macro_mode) {
             dynamic_macro_mode = false;
         }
+        *self->state = IDLE;
     }
 }
 
@@ -440,22 +448,23 @@ void dynamic_macro_play(const struct Chord* self) {
         int ind_start = 0;
         while (ind_start < $(DYNAMIC_MACRO_MAX_LENGTH)) {
             for (int i = ind_start; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
-                register_code(dynamic_macro_buffer[i]);
                 if (dynamic_macro_buffer[i] == 0) {
                     break;
                 }
+                register_code(dynamic_macro_buffer[i]);
             }
             send_keyboard_report();
             wait_ms(TAP_TIMEOUT);
             for (int i = ind_start; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
-                    unregister_code(dynamic_macro_buffer[i]);
                 if (dynamic_macro_buffer[i] == 0) {
                     ind_start = i + 1;
                     break;
                 }
+                unregister_code(dynamic_macro_buffer[i]);
             }
             send_keyboard_report();
         }
+        *self->state = IDLE;
     }
 }
 

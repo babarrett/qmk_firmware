@@ -65,12 +65,14 @@ bool are_hashed_keycodes_in_array($(type) keycode_hash) {
 }
 
 void kill_one_shots(void) {
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        // const struct Chord* chord = list_of_chords[i];
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         if (*chord->state == IN_ONE_SHOT) {
             *chord->state = RESTART;
@@ -83,11 +85,14 @@ void kill_one_shots(void) {
 }
 
 void process_finished_dances(void) {
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         if (*chord->state == ACTIVATED) {
             *chord->state = PRESS_FROM_ACTIVE;
@@ -129,23 +134,28 @@ uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
 }
 
 void remove_subchords(void) {
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         if (!(*chord->state == READY || *chord->state == READY_IN_DANCE || *chord->state == READY_LOCKED)) {
             continue;
         }
         
+        struct Chord chord_storage_2;
+        struct Chord* chord_ptr_2;
+        struct Chord* chord_2;
         for (int j = 0; j < $(NUM_OF_CHORDS); j++) {
             if (i == j) {continue;}
             
-            struct Chord* chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
-            struct Chord chord_storage_2;
+            chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
             memcpy_P(&chord_storage_2, chord_ptr_2, sizeof(struct Chord));
-            struct Chord* chord_2 = &chord_storage_2;
+            chord_2 = &chord_storage_2;
             
             if (are_hashed_keycodes_in_sound(chord_2->keycodes_hash, chord->keycodes_hash)) {
                 if (*chord_2->state == READY) {
@@ -166,11 +176,14 @@ void process_ready_chords(void) {
     uint8_t first_keycode_index = 0;
     while (keycodes_buffer_array_min(&first_keycode_index)) {
         // find ready chords
+        struct Chord chord_storage;
+        struct Chord* chord_ptr;
+        struct Chord* chord;
+        
         for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-            struct Chord chord_storage;
+            chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-            struct Chord* chord = &chord_storage;
+            chord = &chord_storage;
             
             // if the chord does not contain the first keycode
             bool contains_first_keycode = ((uint32_t) 1 << first_keycode_index) & chord->keycodes_hash;
@@ -206,10 +219,8 @@ void process_ready_chords(void) {
         
         // execute logic
         // this should be only one chord
-        struct Chord* chord = NULL;
         for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-            struct Chord chord_storage;
+            chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
             
@@ -257,11 +268,14 @@ void process_ready_chords(void) {
 void deactivate_active_chords(uint16_t keycode) {
     $(type) hash = ($(type))1 << (keycode - SAFE_RANGE);
     bool broken;
+    struct Chord chord_storage;
+    struct Chord* chord_ptr;
+    struct Chord* chord;
+    
     for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-        struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-        struct Chord chord_storage;
+        chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-        struct Chord* chord = &chord_storage;
+        chord = &chord_storage;
         
         broken = are_hashed_keycodes_in_sound(hash, chord->keycodes_hash);
         if (!broken) {
@@ -378,11 +392,14 @@ void matrix_scan_user(void) {
 void clear(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         // kill all chords
+        struct Chord chord_storage;
+        struct Chord* chord_ptr;
+        struct Chord* chord;
+        
         for (int i = 0; i < $(NUM_OF_CHORDS); i++) {
-            struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
-            struct Chord chord_storage;
+            chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
-            struct Chord* chord = &chord_storage;
+            chord = &chord_storage;
             
             *chord->state = IDLE;
             
@@ -403,6 +420,7 @@ void clear(const struct Chord* self) {
         autoshift_mode = true;
         command_mode = 0;
         in_leader_mode = false;
+        leader_ind = 0;
         dynamic_macro_mode = false;
         a_key_went_through = false;
 
