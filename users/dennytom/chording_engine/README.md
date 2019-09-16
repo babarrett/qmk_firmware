@@ -12,11 +12,13 @@ To use it, you will need a general purpose preprocessor [pyexpander](http://pyex
 python3 expander3.py -f keymap.c.in > keymap.c
 ```
 
-If you want to have a nice `keymap.c`, use some linter or formatter. I use `indent`:
+If you want to have a nice `keymap.c`, use some linter or formatter. I like `indent`:
 
 ```sh
 indent keymap.c -bad -bap -bbb -br -brf -brs -ce -i4 -l100 -nut -sob
 ```
+
+I just broke it on my system somehow, so my current `keymap.c` is a mess.
 
 Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`. If you are using a different keyboard, you will have to also create your own `keyboard.inc`.
 
@@ -209,7 +211,7 @@ The complete list of strings that these macros can accept is:
 * Tap-holds
 
   * `KK(X, Y)`: Pulses code `X` on tap and code `Y` on hold.
-  * `KL(X, Y)`: Pulses code `X` on tap and switches to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping). **There is a known problem with this macro**. If you type very quickly and get press the `KL()` chord and some other within the same chord timer, the behavior is unstable. I am trying to figure it out, for now just slow down a bit.
+  * `KL(X, Y)`: Pulses code `X` on tap and switches to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping). 
   * `KM(X, Y)`: Same as `KK()` but meant for modifiers on hold. Instead of a timer to figure out tap-hold, uses retro tapping like behavior just like `KL()`.
   * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
 
@@ -339,6 +341,10 @@ $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "test")
 
 
 Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter than the defined maximum, you have to pad it with zeros. Currently, the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
+
+### Tests
+
+In my keymap folder (for now) are automated tests. I tried to use a ready test framework but struggled so I wrote something tiny based on the minunit test framework and pyexpander. Sadly, I didn't write the tests from the beginning,  so I am not 100% confident in the stability of the system, but at least I should have a full coverage. If you have any recommendations on how to improve these, I am listening.
 
 ## Caveats
 
