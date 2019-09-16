@@ -24,7 +24,7 @@ $include(engine_path + "chord.inc")
 
 $butterstick_cols("ALWAYS_ON",
     "    ,    ,      ,    ,    ,    ,    ,    ,    ,\
-     LOCK,  AT, TO(1),    , CMD,    ,    ,    ,    ,\
+     LOCK,  AT,      ,    , CMD,    ,    ,    ,    ,\
          ,    ,      ,    ,    ,    ,    ,    ,    ")
 
 $secret_chord("ALWAYS_ON", "CLEAR_KB",
