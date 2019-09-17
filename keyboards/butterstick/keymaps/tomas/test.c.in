@@ -47,6 +47,7 @@ void double_dance(const struct Chord* self) {
             } else {
                 tap_key(self->value2);
             }
+            *self->counter = 0;
             *self->state = IDLE;
             break;
         case RESTART:
@@ -75,7 +76,7 @@ $butterstick_cols("QWERTY",
 $butterstick_rows("NUM",
     "1, 2, 3, 4, 5, 6, 7, 8, 9, 0,\
       ,  ,  ,  ,  ,  ,  ,  ,  ,  ,\
-      ,  ,  ,  ,  ,  , DM_RECORD, DM_NEXT, DM_END, DM_PLAY")
+     MK(KC_LCTL, KC_LSFT), KC_LEFT, D(KC_1, KC_2, KC_3), , , , DM_RECORD, DM_NEXT, DM_END, DM_PLAY")
 
 // Register all chords, load chording logic
 $include(engine_path + "chording_engine.inc")
@@ -1127,6 +1128,67 @@ $TEST("dance_tap_hold")
     process_record_user(BOT0, &depressed);
     ASSERT_EQ(UINT, keyboard_history[2][KC_0], 0);
 $END_TEST()
+
+// MK
+$TEST("multiple_keys")
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LCTL], 255);
+$END_TEST()
+
+$TEST("multiple_keys_interleaved")
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT1, &pressed);
+    pause_ms(CHORD_TIMEOUT+1);
+    
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP1, &depressed);
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP1, &depressed);
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP1, &depressed);
+    
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_1], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[9][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[10][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[10][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[11][KC_LCTL], 255);
+$END_TEST()
+
+// D
 
 // These two are leaving the chording engine, they kinda have to be tested manually
 // TO

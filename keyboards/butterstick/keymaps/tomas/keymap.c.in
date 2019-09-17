@@ -32,7 +32,7 @@ $secret_chord("ALWAYS_ON", "CLEAR_KB",
      X, X, , , , , , , X, X")
 
 $butterstick_rows("QWERTY",
-    "AS(Q), AS(W), AS(E), AS(R), AS(T), AS(Y), AS(U), AS(I),     AS(O), AS(P),\
+    "D(Q, 1, 2, 3), AS(W), AS(E), AS(R), AS(T), AS(Y), AS(U), AS(I),     AS(O), AS(P),\
      AS(A), AS(S), AS(D), AS(F), AS(G), AS(H), AS(J), AS(K),     AS(L), AS(;),\
      AS(Z), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
 

@@ -4,71 +4,11 @@
 // python3 expander3.py -f keymap.c.in | cat -s > keymap.c
 // the preprocessor code is written to be readable not to produce nice output
 
-
-
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
 };
 
 // Macros to simplify chord definitions
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Keyboard states and settings
 
@@ -76,15 +16,6 @@ enum pseudolayers {
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
 #define TAP_TIMEOUT 50
-
-
-
-
-
-
-
-
-
 
     
     
@@ -174,15 +105,6 @@ enum pseudolayers {
             #define H_BOT9 ((uint32_t) 1 << 18)
             #define H_BOT0 ((uint32_t) 1 << 19)
     
-
-
-
-
-
-
-
-
-
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 uint8_t current_pseudolayer = 1;
@@ -485,7 +407,6 @@ void key_key_dance(const struct Chord* self) {
     }
 }
 
-
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -712,7 +633,6 @@ void reset(const struct Chord* self) {
 
 // Add all chords
 
-
     
     
     
@@ -914,9 +834,6 @@ void reset(const struct Chord* self) {
     
     
 
-
-
-
     
     
     
@@ -978,8 +895,6 @@ void reset(const struct Chord* self) {
 
     
 
-
-
     
     
     
@@ -993,11 +908,102 @@ void reset(const struct Chord* self) {
             
             
                 
-                
     
+    
+    void function_4(const struct Chord* self) {
+        switch (*self->state) {
+            case ACTIVATED:
+                *self->counter = *self->counter + 1;
+                break;
+            case PRESS_FROM_ACTIVE:
+                switch (*self->counter) {
+                                            
+                        case 1:
+                            
+                            key_in(KC_Q);
+                            break;
+                                            
+                        case 2:
+                            
+                            key_in(KC_1);
+                            break;
+                                            
+                        case 3:
+                            
+                            key_in(KC_2);
+                            break;
+                                            
+                        case 4:
+                            
+                            key_in(KC_3);
+                            break;
+                                        default:
+                        break;
+                }
+                *self->state = FINISHED_FROM_ACTIVE;
+                break;
+            case FINISHED:
+                switch (*self->counter) {
+                                            
+                        case 1:
+                            
+                            tap_key(KC_Q);
+                            break;
+                                            
+                        case 2:
+                            
+                            tap_key(KC_1);
+                            break;
+                                            
+                        case 3:
+                            
+                            tap_key(KC_2);
+                            break;
+                                            
+                        case 4:
+                            
+                            tap_key(KC_3);
+                            break;
+                                        default:
+                        break;
+                }
+                *self->counter = 0;
+                *self->state = IDLE;
+                break;
+            case RESTART:
+                switch (*self->counter) {
+                                            
+                        case 1:
+                            
+                            key_out(KC_Q);
+                            break;
+                                            
+                        case 2:
+                            
+                            key_out(KC_1);
+                            break;
+                                            
+                        case 3:
+                            
+                            key_out(KC_2);
+                            break;
+                                            
+                        case 4:
+                            
+                            key_out(KC_3);
+                            break;
+                                        default:
+                        break;
+                }
+                *self->counter = 0;
+                break;
+            default:
+                break;
+        }
+    }
     uint8_t state_4 = IDLE;
     uint8_t counter_4 = 0;
-    const struct Chord chord_4 PROGMEM = {H_TOP1, QWERTY, &state_4, &counter_4, KC_Q, 0, autoshift_dance};
+    const struct Chord chord_4 PROGMEM = {H_TOP1, QWERTY, &state_4, &counter_4, 0, 0, function_4};
     
 
             
@@ -1613,9 +1619,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -2062,9 +2065,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -2114,8 +2114,6 @@ void reset(const struct Chord* self) {
     
 
     
-
-
 
     
     
@@ -2170,8 +2168,6 @@ void reset(const struct Chord* self) {
     
 
     
-
-
 
     
     
@@ -2767,9 +2763,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -3165,9 +3158,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -3217,8 +3207,6 @@ void reset(const struct Chord* self) {
     
 
     
-
-
 
     
     
@@ -3559,9 +3547,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -3901,9 +3886,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -3957,8 +3939,6 @@ void reset(const struct Chord* self) {
     
 
     
-
-
 
     
     
@@ -4014,8 +3994,6 @@ void reset(const struct Chord* self) {
 
     
 
-
-
     
     
     
@@ -4065,8 +4043,6 @@ void reset(const struct Chord* self) {
     
 
     
-
-
 
     
     
@@ -4742,9 +4718,6 @@ void reset(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -5009,9 +4982,6 @@ void reset(const struct Chord* self) {
     
     
 
-
-
-
     
     
     
@@ -5189,9 +5159,6 @@ void reset(const struct Chord* self) {
     
     
     
-
-
-
 
     
     
@@ -5594,9 +5561,6 @@ void reset(const struct Chord* self) {
     
     
 
-
-
-
     
     
     
@@ -5845,9 +5809,6 @@ void reset(const struct Chord* self) {
     
     
 
-
-
-
     
     
     
@@ -6025,9 +5986,6 @@ void reset(const struct Chord* self) {
     
     
     
-
-
-
 
     
     
@@ -6521,9 +6479,6 @@ void reset(const struct Chord* self) {
     
     
 
-
-
-
     
     
     
@@ -6772,9 +6727,6 @@ void reset(const struct Chord* self) {
     
     
 
-
-
-
     
     
     
@@ -6952,8 +6904,6 @@ void reset(const struct Chord* self) {
     
     
     
-
-
 
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
@@ -7173,9 +7123,7 @@ const struct Chord* const list_of_chords[] PROGMEM = {
     
 };
 
-
     const uint16_t** const leader_triggers PROGMEM = NULL;
-
 
 void (*leader_functions[]) (void) = {
     

@@ -190,6 +190,10 @@ enum keycodes {
     KC_F10,
     KC_F11,
     KC_F12,
+    KC_LEFT,
+    KC_DOWN,
+    KC_UP,
+    KC_RIGHT,
     
     SAFE_RANGE
 };

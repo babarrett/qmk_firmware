@@ -156,10 +156,13 @@ enum keycodes {
     KC_F10,
     KC_F11,
     KC_F12,
+    KC_LEFT,
+    KC_DOWN,
+    KC_UP,
+    KC_RIGHT,
     
     SAFE_RANGE
 };
-
 
 int16_t current_time;
 uint8_t keyboard_history[20][SAFE_RANGE-1];
@@ -212,79 +215,11 @@ void pause_ms(uint16_t ms) {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM
 };
 
 // Macros to simplify chord definitions
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Keyboard states and settings
 
@@ -292,15 +227,6 @@ enum pseudolayers {
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
 #define TAP_TIMEOUT 50
-
-
-
-
-
-
-
-
-
 
     
     
@@ -390,15 +316,6 @@ enum pseudolayers {
             #define H_BOT9 ((uint32_t) 1 << 18)
             #define H_BOT0 ((uint32_t) 1 << 19)
     
-
-
-
-
-
-
-
-
-
 
 // The chord structure and chord functions (send key, switch pseudolayer, ...)
 uint8_t current_pseudolayer = 1;
@@ -701,7 +618,6 @@ void key_key_dance(const struct Chord* self) {
     }
 }
 
-
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -934,7 +850,6 @@ void fnc_L1(void) {
     
     
 
-
 void fnc_L2(void) {
     key_in(KC_S);
     clear_keyboard();
@@ -942,7 +857,6 @@ void fnc_L2(void) {
 
     
     
-
 
 void double_dance(const struct Chord* self) {
     switch (*self->state) {
@@ -977,7 +891,6 @@ void double_dance(const struct Chord* self) {
             break;
     }
 }
-
 
     
     
@@ -1569,9 +1482,6 @@ void double_dance(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -1863,9 +1773,6 @@ void double_dance(const struct Chord* self) {
         
     
 
-
-
-
     
     
     
@@ -2123,36 +2030,52 @@ void double_dance(const struct Chord* self) {
     
     
     
+        
+        
+        
+            
+            
+                
+    
+    
+    void function_49(const struct Chord* self) {
+        switch (*self->state) {
+            case ACTIVATED:
+                                    
+                    
+                    key_in(KC_LCTL);
+                                    
+                    
+                    key_in(KC_LSFT);
+                                break;
+            case DEACTIVATED:
+                                    
+                    
+                    key_out(KC_LCTL);
+                                    
+                    
+                    key_out(KC_LSFT);
+                                *self->state = IDLE;
+                break;
+            case RESTART:
+                                    
+                    
+                    key_out(KC_LCTL);
+                                    
+                    
+                    key_out(KC_LSFT);
+                                break;
+            default:
+                break;
+        }
+    }
+    uint8_t state_49 = IDLE;
+    uint8_t counter_49 = 0;
+    const struct Chord chord_49 PROGMEM = {H_BOT1, NUM, &state_49, &counter_49, 0, 0, function_49};
     
 
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
+            
+        
     
 
     
@@ -2164,27 +2087,10 @@ void double_dance(const struct Chord* self) {
         
             
                 
-    
-    uint8_t state_49 = IDLE;
-    const struct Chord chord_49 PROGMEM = {H_BOT7, NUM, &state_49, NULL, 0, 0, dynamic_macro_record};
-    
-
-            
-        
-    
-
-    
-    
-    
-    
-        
-        
-        
-            
                 
     
     uint8_t state_50 = IDLE;
-    const struct Chord chord_50 PROGMEM = {H_BOT8, NUM, &state_50, NULL, 0, 0, dynamic_macro_next};
+    const struct Chord chord_50 PROGMEM = {H_BOT2, NUM, &state_50, NULL, KC_LEFT, 0, single_dance};
     
 
             
@@ -2198,15 +2104,91 @@ void double_dance(const struct Chord* self) {
         
         
         
+            
             
                 
     
+    
+    void function_51(const struct Chord* self) {
+        switch (*self->state) {
+            case ACTIVATED:
+                break;
+            case DEACTIVATED:
+                *self->counter = *self->counter + 1;
+                break;
+            case FINISHED:
+            case PRESS_FROM_ACTIVE:
+                switch (*self->counter) {
+                                            
+                        case 0:
+                            
+                            key_in(KC_1);
+                            break;
+                                            
+                        case 1:
+                            
+                            key_in(KC_2);
+                            break;
+                                            
+                        case 2:
+                            
+                            key_in(KC_3);
+                            break;
+                                        default:
+                        break;
+                }
+                break;
+            case RESTART:
+                switch (*self->counter) {
+                                            
+                        case 0:
+                            
+                            key_out(KC_1);
+                            break;
+                                            
+                        case 1:
+                            
+                            key_out(KC_2);
+                            break;
+                                            
+                        case 2:
+                            
+                            key_out(KC_3);
+                            break;
+                                        default:
+                        break;
+                }
+                *self->counter = 0;
+                break;
+            default:
+                break;
+        }
+    }
     uint8_t state_51 = IDLE;
-    const struct Chord chord_51 PROGMEM = {H_BOT9, NUM, &state_51, NULL, 0, 0, dynamic_macro_end};
+    uint8_t counter_51 = 0;
+    const struct Chord chord_51 PROGMEM = {H_BOT3, NUM, &state_51, &counter_51, 0, 0, function_51};
     
 
             
         
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
     
 
     
@@ -2220,14 +2202,66 @@ void double_dance(const struct Chord* self) {
                 
     
     uint8_t state_52 = IDLE;
-    const struct Chord chord_52 PROGMEM = {H_BOT0, NUM, &state_52, NULL, 0, 0, dynamic_macro_play};
+    const struct Chord chord_52 PROGMEM = {H_BOT7, NUM, &state_52, NULL, 0, 0, dynamic_macro_record};
     
 
             
         
     
 
+    
+    
+    
+    
+        
+        
+        
+            
+                
+    
+    uint8_t state_53 = IDLE;
+    const struct Chord chord_53 PROGMEM = {H_BOT8, NUM, &state_53, NULL, 0, 0, dynamic_macro_next};
+    
 
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+    
+    uint8_t state_54 = IDLE;
+    const struct Chord chord_54 PROGMEM = {H_BOT9, NUM, &state_54, NULL, 0, 0, dynamic_macro_end};
+    
+
+            
+        
+    
+
+    
+    
+    
+    
+        
+        
+        
+            
+                
+    
+    uint8_t state_55 = IDLE;
+    const struct Chord chord_55 PROGMEM = {H_BOT0, NUM, &state_55, NULL, 0, 0, dynamic_macro_play};
+    
+
+            
+        
+    
 
 // Register all chords, load chording logic
 const struct Chord* const list_of_chords[] PROGMEM = {
@@ -2284,16 +2318,17 @@ const struct Chord* const list_of_chords[] PROGMEM = {
             &chord_50,
             &chord_51,
             &chord_52,
+            &chord_53,
+            &chord_54,
+            &chord_55,
     
 };
-
 
 const uint16_t leader_triggers[2][5] PROGMEM = {
             {KC_O, KC_P, 0, 0, 0},
             {KC_P, KC_O, 0, 0, 0},
     
 };
-
 
 void (*leader_functions[]) (void) = {
             fnc_L1,
@@ -2350,7 +2385,7 @@ void kill_one_shots(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 56; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -2370,7 +2405,7 @@ void process_finished_dances(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 56; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -2419,7 +2454,7 @@ void remove_subchords(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 56; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -2431,7 +2466,7 @@ void remove_subchords(void) {
         struct Chord chord_storage_2;
         struct Chord* chord_ptr_2;
         struct Chord* chord_2;
-        for (int j = 0; j < 53; j++) {
+        for (int j = 0; j < 56; j++) {
             if (i == j) {continue;}
             
             chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
@@ -2461,7 +2496,7 @@ void process_ready_chords(void) {
         struct Chord* chord_ptr;
         struct Chord* chord;
         
-        for (int i = 0; i < 53; i++) {
+        for (int i = 0; i < 56; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -2500,7 +2535,7 @@ void process_ready_chords(void) {
         
         // execute logic
         // this should be only one chord
-        for (int i = 0; i < 53; i++) {
+        for (int i = 0; i < 56; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -2553,7 +2588,7 @@ void deactivate_active_chords(uint16_t keycode) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 56; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -2677,7 +2712,7 @@ void clear(const struct Chord* self) {
         struct Chord* chord_ptr;
         struct Chord* chord;
         
-        for (int i = 0; i < 53; i++) {
+        for (int i = 0; i < 56; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -2738,7 +2773,7 @@ void clear(const struct Chord* self) {
         time_history[i] = -1;
     }
 
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 56; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -2772,7 +2807,7 @@ void clear(const struct Chord* self) {
     struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
     clear_chord.function(&clear_chord);
     
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 56; i++) {
         struct Chord* chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         struct Chord chord_storage;
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
@@ -2806,8 +2841,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -2838,7 +2871,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // KC
 
@@ -2887,8 +2919,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -2934,8 +2964,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -2972,8 +3000,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -3012,9 +3038,7 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // I can not actually track the states if the tap is faster than chord timeout
-
 
     
     
@@ -3051,8 +3075,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -3091,8 +3113,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3128,7 +3148,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // MO
 
@@ -3171,8 +3190,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3213,7 +3230,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // DF
 
@@ -3258,7 +3274,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // AT
 
     
@@ -3297,7 +3312,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // AS
 
@@ -3341,8 +3355,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -3393,8 +3405,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3438,7 +3448,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // LOCK
 
@@ -3510,7 +3519,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // OSK
 
     
@@ -3558,8 +3566,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3603,8 +3609,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3644,7 +3648,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // OSL
 
@@ -3693,8 +3696,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3738,8 +3739,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -3779,7 +3778,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
 
 // CMD
 
@@ -3872,7 +3870,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // KK
 
     
@@ -3915,8 +3912,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -3961,7 +3956,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // KL
 
     
@@ -4005,8 +3999,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -4047,8 +4039,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4110,8 +4100,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -4172,7 +4160,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // KM
 
     
@@ -4221,8 +4208,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -4268,8 +4253,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4339,8 +4322,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4421,7 +4402,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // LEADER
 
     
@@ -4457,8 +4437,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4498,8 +4476,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4555,8 +4531,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4625,7 +4599,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // DYNAMIC MACRO
 
     
@@ -4666,8 +4639,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -4705,8 +4676,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4768,8 +4737,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -4825,8 +4792,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -4910,9 +4875,7 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
 // dance + M()
-
 
     
     
@@ -4953,8 +4916,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -4990,8 +4951,6 @@ void clear(const struct Chord* self) {
     printf("%s "GREEN"PASSED"NC"\n", name);
     return 0;
 }
-
-
 
     
     
@@ -5034,8 +4993,6 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
-
-
     
     
     
@@ -5075,13 +5032,123 @@ void clear(const struct Chord* self) {
     return 0;
 }
 
+// MK
+
+    
+    
+    
+    static char * test_multiple_keys() {     char name[] = "multiple_keys";     
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
+        clear_chord.function(&clear_chord);
+    } while (0);
+    
+    current_time = 0;
+    history_index = 0;
+    
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE-1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT1, &pressed);
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[5][KC_LCTL], 255);
+
+    printf("%s "GREEN"PASSED"NC"\n", name);
+    return 0;
+}
+
+    
+    
+    
+    static char * test_multiple_keys_interleaved() {     char name[] = "multiple_keys_interleaved";     
+    do {
+        uint8_t clear_state = ACTIVATED;
+        struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
+        clear_chord.function(&clear_chord);
+    } while (0);
+    
+    current_time = 0;
+    history_index = 0;
+    
+    for (int j = 0; j < SAFE_RANGE-1; j++) {
+        keyboard_history[0][j] = 0;
+    }
+    time_history[0] = 0;
+    for (int i = 1; i < 20; i++) {
+        for (int j = 0; j < SAFE_RANGE-1; j++) {
+            keyboard_history[i][j] = -1;
+        }
+        time_history[i] = -1;
+    }
+
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT1, &pressed);
+    pause_ms(CHORD_TIMEOUT+1);
+    
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP1, &depressed);
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP1, &depressed);
+    process_record_user(TOP1, &pressed);
+    process_record_user(TOP1, &depressed);
+    
+    process_record_user(BOT1, &depressed);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[1][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LCTL], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[3][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[6][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[7][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[8][KC_1], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[9][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[9][KC_LSFT], 1);
+    
+    ASSERT_EQ(UINT, keyboard_history[10][KC_LCTL], 0);
+    ASSERT_EQ(UINT, keyboard_history[10][KC_LSFT], 0);
+    
+    ASSERT_EQ(UINT, keyboard_history[11][KC_LCTL], 255);
+
+    printf("%s "GREEN"PASSED"NC"\n", name);
+    return 0;
+}
+
+// D
 
 // These two are leaving the chording engine, they kinda have to be tested manually
 // TO
 // RESET
-
-
-
 
 static char * all_tests() {
         mu_run_test(test_clear);
@@ -5131,6 +5198,8 @@ static char * all_tests() {
         mu_run_test(test_dance_hold);
         mu_run_test(test_dance_tap_tap);
         mu_run_test(test_dance_tap_hold);
+        mu_run_test(test_multiple_keys);
+        mu_run_test(test_multiple_keys_interleaved);
     
     return 0;
 }
@@ -5143,7 +5212,7 @@ int main(int argc, char **argv) {
     else {
         printf("\n"GREEN"ALL TESTS PASSED"NC"\n");
     }
-    printf("Tests run: %d / %d\n", tests_run, 47);
+    printf("Tests run: %d / %d\n", tests_run, 49);
 
     return result != 0;
 }

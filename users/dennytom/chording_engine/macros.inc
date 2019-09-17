@@ -253,6 +253,43 @@ def expand_keycode_fnc(DEFINITION):
         return DEFINITION
 )
 
+$macro(MK_backup, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
+    $nonlocal(NUM_OF_CHORDS)
+    $py(l = len(DEFINITION.split(', ')))
+    void function_$(NUM_OF_CHORDS)(const struct Chord* self) {
+        switch (*self->state) {
+            case ACTIVATED:
+                $for(i in range(0, l))\
+                    $py(val = DEFINITION.split(',')[i].strip())
+                    $py(code = expand_keycode_fnc(val))
+                    key_in($(code));
+                $endfor\
+                break;
+            case DEACTIVATED:
+                $for(i in range(0, l))\
+                    $py(val = DEFINITION.split(',')[i].strip())
+                    $py(code = expand_keycode_fnc(val))
+                    key_out($(code));
+                $endfor\
+                *self->state = IDLE;
+                break;
+            case RESTART:
+                $for(i in range(0, l))\
+                    $py(val = DEFINITION.split(',')[i].strip())
+                    $py(code = expand_keycode_fnc(val))
+                    key_out($(code));
+                $endfor\
+                break;
+            default:
+                break;
+        }
+    }
+    uint8_t state_$(NUM_OF_CHORDS) = IDLE;
+    uint8_t counter_$(NUM_OF_CHORDS) = 0;
+    const struct Chord chord_$(NUM_OF_CHORDS) PROGMEM = {$(KEYCODES_HASH), $(PSEUDOLAYER), &state_$(NUM_OF_CHORDS), &counter_$(NUM_OF_CHORDS), 0, 0, function_$(NUM_OF_CHORDS)};
+    $py(NUM_OF_CHORDS += 1)
+$endmacro
+
 $macro(MK, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
     $nonlocal(NUM_OF_CHORDS)
     $py(l = len(DEFINITION.split(', ')))
@@ -296,16 +333,13 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
     void function_$(NUM_OF_CHORDS)(const struct Chord* self) {
         switch (*self->state) {
             case ACTIVATED:
-                break;
-            case DEACTIVATED:
                 *self->counter = *self->counter + 1;
                 break;
-            case FINISHED:
             case PRESS_FROM_ACTIVE:
                 switch (*self->counter) {
                     $for(i in range(0, l))\
                         $py(val = DEFINITION.split(',')[i].strip())
-                        case $(i):
+                        case $(i + 1):
                             $py(code = expand_keycode_fnc(val))
                             key_in($(code));
                             break;
@@ -313,12 +347,28 @@ $macro(D, ON_PSEUDOLAYER, KEYCODES_HASH, DEFINITION)
                     default:
                         break;
                 }
+                *self->state = FINISHED_FROM_ACTIVE;
+                break;
+            case FINISHED:
+                switch (*self->counter) {
+                    $for(i in range(0, l))\
+                        $py(val = DEFINITION.split(',')[i].strip())
+                        case $(i + 1):
+                            $py(code = expand_keycode_fnc(val))
+                            tap_key($(code));
+                            break;
+                    $endfor\
+                    default:
+                        break;
+                }
+                *self->counter = 0;
+                *self->state = IDLE;
                 break;
             case RESTART:
                 switch (*self->counter) {
                     $for(i in range(0, l))\
                         $py(val = DEFINITION.split(',')[i].strip())
-                        case $(i):
+                        case $(i + 1):
                             $py(code = expand_keycode_fnc(val))
                             key_out($(code));
                             break;
