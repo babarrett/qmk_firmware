@@ -1189,6 +1189,106 @@ $TEST("multiple_keys_interleaved")
 $END_TEST()
 
 // D
+$TEST("dance_one")
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_1], 255);
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_1], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_1], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_1], 255);
+$END_TEST()
+
+$TEST("dance_two")
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_2], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_2], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_2], 255);
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_2], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_2], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_2], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_2], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_2], 255);
+$END_TEST()
+
+$TEST("dance_three")
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_3], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_3], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_3], 255);
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_3], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_3], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_3], 1);
+    ASSERT_EQ(UINT, keyboard_history[4][KC_3], 0);
+    ASSERT_EQ(UINT, keyboard_history[5][KC_3], 255);
+$END_TEST()
+
+$TEST("dance_two_held")
+    current_pseudolayer = NUM;
+    
+    process_record_user(BOT3, &pressed);
+    process_record_user(BOT3, &depressed);
+    process_record_user(BOT3, &pressed);
+    
+    pause_ms(CHORD_TIMEOUT+DANCE_TIMEOUT+2);
+    
+    ASSERT_EQ(UINT, keyboard_history[1][KC_2], 1);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_2], 255);
+    
+    process_record_user(BOT3, &depressed);
+    ASSERT_EQ(UINT, keyboard_history[2][KC_2], 0);
+    ASSERT_EQ(UINT, keyboard_history[3][KC_2], 255);
+$END_TEST()
 
 // These two are leaving the chording engine, they kinda have to be tested manually
 // TO
