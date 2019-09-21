@@ -123,7 +123,7 @@ $butterstick_cols("NUM",
      , F11, LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, F12,  ,\
                       ,     ,       ,           ,     ")
 
-$secret_chord("NUM", "MK(RCTRL, RALT)",
+$secret_chord("NUM", "MK(LCTRL, LALT)",
     ", , , , , ,            ,  ,  ,  , , ,\
      , , , , , ,            X, X, X, X, , ,\
            , , ,             ,  ,  ")

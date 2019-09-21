@@ -4216,27 +4216,27 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    key_in(KC_RCTRL);
+                    key_in(KC_LCTRL);
                                     
                     
-                    key_in(KC_RALT);
+                    key_in(KC_LALT);
                                 break;
             case DEACTIVATED:
                                     
                     
-                    key_out(KC_RCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    key_out(KC_RALT);
+                    key_out(KC_LALT);
                                 *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    key_out(KC_RCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    key_out(KC_RALT);
+                    key_out(KC_LALT);
                                 break;
             default:
                 break;
