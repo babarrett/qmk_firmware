@@ -1,0 +1,59 @@
+{
+    "keys": ["TOP1", "TOP2", "TOP3", "TOP4", "TOP5", "...", "BOT0"],
+    "chord_sets": [
+        {
+            "name": "butterstick_rows",
+            "chords": [["TOP1"], ["..."], ["TOP0"], ["TOP1", "BOT1"], ["..."], ["TOP0", "BOT0"], ["..."], ["BOT0"]]
+        },
+        {
+            "name": "butterstick_cols",
+            "chords": ["..."]
+        },
+        {
+            "name": "asetniop",
+            "chords": ["..."]
+        }
+    ],
+    "layers": [
+        {
+            "name": "ALWAYS_ON",
+            "chord_sets": [
+                {
+                    "chord_set": "butterstick_cols",
+                    "keycodes": ["    ", "    ", "", "", "    ", "", "", "", "",
+                                 "LOCK", "  AT", "", "", " CMD", "", "", "", "",
+                                 "    ", "    ", "", "", "    ", "", "", "", ""]
+                },
+                {
+                    "chord_set": "...",
+                    "keycodes": ["..."]
+                }
+            ],
+            "single_chords": [
+                {
+                    "type": "visual",
+                    "chord": ["X", "X", "", "", "", "", "", "", "X", "X",
+                              "X", "X", "", "", "", "", "", "", "X", "X"],
+                    "keycode": "CLEAR_KB"
+                },
+                {
+                    "type": "simple",
+                    "chord": ["BOT1", "BOT0"],
+                    "keycode": "SPACE"
+                },
+                {
+                    "type": "...",
+                    "chord": ["..."],
+                    "keycode": "..."
+                }
+            ]
+        },
+        {
+            "name": "...",
+            "chord_sets": [],
+            "single_chords": []
+        }
+    ],
+    "extra_dependencies": ["custom_macros.h"],
+    "_comment": "extra_dependencies are for to enable custom macros"
+}
