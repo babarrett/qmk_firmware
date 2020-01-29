@@ -32,9 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sleep_led.h"
 #include "led.h"
 #include "command.h"
-#include "backlight.h"
 #include "quantum.h"
 #include "version.h"
+
+#ifdef BACKLIGHT_ENABLE
+#    include "backlight.h"
+#endif
 
 #ifdef MOUSEKEY_ENABLE
 #    include "mousekey.h"
@@ -188,9 +191,6 @@ static void print_version(void) {
 #endif
 #ifdef NKRO_ENABLE
           " NKRO"
-#endif
-#ifdef KEYMAP_SECTION_ENABLE
-          " KEYMAP_SECTION"
 #endif
 
           " " STR(BOOTLOADER_SIZE) "\n");
