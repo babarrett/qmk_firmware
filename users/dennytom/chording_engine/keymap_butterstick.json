@@ -4,6 +4,7 @@
         "BOT1", "BOT2", "BOT3", "BOT4", "BOT5", "BOT6", "BOT7", "BOT8", "BOT9", "BOT0"
         ],
     "keyboard_parameters": {
+      "layout_function_name": "LAYOUT_butter",
       "chord_timeout": 100,
       "dance_timeout": 200,
       "leader_timeout": 750,
@@ -291,5 +292,7 @@
             "single_chords": []
         }
     ],
+    "leader_sequences": [],
+    "extra_code": "",
     "extra_dependencies": []
 }

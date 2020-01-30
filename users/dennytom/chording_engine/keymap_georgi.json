@@ -67,5 +67,13 @@
             "single_chords": []
         }
     ],
+    "leader_sequences": [
+        {
+            "name": "fnc1",
+            "function": "void fnc1(void) { tap_key(KC_LCTL); tap_key(KC_LALT); tap_key(KC_DEL); }",
+            "sequence": ["KC_Q", "KC_Z"]
+        }
+    ],
+    "extra_code": "",
     "extra_dependencies": []
 }

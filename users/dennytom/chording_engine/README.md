@@ -6,21 +6,11 @@ This is a custom chording engine. See butterstick:tomas keymap for an example us
 
 Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
-To use it, you will need a general purpose preprocessor [pyexpander](http://pyexpander.sourceforge.net/). The reason behind general purpose preprocessor is abstraction when defining the keymap. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long, difficult to navigate and even more difficult to modify. It is *nearly impossible* to write C preprocessor macros that make it as easy as pure QMK keymap. The general preprocessor makes it relatively easy. Since I use it heavily and since you will be modifying the code for the preprocessor and not the C code, the code is written to be well formatted in the file `keymap.c.in` and *not to produce pretty C code* in `keymap.c`. My `keymap.c` ends up over 7000 lines long and more than half whitespace. To produce C code from the `keymap.c.in` file, run
+This engine therefore has a python parser that translates a JSON definition of keyboard specific information and keymap definition and produces `keymap.c`. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long and I do not encourage you to edit it. All you should have to edit is the JSON file. To produce the keymap file, run
 
 ```sh
-python3 expander3.py -f keymap.c.in > keymap.c
+python3 parser.py keymap.json keymap.c
 ```
-
-If you want to have a nice `keymap.c`, use some linter or formatter. I like `indent`:
-
-```sh
-indent keymap.c -bad -bap -bbb -br -brf -brs -ce -i4 -l100 -nut -sob
-```
-
-I just broke it on my system somehow, so my current `keymap.c` is a mess.
-
-Thanks to the provided macros, you shouldn't have to modify any file except `keymap.c.in`. If you are using a different keyboard, you will have to also create your own `keyboard.inc`.
 
 ## Features Overview
 
@@ -66,29 +56,26 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 ### Implementation
 
-The source files are split into three categories. `keymap.c.in` is the main file. In defines all the chords that you wish to use and includes all the other files. `keyboard.inc` file contains all details specific to the board this should be running on -- timings, keys, macros specific to the amount of keys. Finally everything else is in this folder and contains all the definitions, algorithms and macros. Because all the files here are included by the pyexpander, you do not need to worry about adding the user space in your path, as long as in your `keymap.c.in` file is properly defined the `engine_path` variable.
+The source files are split into several files. `engine_part1.in` and `engine_part2.in` contain C code that defines the Chord structure, implementations for all provided functions and the engine itself. `parser.py` generates keyboard and keymap dependent code. I rarely write in python, if you have improvements, let me know, *please*.
 
 ### Keycodes
 
-I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... TOP9, TOP0, BOT1, BOT2, ... BOT9 and BOT0.
+I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... .
 
 ```c
-$internal_keycodes("TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0")
+ "keys": ["TOP1", "TOP2", "TOP3", ...]
 ```
 
-in `keyboard.inc`. This macro gets expanded and creates the keycodes definitions (starting at `TOP1 = SAFE_RANGE`), creates a single keymaps layer with these keycodes and finally creates `H_TOP1` to `H_BOT0` (or whatever keycodes you define) macros used for defining which keys have to be pressed for each added chord. In my keymap I also define macros for easy adding a large number of chords.
+in `keymap.json`. This creates a single keymap layer with new keycodes.
 
 *The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, just pass in your keycodes. My `keyboard_macros.inc` is using the `internal_keycodes` macro in to make it easy to define all the internal keycodes, define my only QMK layer, define the smallest type for hashing keys and macros for hashing.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, you will have to manually modify the resulting `keymap.c`.
 
-If you want to add more QMK layers or have a mixed layer, you will have to write it manually. To make that easier, you can set `custom_keymaps_array` to `True` and define your own `keymaps[]` array. Your `keymap.c.in` then should look something like this:
+If you want to add more QMK layers or have a mixed layer, you will also have to write it manually. To make that easier, you can set `custom_keymaps_array` to `True` and define your own `keymaps[]` array. Your `keymap.c` then should look something like this:
 
 ```c
 ...
-$py(custom_keymaps_array = True)
-$include("keyboard.inc")
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
     [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO(0))
@@ -96,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ...
 ```
 
-This would be useful for a gaming layer (even though my chording engine has pretty low latency), or when you want to send advanced keycodes (steno, lights, sounds, etc).
+This would be useful for a gaming layer (even though my chording engine has pretty low latency), or when you want to send advanced keycodes.
 
 I provide a `TO()` macro that mimics QMK's layer switching `TO()` macro. I would not recommend implementing more complicated QMK layer switching functions unless necessary.
 
@@ -149,50 +136,82 @@ All chords have to be added to `list_of_chord` array that gets regularly scanned
 
 The chords change states based on external and internal events. Anytime a chord's function is activated, it may change it's own state. Also, on certain events, the chording engine will trigger the functions of all chords in a specific state and *if the chords' state hasn't changed* it will then change it appropriately. In this folder is a diagram of the chord's state machine and it's state changes based on external events. The diagram assumes only a single chord, the chord can also be affected by other chords, but that is rare, study the code or contact me for details.
 
-### Macros
+### Keyboard parameters
 
-The file `macros.inc` contains pyexpander macros that simplify adding the chords. The same chord can be added using this line: `$KC("QWERTY", "H_TOP1", "KC_Q")`.
+All timings, maximum lengths for macros, command mode and leader function are defined in `keyboard_parameters` field.
 
-In my keymap, I also have macros `butterstick_rows` and `butterstick_cols` (in process of getting cleaned up) that allow to add all standard butterstick combos in a syntax similar to QMK's layer syntax:
+### Pseudolayers
 
-```c
-$butterstick_rows("QWERTY",
-    "Q, W, E, R, T, Y, U, I, O, P,\
-     A, S, D, F, G, H, J, K, L, ;,\
-     Z, X, C, V, B, N, M, ,, ., /")
-$butterstick_cols("QWERTY",
-    "ESC, , TAB, , O(RGUI), , INS, DEL, BSPC,\
-        , ,    , ,        , ,    ,    , ENTER,\
-     O(LSFT), O(LCTL), O(LALT), O(NUM), O(LGUI), O(NUM), O(RALT), O(RCTL),  O(RSFT)")
+Array `pseudolayers` defines the keymap per pseudolayer. Each field has to contain the name for the layer and the list of chords.
+
+```JSON
+"pseudolayers": [
+  {        
+    "name": "QWERTY",
+	"chord_sets": [
+      {
+        "chord_set": "rows",
+        "keycodes": [
+          "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", 
+          "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
+          "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"
+        ]
+      }
+    ],
+    "single_chords": [
+      {
+        "type": "simple",
+        "keycode": "SPACE",
+        "chord": ["BOT1", "BOT0"]
+      },
+      {
+        "type": "visual",
+        "keycode": "CLEAR_KB",
+        "chord": [
+          "X", "", "", "", "", "", "", "", "", "X",
+          "X", "", "", "", "", "", "", "", "", "X",
+        ]
+      }
+    ]
+  }
+]
 ```
 
-The first macro defines single key chords and the logical middle row. The second one defines the logical columns (`TOP1 + TOP2 = KC_ESC`, `TOP9 + TOP0 + BOT9 + BOT0 = KC_ENTER` ).
+The array `single_chords` defines chords one by one. You can either use simple chord and list all the keys that have to pressed at the same time or use the visual chord and place `"X"` over keys that will be part of the chord.
 
-The arguments have to come in a string so they can be parsed. Not sure if I can work around that. Take a look on how these are implemented, they are using a `$add_key` macro that you can use even if you don't want to use these keyboard specific macros.
+The array `chord_sets` lets you define a number of chords at the same time. You have to define each chord set in the `chord_sets` in the root object like this:
 
-You might notice that the macros try to do a few clever things:
+```json
+"chord_sets": [
+  {
+    "name": "rows",
+    "chords": [
+      ["TOP1"], ["TOP2"], ["TOP3"], ["TOP4"], ["TOP5"], ["TOP6"], ["TOP7"], ["TOP8"], ["TOP9"], ["TOP0"]
+      ["TOP1", "BOT1"], ["TOP2", "BOT2"], ["TOP3", "BOT3"], ["TOP4", "BOT4"], ["TOP5", "BOT5"], ["TOP6", "BOT6"], ["TOP7", "BOT7"], ["TOP8", "BOT8"], ["TOP9", "BOT9"], ["TOP0", "BOT0"],
+      ["BOT1"], ["BOT2"], ["BOT3"], ["BOT4"], ["BOT5"], ["BOT6"], ["BOT7"], ["BOT8"], ["BOT9"], ["BOT0"]
+    ]
+  },
+  {
+    "name": "cols",
+    "chords": [
+      ["TOP1", "TOP2"], ["TOP2", "TOP3"], ["TOP3", "TOP4"], ["TOP4", "TOP5"], ["TOP5", "TOP6"], ["TOP6", "TOP7"], ["TOP7", "TOP8"], ["TOP8", "TOP9"], ["TOP9", "TOP0"],
+      ["TOP1", "TOP2", "BOT1", "BOT2"], ["TOP2", "TOP3", "BOT2", "BOT3"], ["TOP3", "TOP4", "BOT3", "BOT4"], ["TOP4", "TOP5", "BOT4", "BOT5"], ["TOP5", "TOP6", "BOT5", "BOT6"], ["TOP6", "TOP7", "BOT6", "BOT7"], ["TOP7", "TOP8", "BOT7", "BOT8"], ["TOP8", "TOP9", "BOT8", "BOT9"], ["TOP9", "TOP0", "BOT9", "BOT0"],
+      ["BOT1", "BOT2"], ["BOT2", "BOT3"], ["BOT3", "BOT4"], ["BOT4", "BOT5"], ["BOT5", "BOT6"], ["BOT6", "BOT7"], ["BOT7", "BOT8"], ["BOT8", "BOT9"], ["BOT9", "BOT00"],
+    ]
+  }
+]
+```
 
-* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,` becomes `KC_COMMA`. *To allow simple string splitting, you have to put a whitespace after the separating commas and no whitespace after the commas you want to expand into `KC_COMMA`.* I will see if I figure out a more flexible solution. This really works only for basic keycodes. However, because of the order of preprocessors you can not use strings defined using `#define` in these strings. Pyexpander substitutions and macros will work:
 
-  ```c
-  $py(key1 = "Q")
-  $butterstick_rows("QWERTY",
-      key1 + ", W, E, R, T, Y, U, I, O, P,\
-       A, S, D, F, G, H, J, K, L, ;,\
-       Z, X, C, V, B, N, M, ,, ., /")
-  ```
 
+You might notice that the code tries to do a few clever things when parsing keycodes:
+
+* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,` becomes `KC_COMMA`. This really works only for basic keycodes. 
 * `MO()` and `DF()` macros work the same way for pseudolayers as they would for layers in pure QMK.
-
 * `O()` define a one shot key but it also supports pseudolayers!
-
 * `STR('...')` sends a string. Careful with quoting.
-
 * Special chords like Command mode have their own codes like `CMD`.
-
 * The empty strings `""` get ignored.
-
-These two macros take care of most chords, you need to manually add only chords with non-standard (from butterstick's point of view) keys like `$KC("QWERTY", "H_BOT1 + H_BOT0", "KC_SPACE")`. And that can be done with the `secret_chord` macro (see bellow). I also have a macro for ASETNIOP style layout but that one is much more WIP. Follow it's example to make any more complex chorded input macros.
 
 The complete list of strings that these macros can accept is:
 
@@ -224,20 +243,21 @@ The complete list of strings that these macros can accept is:
 
 * `CMD`: The command mode. The number of keycodes that can be buffered is defined in `keyboard.inc` in `COMMAND_MAX_LENGTH` (works but needs cleanup).
 
-* `LEAD`: The leader key. The maximum length of the sequences needs to be defined in `keyboard.inc`. You can use the `add_leader_combo` macro to add sequences:
+* `LEAD`: The leader key. The maximum length of the sequences needs to be defined in `keyboard_params`. You can use `leader_sequences` array to add sequences:
 
-  ```c
-  void fnc_L1(void) {
-      SEND(KC_LCTL);
-      SEND(KC_LALT);
-      SEND(KC_DEL);
-  }
-  $add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "fnc_L1")
+  ```json
+  "leader_sequences": [
+    {
+      "name": "fn_L1",
+      "function": "void fn_L1(void) { SEND(KC_LCTL); SEND(KC_LALT); SEND(KC_DEL); }",
+      "sequence": ["KC_Q", "KC_Z"]
+      }
+  ]
   ```
 
-  This is the only instance the function called is not associated to a chord. That is why the function `fnc_L1` does not accept any inputs.
+  When the engine notices the sequence, it will call the function defined in the field `name`. You can either define it in the `function` field, in the field `extra_code` or in an external file that you then have to insert manually or using the `extra_dependencies` array. The parser copy-pastes the contents `extra_code` of all files specified in the `extra_dependencies` array in the `keymap.c`. 
 
-* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. The only constraint is that the function has to follow the same syntax as in the previous example of adding a chord manually. The following example will register a macro that acts exactly like `KC_MEH` (the chording engine *should* support `KC_MEH`, this is just an example):
+* `M(X, VALUE1, VALUE2)` A custom macro. Adds a chord that will use function `X` and with `chord.value1 = VALUE1; chord.value2 = VALUE2;`. The function `X` can be arbitrary C function, go crazy. Just like with the leader sequences, you have to insert the code into the generated `keymap.c` manually or through `extra_code` or `extra_dependencies`. The following example defines a macro that acts exactly like `KC_MEH` (the chording engine *should* support `KC_MEH`, this is just an example):
 
   ```c
   void fn_M1(const struct Chord* self) {
@@ -264,10 +284,6 @@ The complete list of strings that these macros can accept is:
               break;
       }
   }
-  $butterstick_rows("QWERTY",
-      "M(fnc_M1, 0, 0), W, E, R, T, Y, U, I, O, P,\
-       A, S, D, F, G, H, J, K, L, ;,\
-       Z, X, C, V, B, N, M, \,, ., /")
   ```
 
   Since this feels like it would be the most common way to use this feature, I wrote a macro for this:
@@ -282,74 +298,12 @@ The complete list of strings that these macros can accept is:
 
 * `RESET`: Go to the DFU flashing mode.
 
-
-Macro `secret_chord` allows you to add a single chord while utilize the smart string parsing and defining the chord's keys visually. For example
-
-```c
-$secret_chord("QWERTY", "DF(ASETNIOP)",
-    "X, , , , , , , , , X,\
-     X, , , , , , , , , X")
-```
-
-adds chord on the `QWERTY` pseudolayer that gets activated with `TOP1 + TOP0 + BOT1 + BOT0` and on activation permanently switches to the `ASETNIOP` layer.
-
-I also have `asetniop_layer` (see [http://asetniop.com](asetniop.com)) macro to define chorded input on the 4 top-left and 4 top-right keys:
-
-```c
-$asetniop_layer("ASETNIOP",
-    "A,  S,  E,  T,  N,  I,  O,  P,\
-       W,  D,  R,  B,  H,  L,  ;,\
-         X,  C,  Y,  V,  U,  ,\
-           F,  J, \,,  G,  M,\
-             Q,  K,  -,  BSPC,\
-               Z,  .,  ',\
-                 [,  ],\
-                   /")
-```
-
-This macro can also parse strings like `butterstick_rows`.
-
-All these macros are defined in `macros.inc` and look something like this:
-
-```c
-$macro(butterstick_rows, PSEUDOLAYER, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13, K14, K15, K16, K17, K18, K19, K20, K21, K22, K23, K24, K25, K26, K27, K28, K29, K30)
-    $nonlocal(NUM_OF_CHORDS)
-    $add_key(PSEUDOLAYER, "H_TOP1", K1)
-...
-    $add_key(PSEUDOLAYER, "H_TOP0", K10)
-    $add_key(PSEUDOLAYER, "H_TOP1 + H_BOT1", K11)
-    $add_key(PSEUDOLAYER, "H_TOP2 + H_BOT2", K12)
-...
-    $add_key(PSEUDOLAYER, "H_BOT9", K29)
-    $add_key(PSEUDOLAYER, "H_BOT0", K30)
-$endmacro
-```
-
-On the input are all the actions (`K1` to `K30`) and each line runs the `$add_key` macro (parses the action string and adds a new chord). If you want the macro to create more chords, add more arguments and a new `$add_key` chord for each of them. The `secret_chord` macro uses variable `T1 ... T0` and `B1 ... B0` on the input. I am not sure if those names have to be unique.
-
 ### Leader Key
 
-To add a new sequence, in your `keymap.c.in` use the macro `add_leader_combo`:
-
-```c
-void test(void) {
-    SEND_STRING("Hello!");
-}
-$add_leader_combo("{KC_Q, KC_Z, 0, 0, 0}", "test")
-```
-
-
-
-Notice that the sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal to the maximum (defined in `keyboard.inc`), if you want it to be shorter than the defined maximum, you have to pad it with zeros. Currently, the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
-
-### Tests
-
-In my keymap folder (for now) are automated tests. I tried to use a ready test framework but struggled so I wrote something tiny based on the minunit test framework and pyexpander. Sadly, I didn't write the tests from the beginning,  so I am not 100% confident in the stability of the system, but at least I should have a full coverage. If you have any recommendations on how to improve these, I am listening.
+The sequences are not defined by the *keys* you press but by the *keycodes* that get intercepted. The length of the sequence must be equal or shorter than the maximum (defined in `keyboard.inc`). Currently, the timeout for the leader sequence refreshes after each key pressed. If the sequence is not in the database, nothing will happen.
 
 ## Caveats
 
 Each chord stores as much as possible in `PROGMEM` and unless it needs it, doesn't allocate `counter`. However it still has to store it's `state` and sometimes the `counter` in RAM. If you keep adding more chords, at one point you will run out. If your firmware fits in the memory and your keyboard crashes, try optimizing your RAM usage.
 
 Also, the code is not perfect. I keep testing it, but can not guarantee that it is stable. Some functions take (very short but still) time and if you happen to create keypress event when the keyboard can not see it, a chord can get stuck in a funny state. That is especially fun if the pseudolayer changes and you can not immediately press it again. Just restart the keyboard or push the key a few times.
-
-The use of `pyexpander` is a bit double-edged sword. It shortens the code *dramatically*, I can not imagine writing the keymap without it. Defining just the alphas would be 72 lines of code instead of the current 4. On the other hand, the code `pyexpander` produces is functional but ugly. It preserves too much whitespace (that is technically avoidable but then the code for preprocessor becomes ugly). It also introduces another language and another tool to the project. Macros rarely offer autocompletion, so you have to rely on documentation and existing code. But worst of all, it can be difficult to debug. The lines in the error log have lost their meaning and you don't get to see the source code that produced the error. And you get no static analysis. I *tried* keeping it in pure C with the help of some boost preprocessor magic but even that quickly ran into issues. Soon I was `#include`-ing dozens of files just to simulate functions and the error messages were just as cryptic.

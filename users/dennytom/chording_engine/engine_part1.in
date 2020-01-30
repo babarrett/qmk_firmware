@@ -1,41 +1,16 @@
+uint8_t keycode_index = 0;
+uint8_t command_mode = 0;
+uint8_t command_ind = 0;
+bool in_leader_mode = false;
+uint8_t leader_ind = 0;
+uint16_t leader_timer = 0;
+uint8_t dynamic_macro_mode = false;
+uint8_t dynamic_macro_ind = 0;
 uint8_t current_pseudolayer = 1;
 bool lock_next = false;
 uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
 bool autoshift_mode = true;
-
-uint8_t keycodes_buffer_array[$(NUM_OF_KEYS)] = {
-    $for(i in range(0, NUM_OF_KEYS))\
-        0,
-    $endfor\
-    };
-uint8_t keycode_index = 0;
-
-uint8_t command_mode = 0;
-uint16_t command_buffer[] = {
-    $for(i in range(0, COMMAND_MAX_LENGTH))\
-        0,
-    $endfor\
-    };
-uint8_t command_ind = 0;
-
-bool in_leader_mode = false;
-uint16_t leader_buffer[] = {
-    $for(i in range(0, LEADER_MAX_LENGTH))\
-        0,
-    $endfor\
-    };
-uint8_t leader_ind = 0;
-uint16_t leader_timer = 0;
-
-bool dynamic_macro_mode = false;
-uint16_t dynamic_macro_buffer[] = {
-    $for(i in range(0, DYNAMIC_MACRO_MAX_LENGTH))\
-        0,
-    $endfor\
-    };
-uint8_t dynamic_macro_ind;
-
 bool a_key_went_through = false;
 
 enum chord_states {
@@ -55,7 +30,7 @@ enum chord_states {
 };
 
 struct Chord {
-    $(type) keycodes_hash;
+    uint32_t keycodes_hash;
     uint8_t pseudolayer;
     uint8_t* state;
     uint8_t* counter;
@@ -147,15 +122,15 @@ bool handle_US_ANSI_shifted_keys(int16_t keycode, bool in) {
 }
 
 void key_in(int16_t keycode) {
-    if (command_mode == 1 && command_ind < $(COMMAND_MAX_LENGTH)) {
+    if (command_mode == 1 && command_ind < COMMAND_MAX_LENGTH) {
         command_buffer[command_ind] = keycode;
         command_ind++;
         a_key_went_through = true;
-    } else if (in_leader_mode && leader_ind < $(LEADER_MAX_LENGTH)) {
+    } else if (in_leader_mode && leader_ind < LEADER_MAX_LENGTH) {
         leader_buffer[leader_ind] = keycode;
         leader_ind++;
         a_key_went_through = true;
-    } else if (dynamic_macro_mode && dynamic_macro_ind < $(DYNAMIC_MACRO_MAX_LENGTH)) {
+    } else if (dynamic_macro_mode && dynamic_macro_ind < DYNAMIC_MACRO_MAX_LENGTH) {
         dynamic_macro_buffer[dynamic_macro_ind] = keycode;
         dynamic_macro_ind++;
         a_key_went_through = true;
@@ -260,7 +235,6 @@ void key_key_dance(const struct Chord* self) {
     }
 }
 
-$nonlocal(LONG_PRESS_MULTIPLIER)
 void autoshift_dance_impl(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -272,7 +246,7 @@ void autoshift_dance_impl(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            if (*self->counter == $(LONG_PRESS_MULTIPLIER - 2)) {
+            if (*self->counter == (LONG_PRESS_MULTIPLIER - 2)) {
                 key_in(KC_LSFT);
                 tap_key(self->value1);
                 key_out(KC_LSFT);
@@ -401,7 +375,7 @@ void command(const struct Chord* self) {
 
 bool identical(uint16_t* buffer1, uint16_t* buffer2) {
     bool same = true;
-    for (int i = 0; i < $(LEADER_MAX_LENGTH); i++) {
+    for (int i = 0; i < LEADER_MAX_LENGTH; i++) {
         same = same && (buffer1[i] == buffer2[i]);
     }
     return same;
@@ -416,7 +390,7 @@ void leader(const struct Chord* self) {
 
 void dynamic_macro_record(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
-        for (int i = 0; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+        for (int i = 0; i < DYNAMIC_MACRO_MAX_LENGTH; i++) {
             dynamic_macro_buffer[i] = 0;
         }
         dynamic_macro_mode = true;
@@ -426,7 +400,7 @@ void dynamic_macro_record(const struct Chord* self) {
 
 void dynamic_macro_next(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
-        if (dynamic_macro_mode && dynamic_macro_ind < $(DYNAMIC_MACRO_MAX_LENGTH)) {
+        if (dynamic_macro_mode && dynamic_macro_ind < DYNAMIC_MACRO_MAX_LENGTH) {
             dynamic_macro_buffer[dynamic_macro_ind] = 0;
             dynamic_macro_ind++;
         }
@@ -446,8 +420,8 @@ void dynamic_macro_end(const struct Chord* self) {
 void dynamic_macro_play(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         int ind_start = 0;
-        while (ind_start < $(DYNAMIC_MACRO_MAX_LENGTH)) {
-            for (int i = ind_start; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+        while (ind_start < DYNAMIC_MACRO_MAX_LENGTH) {
+            for (int i = ind_start; i < DYNAMIC_MACRO_MAX_LENGTH; i++) {
                 if (dynamic_macro_buffer[i] == 0) {
                     break;
                 }
@@ -455,7 +429,7 @@ void dynamic_macro_play(const struct Chord* self) {
             }
             send_keyboard_report();
             wait_ms(TAP_TIMEOUT);
-            for (int i = ind_start; i < $(DYNAMIC_MACRO_MAX_LENGTH); i++) {
+            for (int i = ind_start; i < DYNAMIC_MACRO_MAX_LENGTH; i++) {
                 if (dynamic_macro_buffer[i] == 0) {
                     ind_start = i + 1;
                     break;
@@ -484,3 +458,5 @@ void reset(const struct Chord* self) {
         reset_keyboard_kb();
     }
 }
+
+struct Chord* last_chord = NULL;
