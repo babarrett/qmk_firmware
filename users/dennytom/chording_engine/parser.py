@@ -1361,7 +1361,7 @@ with open("keymap_georgi.json", "r") as read_file:
         output_buffer += "        send_keyboard_report();\n"
         output_buffer += "        \n"
         output_buffer += "        // switch to default pseudolayer\n"
-        output_buffer += "        current_pseudolayer = 1;\n"
+        output_buffer += "        current_pseudolayer = " + data["keyboard_parameters"]["default_pseudolayer"] + ";\n"
         output_buffer += "        \n"
         output_buffer += "        // clear all keyboard states\n"
         output_buffer += "        lock_next = false;\n"
