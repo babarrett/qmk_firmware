@@ -84,11 +84,11 @@
                 {
                     "chord_set": "georgi_rows",
                     "keycodes": [
-                        "ESC", "Q",          "W",          "E",          "R",          "T",       "Y",          "U",          "I",          "O",          "P", "\\", 
-                        "INS", "A", "KM(S,LALT)", "KM(D,LCTL)", "KM(F,LSFT)", "KM(G,LGUI)",       "KM(H,RGUI)", "KM(J,RSFT)", "KM(K,RCTL)", "KM(L,RALT)", ";", " ",
-                        "TAB", "Z",          "X",          "C",          "V",          "B",       "N",          "M",          ",",          ".",          "/", "'",
-                                                         "DEL",        "SPC",    "MO(NUM)",       "MO(FNC)",    "SPC",        "BSPC"
-                    ]
+                        "ESC", "Q",          "W",          "E",          "R",            "T",       "Y",           "U",          "I",          "O",          "P", "\\", 
+                        "INS", "A", "KK(S,LALT)", "KM(D,LCTL)", "KM(F,LSFT)",   "KK(G,LGUI)",       "KK(H,RGUI)",  "KM(J,RSFT)", "KM(K,RCTL)", "KK(L,RALT)", ";", " ",
+                        "TAB", "Z",          "X",          "C",          "V",            "B",       "N",           "M",          ",",          ".",          "/", "'",
+                                                       "ENTER",       "BSPC", "KL(SPC, NUM)",       "KL(SPC,FNC)", "DEL",        "ENTER"
+                    ] 
                 }
             ],
             "single_chords": []

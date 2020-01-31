@@ -178,7 +178,7 @@ def expand_keycode_fnc(DEFINITION):
         "MEDIA_PREV_TRACK", "CPRV", "MEDIA_STOP", "MSTP",
         "MEDIA_PLAY_PAUSE", "MPLY", "MEDIA_SELECT", "MSEL",
         "MEDIA_EJECT", "EJCT", "MAIL", "CALCULATOR", "CALC",
-        "MY_COMPUTER", "MYCM", "WWW_SEATCH", "WSCH", "WWW_HOME",
+        "MY_COMPUTER", "MYCM", "WWW_SEARCH", "WSCH", "WWW_HOME",
         "WHOM", "WWW_BACK", "WBAK", "WWW_FORWARD", "WFWD",
         "WWW_STOP", "WSTP", "WWW_REFRESH", "WREF",
         "WWW_FAVORITES", "WFAV", "MEDIA_FAST_FORWARD", "MFFD",
@@ -397,7 +397,7 @@ output_buffer = ""
 number_of_chords = 0
 list_of_leader_combos = []
 
-with open("keymap_def.json", "r") as read_file:
+with open("keymap_georgi.json", "r") as read_file:
     data = json.load(read_file)
     with open("keymap.c", "w") as write_file:
         number_of_keys = len(data["keys"])
