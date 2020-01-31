@@ -1,0 +1,149 @@
+#include QMK_KEYBOARD_H
+
+// use pyexpander to generate keymap.c:
+// python3 expander3.py -f keymap.c.in | cat -s > keymap.c
+// the preprocessor code is written to be readable not to produce nice output
+
+$py(engine_path = "../../../../users/dennytom/chording_engine/")
+
+enum pseudolayers {
+    ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
+};
+
+// Macros to simplify chord definitions
+$include(engine_path + "macros.inc")
+
+// Keyboard states and settings
+$py(custom_keymaps_array = False)
+$include("keyboard.inc")
+
+// The chord structure and chord functions (send key, switch pseudolayer, ...)
+$include(engine_path + "chord.inc")
+
+// Add all chords
+
+$butterstick_cols("ALWAYS_ON",
+    "    ,    ,      ,    ,    ,    ,    ,    ,    ,\
+     LOCK,  AT,      ,    , CMD,    ,    ,    ,    ,\
+         ,    ,      ,    ,    ,    ,    ,    ,    ")
+
+$secret_chord("ALWAYS_ON", "CLEAR_KB",
+    "X, X, , , , , , , X, X,\
+     X, X, , , , , , , X, X")
+
+$butterstick_rows("QWERTY",
+    "D(Q, 1, 2, 3), AS(W), AS(E), AS(R), AS(T), AS(Y), AS(U), AS(I),     AS(O), AS(P),\
+     AS(A), AS(S), AS(D), AS(F), AS(G), AS(H), AS(J), AS(K),     AS(L), AS(;),\
+     AS(Z), AS(X), AS(C), AS(V), AS(B), AS(N), AS(M), AS(COMMA), AS(.), AS(/)")
+
+$butterstick_cols("QWERTY",
+    "   ESC, MO(MOV),     TAB,       , O(RGUI),       ,     INS,     DEL,     BSPC,\
+            ,        ,        ,       ,        ,       ,        ,        ,    ENTER,\
+     O(LSFT), O(LCTL), O(LALT), O(NUM), O(LGUI), O(NUM), O(RALT), O(RCTL),  O(RSFT)")
+
+$secret_chord("QWERTY", "SPACE",
+    " , , , , , , , , ,  ,\
+     X, , , , , , , , , X")
+
+$secret_chord("QWERTY", "MO(MOUSE)",
+    "X, X, X, X, , , , , , ,\
+      ,  ,  ,  , , , , , , ")
+
+$butterstick_rows("NUM",
+    "AS(1), AS(2), AS(3), AS(4), AS(5), AS(6), AS(7), AS(8), AS(9), AS(0),\
+        F1,    F2,    F3,    F4,    F5,    F6,    F7,    F8,    F9,   F10,\
+     AS(`), AS(-), AS(=), AS([), AS(]), AS(\), AS('),      ,   F11,   F12")
+
+$butterstick_cols("NUM",
+    "    ESC,        ,     TAB, , O(RGUI), ,     INS,     DEL,     BSPC,\
+            ,        ,        , ,        , ,        ,        ,    ENTER,\
+     O(LSFT), O(LCTL), O(LALT), , O(LGUI), , O(RALT), O(RCTL),  O(RSFT)")
+
+$secret_chord("NUM", "SPACE",
+    " , , , , , , , , ,  ,\
+     X, , , , , , , , , X")
+
+$butterstick_rows("MOV",
+    ", ,     ,     ,     ,     , HOME,  UP,   END,  PGUP,\
+     , ,     ,     ,     ,     ,     ,     ,     ,      ,\
+     , , LSFT, LCTL, LALT, LGUI, LEFT, DOWN, RIGHT, PGDN")
+
+$butterstick_rows("MOUSE",
+    ", ,    ,     ,     ,     ,  BTN1, MS_U, BTN2, WH_U,\
+     , ,    ,     ,     ,     ,      ,     ,     ,     ,\
+     , , LSFT, LCTL, LALT, LGUI, MS_L, MS_D, MS_R, WH_D")
+
+$secret_chord("QWERTY", "DF(ASETNIOP)",
+    "X, , , , , , , , , X,\
+     X, , , , , , , , , X")
+
+$secret_chord("ASETNIOP", "DF(QWERTY)",
+    "X, , , , , , , , , X,\
+     X, , , , , , , , , X")
+
+$secret_chord("ASETNIOP", "MO(ASETNIOP_FN)",
+    " , , ,  , , ,  , , , ,\
+      , , , X, , , X, , , ")
+
+$asetniop_layer("ASETNIOP",
+    "A,  S,  E,  T,  N,  I,  O,  P,\
+       W,  D,  R,  B,  H,  L,  ;,\
+         X,  C,  Y,  V,  U,  ,\
+           F,  J,  ,,  G,  M,\
+             Q,  K,  -,  BSPC,\
+               Z,  .,  ',\
+                 [,  ],\
+                   /")
+
+$butterstick_rows("ASETNIOP",
+    ", , ,     ,  ESC,  DEL,                        , , , ,\
+     , , ,     ,     ,     ,                        , , , ,\
+     , , , LSFT, LCTL, LALT, KL(SPACE, ASETNIOP_123), , , ")
+
+$butterstick_cols("ASETNIOP",
+    ", , , , LGUI, , , , ,\
+     , , , ,     , , , , ,\
+     , , , ,     , , , , ")
+
+$asetniop_layer("ASETNIOP_123",
+    "1,  2,  3,  4,  7,  8,  9,  0,\
+        ,   ,  5,  =,  6,  \,  ;,\
+          ,   ,   ,   ,   ,   ,\
+            ,   ,   ,   ,   ,\
+              ,   ,   ,  BSPC,\
+                ,   ,   ,\
+                  ,   ,\
+                  ")
+
+$butterstick_rows("ASETNIOP_123",
+    ", , ,     ,  ESC,  DEL, , , , ,\
+     , , ,     ,     ,     , , , , ,\
+     , , , LSFT, LCTL, LALT, , , , ")
+
+$butterstick_cols("ASETNIOP_123",
+    ", , , , LGUI, , , , ,\
+     , , , ,     , , , , ,\
+     , , , ,     , , , , ")
+
+$asetniop_layer("ASETNIOP_FN",
+    "HOME, PGDN, PGUP, END, LEFT, DOWN, UP, RIGHT,\
+      F1, F2, F3, F4, F5, F6, F7,\
+        F10, , , , , F8,\
+          F11, , , , F9,\
+            F12, , , BSPC,\
+              , , ,\
+                , ,\
+                  ")
+
+$butterstick_rows("ASETNIOP_FN",
+    ", , ,     ,  ESC,  DEL, , , , ,\
+     , , ,     ,     ,     , , , , ,\
+     , , , LSFT, LCTL, LALT, , , , ")
+
+$butterstick_cols("ASETNIOP_FN",
+    ", , , , LGUI, , , , ,\
+     , , , ,     , , , , ,\
+     , , , ,     , , , , ")
+
+// Register all chords, load chording logic
+$include(engine_path + "chording_engine.inc")

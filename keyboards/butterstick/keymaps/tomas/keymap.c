@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 
+
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
@@ -7,7 +8,6 @@
 #define DYNAMIC_MACRO_MAX_LENGTH 20
 #define COMMAND_MAX_LENGTH 5
 #define LEADER_MAX_LENGTH 5
-#define LONG_PRESS_MULTIPLIER 3
 
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
@@ -19,8 +19,6 @@ enum internal_keycodes {
     FIRST_INTERNAL_KEYCODE = TOP1,
     LAST_INTERNAL_KEYCODE = BOT0
 };
-
-#define NUMBER_OF_KEYS 20
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_butter(TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0)
@@ -48,24 +46,36 @@ size_t keymapsCount = 1;
 #define H_BOT9 ((uint32_t) 1 << 18)
 #define H_BOT0 ((uint32_t) 1 << 19)
 
-uint8_t keycodes_buffer_array[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-uint8_t command_buffer[] = {0, 0, 0, 0, 0};
-uint16_t leader_buffer[] = {0, 0, 0, 0, 0};
-uint8_t dynamic_macro_buffer[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-uint8_t keycode_index = 0;
-uint8_t command_mode = 0;
-uint8_t command_ind = 0;
-bool in_leader_mode = false;
-uint8_t leader_ind = 0;
-uint16_t leader_timer = 0;
-uint8_t dynamic_macro_mode = false;
-uint8_t dynamic_macro_ind = 0;
 uint8_t current_pseudolayer = 1;
 bool lock_next = false;
 uint16_t chord_timer = 0;
 uint16_t dance_timer = 0;
 bool autoshift_mode = true;
+
+uint8_t keycodes_buffer_array[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+};
+uint8_t keycode_index = 0;
+
+uint8_t command_mode = 0;
+uint8_t command_buffer[] = {
+    0, 0, 0, 0, 0, 
+};
+uint8_t command_ind = 0;
+
+bool in_leader_mode = false;
+uint16_t leader_buffer[] = {
+    0, 0, 0, 0, 0, 
+};
+uint8_t leader_ind = 0;
+uint16_t leader_timer = 0;
+
+uint8_t dynamic_macro_mode = false;
+uint8_t dynamic_macro_buffer[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+};
+uint8_t dynamic_macro_ind = 0;
+
 bool a_key_went_through = false;
 
 enum chord_states {
@@ -301,7 +311,7 @@ void autoshift_dance_impl(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            if (*self->counter == (LONG_PRESS_MULTIPLIER - 2)) {
+            if (*self->counter == 1) {
                 key_in(KC_LSFT);
                 tap_key(self->value1);
                 key_out(KC_LSFT);
@@ -515,12 +525,6 @@ void reset(const struct Chord* self) {
 }
 
 struct Chord* last_chord = NULL;
-
-
-#define NUMBER_OF_LEADER_COMBOS 0
-
-const uint16_t** const leader_triggers PROGMEM = NULL;
-void (*leader_functions[]) (void) = {};
 
 uint8_t state_0 = IDLE;
 const struct Chord chord_0 PROGMEM = {H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2, ALWAYS_ON, &state_0, NULL, 0, 0, lock};
@@ -894,8 +898,7 @@ const struct Chord chord_160 PROGMEM = {H_BOT5, ASETNIOP, &state_160, NULL, KC_L
 uint8_t state_161 = IDLE;
 const struct Chord chord_161 PROGMEM = {H_BOT6, ASETNIOP, &state_161, NULL, KC_LALT, 0, single_dance};
 uint8_t state_162 = IDLE;
-uint8_t counter_162 = 0;
-const struct Chord chord_162 PROGMEM = {H_BOT7, ASETNIOP, &state_162, &counter_162, KC_SPACE, ASETNIOP_123, key_layer_dance};
+const struct Chord chord_162 PROGMEM = {H_BOT7, ASETNIOP, &state_162, NULL, KC_SPACE, ASETNIOP_123, key_layer_dance};
 uint8_t state_163 = IDLE;
 const struct Chord chord_163 PROGMEM = {H_TOP5 + H_TOP6, ASETNIOP, &state_163, NULL, KC_LGUI, 0, single_dance};
 uint8_t state_164 = IDLE;
@@ -1210,13 +1213,14 @@ const struct Chord* const list_of_chords[] PROGMEM = {
     &chord_209,
     &chord_210,
     &chord_211,
-    &chord_212
+    &chord_212,
 };
 
-#define HASH_TYPE uint32_t
-#define NUMBER_OF_CHORDS 213
+const uint16_t** const leader_triggers PROGMEM = NULL;
+void (*leader_functions[]) (void) = {
+};
 
-bool are_hashed_keycodes_in_sound(HASH_TYPE keycodes_hash, HASH_TYPE sound) {
+bool are_hashed_keycodes_in_sound(uint32_t keycodes_hash, uint32_t sound) {
     return (keycodes_hash & sound) == keycodes_hash;
 }
 
@@ -1230,13 +1234,13 @@ void sound_keycode_array(uint16_t keycode) {
     keycodes_buffer_array[index] = keycode_index;
 }
 
-void silence_keycode_hash_array(HASH_TYPE keycode_hash) {
-    for (int i = 0; i < NUMBER_OF_KEYS; i++) {
-        bool index_in_hash = ((HASH_TYPE) 1 << i) & keycode_hash;
+void silence_keycode_hash_array(uint32_t keycode_hash) {
+    for (int i = 0; i < 20; i++) {
+        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
         if (index_in_hash) {
             uint8_t current_val = keycodes_buffer_array[i];
             keycodes_buffer_array[i] = 0;
-            for (int j = 0; j < NUMBER_OF_KEYS; j++) {
+            for (int j = 0; j < 20; j++) {
                 if (keycodes_buffer_array[j] > current_val) {
                     keycodes_buffer_array[j]--;
                 }
@@ -1246,9 +1250,9 @@ void silence_keycode_hash_array(HASH_TYPE keycode_hash) {
     }
 }
 
-bool are_hashed_keycodes_in_array(HASH_TYPE keycode_hash) {
-    for (int i = 0; i < NUMBER_OF_KEYS; i++) {
-        bool index_in_hash = ((HASH_TYPE) 1 << i) & keycode_hash;
+bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
+    for (int i = 0; i < 20; i++) {
+        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
         bool index_in_array = (bool) keycodes_buffer_array[i];
         if (index_in_hash && !index_in_array) {
             return false;
@@ -1262,7 +1266,7 @@ void kill_one_shots(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+    for (int i = 0; i < 213; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1282,7 +1286,7 @@ void process_finished_dances(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+    for (int i = 0; i < 213; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1315,7 +1319,7 @@ void process_finished_dances(void) {
 }
 
 uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
-    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+    for (int i = 0; i < 20; i++) {
         if (keycodes_buffer_array[i] == 1) {
             if (first_keycode_index != NULL) {
                 *first_keycode_index = (uint8_t) i;
@@ -1331,7 +1335,7 @@ void remove_subchords(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+    for (int i = 0; i < 213; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1343,7 +1347,7 @@ void remove_subchords(void) {
         struct Chord chord_storage_2;
         struct Chord* chord_ptr_2;
         struct Chord* chord_2;
-        for (int j = 0; j < NUMBER_OF_CHORDS; j++) {
+        for (int j = 0; j < 213; j++) {
             if (i == j) {continue;}
             
             chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
@@ -1373,7 +1377,7 @@ void process_ready_chords(void) {
         struct Chord* chord_ptr;
         struct Chord* chord;
         
-        for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+        for (int i = 0; i < 213; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -1412,7 +1416,7 @@ void process_ready_chords(void) {
         
         // execute logic
         // this should be only one chord
-        for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+        for (int i = 0; i < 213; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -1458,13 +1462,13 @@ void process_ready_chords(void) {
 }
 
 void deactivate_active_chords(uint16_t keycode) {
-    HASH_TYPE hash = (HASH_TYPE)1 << (keycode - SAFE_RANGE);
+    uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
     bool broken;
     struct Chord chord_storage;
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+    for (int i = 0; i < 213; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1526,7 +1530,7 @@ void process_command(void) {
 
 void process_leader(void) {
     in_leader_mode = false;
-    for (int i = 0; i < NUMBER_OF_LEADER_COMBOS; i++) {
+    for (int i = 0; i < 0; i++) {
         uint16_t trigger[5];
         memcpy_P(trigger, leader_triggers[i], LEADER_MAX_LENGTH * sizeof(uint16_t));
         
@@ -1587,7 +1591,7 @@ void clear(const struct Chord* self) {
         struct Chord* chord_ptr;
         struct Chord* chord;
         
-        for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
+        for (int i = 0; i < 213; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
