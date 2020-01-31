@@ -12,6 +12,8 @@ This engine therefore has a python parser that translates a JSON definition of k
 python3 parser.py keymap.json keymap.c
 ```
 
+The rest of the document explains how the whole thing works, if you want just want to dive in, take a look at my JSON files and read the "Supported keycodes" subsection.
+
 ## Features Overview
 
 The chording engine completely sidesteps QMK's key event processing. Most of QMK's features are reimplemented. A list with short description follow, examples and further details follow later in this README.
@@ -58,7 +60,7 @@ A sequence of keycodes can be recorded and stored in the RAM of the keyboard and
 
 The source files are split into several files. `engine_part1.in` and `engine_part2.in` contain C code that defines the Chord structure, implementations for all provided functions and the engine itself. `parser.py` generates keyboard and keymap dependent code. I rarely write in python, if you have improvements, let me know, *please*.
 
-### Keycodes
+### Internal keycodes
 
 I do not have experience with stenography, so the the steno keycodes are hard for me to remember. That is why the keymap is using new keycodes TOP1, TOP2, ... .
 
@@ -213,7 +215,7 @@ You might notice that the code tries to do a few clever things when parsing keyc
 * Special chords like Command mode have their own codes like `CMD`.
 * The empty strings `""` get ignored.
 
-The complete list of strings that these macros can accept is:
+### Supported keycodes
 
 * `KC_X`: Send code `KC_X` just like a normal keyboard. Often the parser will be able to deal even without the `KC_` at the beginning. Basic keycodes and US ANSI shifted keycodes are supported. Most quantum and advanced keycodes *do not*. I will be adding these as needed.
 

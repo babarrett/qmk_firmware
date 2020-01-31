@@ -54,7 +54,7 @@ def KL(on_pseudolayer, keycodes_hash, keycode, to_pseudolayer, output_buffer, in
 def KK(on_pseudolayer, keycodes_hash, keycode1, keycode2, output_buffer, index):
     return new_chord(on_pseudolayer, keycodes_hash, True, keycode1, keycode2, "key_key_dance", output_buffer, index)
 
-def KM(on_pseudolayer, keycodes_hash, keycode, to_pseudolayer, index):
+def KM(on_pseudolayer, keycodes_hash, keycode, to_pseudolayer, output_buffer, index):
     return new_chord(on_pseudolayer, keycodes_hash, False, keycode, to_pseudolayer, "key_mod_dance", output_buffer, index)
 
 def MO(on_pseudolayer, keycodes_hash, to_pseudolayer, output_buffer, index):
