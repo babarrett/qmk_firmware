@@ -1,17 +1,37 @@
 #include QMK_KEYBOARD_H
 
-
 #define CHORD_TIMEOUT 100
 #define DANCE_TIMEOUT 200
 #define LEADER_TIMEOUT 750
 #define TAP_TIMEOUT 50
+#define LONG_PRESS_MULTIPLIER 3
 #define DYNAMIC_MACRO_MAX_LENGTH 20
 #define COMMAND_MAX_LENGTH 5
 #define LEADER_MAX_LENGTH 5
+#define HASH_TYPE uint32_t
+#define NUMBER_OF_KEYS 20
+#define DEFAULT_PSEUDOLAYER QWERTY
 
-enum pseudolayers {
-    ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
-};
+#define H_TOP1 ((HASH_TYPE) 1 << 0)
+#define H_TOP2 ((HASH_TYPE) 1 << 1)
+#define H_TOP3 ((HASH_TYPE) 1 << 2)
+#define H_TOP4 ((HASH_TYPE) 1 << 3)
+#define H_TOP5 ((HASH_TYPE) 1 << 4)
+#define H_TOP6 ((HASH_TYPE) 1 << 5)
+#define H_TOP7 ((HASH_TYPE) 1 << 6)
+#define H_TOP8 ((HASH_TYPE) 1 << 7)
+#define H_TOP9 ((HASH_TYPE) 1 << 8)
+#define H_TOP0 ((HASH_TYPE) 1 << 9)
+#define H_BOT1 ((HASH_TYPE) 1 << 10)
+#define H_BOT2 ((HASH_TYPE) 1 << 11)
+#define H_BOT3 ((HASH_TYPE) 1 << 12)
+#define H_BOT4 ((HASH_TYPE) 1 << 13)
+#define H_BOT5 ((HASH_TYPE) 1 << 14)
+#define H_BOT6 ((HASH_TYPE) 1 << 15)
+#define H_BOT7 ((HASH_TYPE) 1 << 16)
+#define H_BOT8 ((HASH_TYPE) 1 << 17)
+#define H_BOT9 ((HASH_TYPE) 1 << 18)
+#define H_BOT0 ((HASH_TYPE) 1 << 19)
 
 enum internal_keycodes {
     TOP1 = SAFE_RANGE,
@@ -20,63 +40,30 @@ enum internal_keycodes {
     LAST_INTERNAL_KEYCODE = BOT0
 };
 
+enum pseudolayers {
+    ALWAYS_ON, QWERTY, NUM, MOV, MOUSE, ASETNIOP, ASETNIOP_123, ASETNIOP_FN
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_butter(TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0)
 };
 size_t keymapsCount = 1;
 
-#define H_TOP1 ((uint32_t) 1 << 0)
-#define H_TOP2 ((uint32_t) 1 << 1)
-#define H_TOP3 ((uint32_t) 1 << 2)
-#define H_TOP4 ((uint32_t) 1 << 3)
-#define H_TOP5 ((uint32_t) 1 << 4)
-#define H_TOP6 ((uint32_t) 1 << 5)
-#define H_TOP7 ((uint32_t) 1 << 6)
-#define H_TOP8 ((uint32_t) 1 << 7)
-#define H_TOP9 ((uint32_t) 1 << 8)
-#define H_TOP0 ((uint32_t) 1 << 9)
-#define H_BOT1 ((uint32_t) 1 << 10)
-#define H_BOT2 ((uint32_t) 1 << 11)
-#define H_BOT3 ((uint32_t) 1 << 12)
-#define H_BOT4 ((uint32_t) 1 << 13)
-#define H_BOT5 ((uint32_t) 1 << 14)
-#define H_BOT6 ((uint32_t) 1 << 15)
-#define H_BOT7 ((uint32_t) 1 << 16)
-#define H_BOT8 ((uint32_t) 1 << 17)
-#define H_BOT9 ((uint32_t) 1 << 18)
-#define H_BOT0 ((uint32_t) 1 << 19)
-
-uint8_t current_pseudolayer = 1;
-bool lock_next = false;
-uint16_t chord_timer = 0;
-uint16_t dance_timer = 0;
-bool autoshift_mode = true;
-
 uint8_t keycodes_buffer_array[] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
-uint8_t keycode_index = 0;
 
-uint8_t command_mode = 0;
 uint8_t command_buffer[] = {
-    0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0
 };
-uint8_t command_ind = 0;
 
-bool in_leader_mode = false;
 uint16_t leader_buffer[] = {
-    0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0
 };
-uint8_t leader_ind = 0;
-uint16_t leader_timer = 0;
 
-uint8_t dynamic_macro_mode = false;
 uint8_t dynamic_macro_buffer[] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
-uint8_t dynamic_macro_ind = 0;
-
-bool a_key_went_through = false;
 
 enum chord_states {
     IDLE,
@@ -104,8 +91,25 @@ struct Chord {
     void (*function) (const struct Chord*);
 };
 
+uint8_t current_pseudolayer = DEFAULT_PSEUDOLAYER;
+bool lock_next = false;
+uint16_t chord_timer = 0;
+uint16_t dance_timer = 0;
+bool autoshift_mode = true;
+uint8_t keycode_index = 0;
+uint8_t command_mode = 0;
+uint8_t command_ind = 0;
+bool in_leader_mode = false;
+uint8_t leader_ind = 0;
+uint16_t leader_timer = 0;
+uint8_t dynamic_macro_mode = false;
+uint8_t dynamic_macro_ind = 0;
+bool a_key_went_through = false;
+struct Chord* last_chord = NULL;
+
 bool handle_US_ANSI_shifted_keys(int16_t keycode, bool in) {
     bool is_US_ANSI_shifted = true;
+    
     int16_t regular_keycode = KC_NO;
     switch (keycode) {
         case KC_TILDE:
@@ -311,7 +315,7 @@ void autoshift_dance_impl(const struct Chord* self) {
             *self->state = IDLE;
             break;
         case FINISHED_FROM_ACTIVE:
-            if (*self->counter == 1) {
+            if (*self->counter == (LONG_PRESS_MULTIPLIER - 2)) {
                 key_in(KC_LSFT);
                 tap_key(self->value1);
                 key_out(KC_LSFT);
@@ -523,8 +527,6 @@ void reset(const struct Chord* self) {
         reset_keyboard_kb();
     }
 }
-
-struct Chord* last_chord = NULL;
 
 uint8_t state_0 = IDLE;
 const struct Chord chord_0 PROGMEM = {H_TOP1 + H_TOP2 + H_BOT1 + H_BOT2, ALWAYS_ON, &state_0, NULL, 0, 0, lock};
@@ -898,7 +900,8 @@ const struct Chord chord_160 PROGMEM = {H_BOT5, ASETNIOP, &state_160, NULL, KC_L
 uint8_t state_161 = IDLE;
 const struct Chord chord_161 PROGMEM = {H_BOT6, ASETNIOP, &state_161, NULL, KC_LALT, 0, single_dance};
 uint8_t state_162 = IDLE;
-const struct Chord chord_162 PROGMEM = {H_BOT7, ASETNIOP, &state_162, NULL, KC_SPACE, ASETNIOP_123, key_layer_dance};
+uint8_t counter_162 = 0;
+const struct Chord chord_162 PROGMEM = {H_BOT7, ASETNIOP, &state_162, &counter_162, KC_SPACE, ASETNIOP_123, key_layer_dance};
 uint8_t state_163 = IDLE;
 const struct Chord chord_163 PROGMEM = {H_TOP5 + H_TOP6, ASETNIOP, &state_163, NULL, KC_LGUI, 0, single_dance};
 uint8_t state_164 = IDLE;
@@ -1001,226 +1004,16 @@ uint8_t state_212 = IDLE;
 const struct Chord chord_212 PROGMEM = {H_TOP5 + H_TOP6, ASETNIOP_FN, &state_212, NULL, KC_LGUI, 0, single_dance};
 
 const struct Chord* const list_of_chords[] PROGMEM = {
-    &chord_0,
-    &chord_1,
-    &chord_2,
-    &chord_3,
-    &chord_4,
-    &chord_5,
-    &chord_6,
-    &chord_7,
-    &chord_8,
-    &chord_9,
-    &chord_10,
-    &chord_11,
-    &chord_12,
-    &chord_13,
-    &chord_14,
-    &chord_15,
-    &chord_16,
-    &chord_17,
-    &chord_18,
-    &chord_19,
-    &chord_20,
-    &chord_21,
-    &chord_22,
-    &chord_23,
-    &chord_24,
-    &chord_25,
-    &chord_26,
-    &chord_27,
-    &chord_28,
-    &chord_29,
-    &chord_30,
-    &chord_31,
-    &chord_32,
-    &chord_33,
-    &chord_34,
-    &chord_35,
-    &chord_36,
-    &chord_37,
-    &chord_38,
-    &chord_39,
-    &chord_40,
-    &chord_41,
-    &chord_42,
-    &chord_43,
-    &chord_44,
-    &chord_45,
-    &chord_46,
-    &chord_47,
-    &chord_48,
-    &chord_49,
-    &chord_50,
-    &chord_51,
-    &chord_52,
-    &chord_53,
-    &chord_54,
-    &chord_55,
-    &chord_56,
-    &chord_57,
-    &chord_58,
-    &chord_59,
-    &chord_60,
-    &chord_61,
-    &chord_62,
-    &chord_63,
-    &chord_64,
-    &chord_65,
-    &chord_66,
-    &chord_67,
-    &chord_68,
-    &chord_69,
-    &chord_70,
-    &chord_71,
-    &chord_72,
-    &chord_73,
-    &chord_74,
-    &chord_75,
-    &chord_76,
-    &chord_77,
-    &chord_78,
-    &chord_79,
-    &chord_80,
-    &chord_81,
-    &chord_82,
-    &chord_83,
-    &chord_84,
-    &chord_85,
-    &chord_86,
-    &chord_87,
-    &chord_88,
-    &chord_89,
-    &chord_90,
-    &chord_91,
-    &chord_92,
-    &chord_93,
-    &chord_94,
-    &chord_95,
-    &chord_96,
-    &chord_97,
-    &chord_98,
-    &chord_99,
-    &chord_100,
-    &chord_101,
-    &chord_102,
-    &chord_103,
-    &chord_104,
-    &chord_105,
-    &chord_106,
-    &chord_107,
-    &chord_108,
-    &chord_109,
-    &chord_110,
-    &chord_111,
-    &chord_112,
-    &chord_113,
-    &chord_114,
-    &chord_115,
-    &chord_116,
-    &chord_117,
-    &chord_118,
-    &chord_119,
-    &chord_120,
-    &chord_121,
-    &chord_122,
-    &chord_123,
-    &chord_124,
-    &chord_125,
-    &chord_126,
-    &chord_127,
-    &chord_128,
-    &chord_129,
-    &chord_130,
-    &chord_131,
-    &chord_132,
-    &chord_133,
-    &chord_134,
-    &chord_135,
-    &chord_136,
-    &chord_137,
-    &chord_138,
-    &chord_139,
-    &chord_140,
-    &chord_141,
-    &chord_142,
-    &chord_143,
-    &chord_144,
-    &chord_145,
-    &chord_146,
-    &chord_147,
-    &chord_148,
-    &chord_149,
-    &chord_150,
-    &chord_151,
-    &chord_152,
-    &chord_153,
-    &chord_154,
-    &chord_155,
-    &chord_156,
-    &chord_157,
-    &chord_158,
-    &chord_159,
-    &chord_160,
-    &chord_161,
-    &chord_162,
-    &chord_163,
-    &chord_164,
-    &chord_165,
-    &chord_166,
-    &chord_167,
-    &chord_168,
-    &chord_169,
-    &chord_170,
-    &chord_171,
-    &chord_172,
-    &chord_173,
-    &chord_174,
-    &chord_175,
-    &chord_176,
-    &chord_177,
-    &chord_178,
-    &chord_179,
-    &chord_180,
-    &chord_181,
-    &chord_182,
-    &chord_183,
-    &chord_184,
-    &chord_185,
-    &chord_186,
-    &chord_187,
-    &chord_188,
-    &chord_189,
-    &chord_190,
-    &chord_191,
-    &chord_192,
-    &chord_193,
-    &chord_194,
-    &chord_195,
-    &chord_196,
-    &chord_197,
-    &chord_198,
-    &chord_199,
-    &chord_200,
-    &chord_201,
-    &chord_202,
-    &chord_203,
-    &chord_204,
-    &chord_205,
-    &chord_206,
-    &chord_207,
-    &chord_208,
-    &chord_209,
-    &chord_210,
-    &chord_211,
-    &chord_212,
+    &chord_0, &chord_1, &chord_2, &chord_3, &chord_4, &chord_5, &chord_6, &chord_7, &chord_8, &chord_9, &chord_10, &chord_11, &chord_12, &chord_13, &chord_14, &chord_15, &chord_16, &chord_17, &chord_18, &chord_19, &chord_20, &chord_21, &chord_22, &chord_23, &chord_24, &chord_25, &chord_26, &chord_27, &chord_28, &chord_29, &chord_30, &chord_31, &chord_32, &chord_33, &chord_34, &chord_35, &chord_36, &chord_37, &chord_38, &chord_39, &chord_40, &chord_41, &chord_42, &chord_43, &chord_44, &chord_45, &chord_46, &chord_47, &chord_48, &chord_49, &chord_50, &chord_51, &chord_52, &chord_53, &chord_54, &chord_55, &chord_56, &chord_57, &chord_58, &chord_59, &chord_60, &chord_61, &chord_62, &chord_63, &chord_64, &chord_65, &chord_66, &chord_67, &chord_68, &chord_69, &chord_70, &chord_71, &chord_72, &chord_73, &chord_74, &chord_75, &chord_76, &chord_77, &chord_78, &chord_79, &chord_80, &chord_81, &chord_82, &chord_83, &chord_84, &chord_85, &chord_86, &chord_87, &chord_88, &chord_89, &chord_90, &chord_91, &chord_92, &chord_93, &chord_94, &chord_95, &chord_96, &chord_97, &chord_98, &chord_99, &chord_100, &chord_101, &chord_102, &chord_103, &chord_104, &chord_105, &chord_106, &chord_107, &chord_108, &chord_109, &chord_110, &chord_111, &chord_112, &chord_113, &chord_114, &chord_115, &chord_116, &chord_117, &chord_118, &chord_119, &chord_120, &chord_121, &chord_122, &chord_123, &chord_124, &chord_125, &chord_126, &chord_127, &chord_128, &chord_129, &chord_130, &chord_131, &chord_132, &chord_133, &chord_134, &chord_135, &chord_136, &chord_137, &chord_138, &chord_139, &chord_140, &chord_141, &chord_142, &chord_143, &chord_144, &chord_145, &chord_146, &chord_147, &chord_148, &chord_149, &chord_150, &chord_151, &chord_152, &chord_153, &chord_154, &chord_155, &chord_156, &chord_157, &chord_158, &chord_159, &chord_160, &chord_161, &chord_162, &chord_163, &chord_164, &chord_165, &chord_166, &chord_167, &chord_168, &chord_169, &chord_170, &chord_171, &chord_172, &chord_173, &chord_174, &chord_175, &chord_176, &chord_177, &chord_178, &chord_179, &chord_180, &chord_181, &chord_182, &chord_183, &chord_184, &chord_185, &chord_186, &chord_187, &chord_188, &chord_189, &chord_190, &chord_191, &chord_192, &chord_193, &chord_194, &chord_195, &chord_196, &chord_197, &chord_198, &chord_199, &chord_200, &chord_201, &chord_202, &chord_203, &chord_204, &chord_205, &chord_206, &chord_207, &chord_208, &chord_209, &chord_210, &chord_211, &chord_212
 };
 
 const uint16_t** const leader_triggers PROGMEM = NULL;
-void (*leader_functions[]) (void) = {
-};
+void (*leader_functions[]) (void) = {};
 
-bool are_hashed_keycodes_in_sound(uint32_t keycodes_hash, uint32_t sound) {
+#define NUMBER_OF_CHORDS 213
+#define NUMBER_OF_LEADER_COMBOS 0
+
+bool are_hashed_keycodes_in_sound(HASH_TYPE keycodes_hash, HASH_TYPE sound) {
     return (keycodes_hash & sound) == keycodes_hash;
 }
 
@@ -1234,13 +1027,13 @@ void sound_keycode_array(uint16_t keycode) {
     keycodes_buffer_array[index] = keycode_index;
 }
 
-void silence_keycode_hash_array(uint32_t keycode_hash) {
-    for (int i = 0; i < 20; i++) {
-        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
+void silence_keycode_hash_array(HASH_TYPE keycode_hash) {
+    for (int i = 0; i < NUMBER_OF_KEYS; i++) {
+        bool index_in_hash = ((HASH_TYPE) 1 << i) & keycode_hash;
         if (index_in_hash) {
             uint8_t current_val = keycodes_buffer_array[i];
             keycodes_buffer_array[i] = 0;
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < NUMBER_OF_KEYS; j++) {
                 if (keycodes_buffer_array[j] > current_val) {
                     keycodes_buffer_array[j]--;
                 }
@@ -1250,9 +1043,9 @@ void silence_keycode_hash_array(uint32_t keycode_hash) {
     }
 }
 
-bool are_hashed_keycodes_in_array(uint32_t keycode_hash) {
-    for (int i = 0; i < 20; i++) {
-        bool index_in_hash = ((uint32_t) 1 << i) & keycode_hash;
+bool are_hashed_keycodes_in_array(HASH_TYPE keycode_hash) {
+    for (int i = 0; i < NUMBER_OF_KEYS; i++) {
+        bool index_in_hash = ((HASH_TYPE) 1 << i) & keycode_hash;
         bool index_in_array = (bool) keycodes_buffer_array[i];
         if (index_in_hash && !index_in_array) {
             return false;
@@ -1266,7 +1059,7 @@ void kill_one_shots(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 213; i++) {
+    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1286,7 +1079,7 @@ void process_finished_dances(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 213; i++) {
+    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1319,7 +1112,7 @@ void process_finished_dances(void) {
 }
 
 uint8_t keycodes_buffer_array_min(uint8_t* first_keycode_index) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < NUMBER_OF_KEYS; i++) {
         if (keycodes_buffer_array[i] == 1) {
             if (first_keycode_index != NULL) {
                 *first_keycode_index = (uint8_t) i;
@@ -1335,7 +1128,7 @@ void remove_subchords(void) {
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 213; i++) {
+    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1347,7 +1140,7 @@ void remove_subchords(void) {
         struct Chord chord_storage_2;
         struct Chord* chord_ptr_2;
         struct Chord* chord_2;
-        for (int j = 0; j < 213; j++) {
+        for (int j = 0; j < NUMBER_OF_CHORDS; j++) {
             if (i == j) {continue;}
             
             chord_ptr_2 = (struct Chord*) pgm_read_word (&list_of_chords[j]);
@@ -1377,7 +1170,7 @@ void process_ready_chords(void) {
         struct Chord* chord_ptr;
         struct Chord* chord;
         
-        for (int i = 0; i < 213; i++) {
+        for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -1416,7 +1209,7 @@ void process_ready_chords(void) {
         
         // execute logic
         // this should be only one chord
-        for (int i = 0; i < 213; i++) {
+        for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -1462,13 +1255,13 @@ void process_ready_chords(void) {
 }
 
 void deactivate_active_chords(uint16_t keycode) {
-    uint32_t hash = (uint32_t)1 << (keycode - SAFE_RANGE);
+    HASH_TYPE hash = (HASH_TYPE)1 << (keycode - SAFE_RANGE);
     bool broken;
     struct Chord chord_storage;
     struct Chord* chord_ptr;
     struct Chord* chord;
     
-    for (int i = 0; i < 213; i++) {
+    for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
         chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
         memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
         chord = &chord_storage;
@@ -1530,7 +1323,7 @@ void process_command(void) {
 
 void process_leader(void) {
     in_leader_mode = false;
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < NUMBER_OF_LEADER_COMBOS; i++) {
         uint16_t trigger[5];
         memcpy_P(trigger, leader_triggers[i], LEADER_MAX_LENGTH * sizeof(uint16_t));
         
@@ -1591,7 +1384,7 @@ void clear(const struct Chord* self) {
         struct Chord* chord_ptr;
         struct Chord* chord;
         
-        for (int i = 0; i < 213; i++) {
+        for (int i = 0; i < NUMBER_OF_CHORDS; i++) {
             chord_ptr = (struct Chord*) pgm_read_word (&list_of_chords[i]);
             memcpy_P(&chord_storage, chord_ptr, sizeof(struct Chord));
             chord = &chord_storage;
@@ -1608,7 +1401,7 @@ void clear(const struct Chord* self) {
         send_keyboard_report();
         
         // switch to default pseudolayer
-        current_pseudolayer = 1;
+        current_pseudolayer = DEFAULT_PSEUDOLAYER;
         
         // clear all keyboard states
         lock_next = false;
