@@ -2567,33 +2567,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_RCTRL);
+                    key_in(KC_RCTRL);
                                     
                     
-                    register_code(KC_RALT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_RALT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_RCTRL);
+                    key_out(KC_RCTRL);
                                     
                     
-                    register_code(KC_RALT);
-                                send_keyboard_report();
+                    key_out(KC_RALT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_RCTRL);
+                    key_out(KC_RCTRL);
                                     
                     
-                    unregister_code(KC_RALT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_RALT);
+                                break;
             default:
                 break;
         }
@@ -2671,33 +2666,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LCTRL);
+                    key_in(KC_LCTRL);
                                     
                     
-                    register_code(KC_LALT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LALT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    register_code(KC_LALT);
-                                send_keyboard_report();
+                    key_out(KC_LALT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    unregister_code(KC_LALT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LALT);
+                                break;
             default:
                 break;
         }
@@ -2773,33 +2763,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_RCTRL);
+                    key_in(KC_RCTRL);
                                     
                     
-                    register_code(KC_RGUI);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_RGUI);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_RCTRL);
+                    key_out(KC_RCTRL);
                                     
                     
-                    register_code(KC_RGUI);
-                                send_keyboard_report();
+                    key_out(KC_RGUI);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_RCTRL);
+                    key_out(KC_RCTRL);
                                     
                     
-                    unregister_code(KC_RGUI);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_RGUI);
+                                break;
             default:
                 break;
         }
@@ -2875,33 +2860,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LCTRL);
+                    key_in(KC_LCTRL);
                                     
                     
-                    register_code(KC_LGUI);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LGUI);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    register_code(KC_LGUI);
-                                send_keyboard_report();
+                    key_out(KC_LGUI);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    unregister_code(KC_LGUI);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LGUI);
+                                break;
             default:
                 break;
         }
@@ -4236,33 +4216,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_RCTRL);
+                    key_in(KC_LCTRL);
                                     
                     
-                    register_code(KC_RALT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LALT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_RCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    register_code(KC_RALT);
-                                send_keyboard_report();
+                    key_out(KC_LALT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_RCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    unregister_code(KC_RALT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LALT);
+                                break;
             default:
                 break;
         }
@@ -4340,33 +4315,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LCTRL);
+                    key_in(KC_LCTRL);
                                     
                     
-                    register_code(KC_LALT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LALT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    register_code(KC_LALT);
-                                send_keyboard_report();
+                    key_out(KC_LALT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LCTRL);
+                    key_out(KC_LCTRL);
                                     
                     
-                    unregister_code(KC_LALT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LALT);
+                                break;
             default:
                 break;
         }
@@ -5462,42 +5432,37 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_in(KC_LSFT);
                                     
                     
-                    register_code(KC_LCTL);
+                    key_in(KC_LCTL);
                                     
                     
-                    register_code(KC_LEFT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LEFT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    register_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    register_code(KC_LEFT);
-                                send_keyboard_report();
+                    key_out(KC_LEFT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    unregister_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    unregister_code(KC_LEFT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LEFT);
+                                break;
             default:
                 break;
         }
@@ -5585,42 +5550,37 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_in(KC_LSFT);
                                     
                     
-                    register_code(KC_LCTL);
+                    key_in(KC_LCTL);
                                     
                     
-                    register_code(KC_RIGHT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_RIGHT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    register_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    register_code(KC_RIGHT);
-                                send_keyboard_report();
+                    key_out(KC_RIGHT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    unregister_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    unregister_code(KC_RIGHT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_RIGHT);
+                                break;
             default:
                 break;
         }
@@ -5719,33 +5679,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_in(KC_LSFT);
                                     
                     
-                    register_code(KC_LEFT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LEFT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    register_code(KC_LEFT);
-                                send_keyboard_report();
+                    key_out(KC_LEFT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    unregister_code(KC_LEFT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LEFT);
+                                break;
             default:
                 break;
         }
@@ -5833,33 +5788,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_in(KC_LSFT);
                                     
                     
-                    register_code(KC_RIGHT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_RIGHT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    register_code(KC_RIGHT);
-                                send_keyboard_report();
+                    key_out(KC_RIGHT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LSFT);
+                    key_out(KC_LSFT);
                                     
                     
-                    unregister_code(KC_RIGHT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_RIGHT);
+                                break;
             default:
                 break;
         }
@@ -5984,33 +5934,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LCTL);
+                    key_in(KC_LCTL);
                                     
                     
-                    register_code(KC_LEFT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_LEFT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    register_code(KC_LEFT);
-                                send_keyboard_report();
+                    key_out(KC_LEFT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    unregister_code(KC_LEFT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_LEFT);
+                                break;
             default:
                 break;
         }
@@ -6098,33 +6043,28 @@ void reset(const struct Chord* self) {
             case ACTIVATED:
                                     
                     
-                    register_code(KC_LCTL);
+                    key_in(KC_LCTL);
                                     
                     
-                    register_code(KC_RIGHT);
-                                send_keyboard_report();
-                break;
+                    key_in(KC_RIGHT);
+                                break;
             case DEACTIVATED:
-                break;
-            case FINISHED:
-            case PRESS_FROM_ACTIVE:
                                     
                     
-                    register_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    register_code(KC_RIGHT);
-                                send_keyboard_report();
+                    key_out(KC_RIGHT);
+                                *self->state = IDLE;
                 break;
             case RESTART:
                                     
                     
-                    unregister_code(KC_LCTL);
+                    key_out(KC_LCTL);
                                     
                     
-                    unregister_code(KC_RIGHT);
-                                send_keyboard_report();
-                break;
+                    key_out(KC_RIGHT);
+                                break;
             default:
                 break;
         }

@@ -34,9 +34,9 @@ $include(engine_path + "chord.inc")
 // Add all chords
 
 $butterstick_cols("ALWAYS_ON",
-    ", , , , ,      ,      , , , , ,\
-     , , , , ,       LEAD,   , , , , ,\
-     , , , , ,       ,       , , , , ,\
+    ", , , , ,       ,      , , , , ,\
+     , , , , ,   LEAD ,     , , , , ,\
+     , , , , ,       ,      , , , , ,\
            , ,       ,       , ")
 
 $secret_chord("ALWAYS_ON", "CLEAR_KB",
@@ -63,7 +63,7 @@ $butterstick_rows("COLEMAK",
               "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
                ESC,  A, R, S, T, D,         H, N, E, I, O, RGUI,\
                LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
-KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
+KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KM(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 $butterstick_cols("COLEMAK",
     ",    ,     ,     ,     ,       ,           ,     ,     , , ,\
@@ -123,7 +123,7 @@ $butterstick_cols("NUM",
      , F11, LALT, LGUI, LCTL,       ,       RCTL, RGUI, RALT, F12,  ,\
                       ,     ,       ,           ,     ")
 
-$secret_chord("NUM", "MK(RCTRL, RALT)",
+$secret_chord("NUM", "MK(LCTRL, LALT)",
     ", , , , , ,            ,  ,  ,  , , ,\
      , , , , , ,            X, X, X, X, , ,\
            , , ,             ,  ,  ")
@@ -146,10 +146,10 @@ $butterstick_cols("SYM",
                    ,     ,       ,           ,     ")
 
 $butterstick_rows("MOVE",
-    ",  MK(LSFT, LCTL, LEFT), HOME,   UP,  PGUP,  MK(LSFT, LCTL, RIGHT),             , ,     UP,   ,      , ,\
-        INS,  MK(LSFT, LEFT), LEFT, DOWN, RIGHT, MK(LSFT, RIGHT),                   , LEFT, DOWN, RIGHT, , ,\
-        LSFT, MK(LCTL, LEFT),  END, DOWN,  PGDN, MK(LCTL, RIGHT),                   , LEFT, DOWN, RIGHT, , RSFT,\
-                                      ,     ,      ,                                        , ,     ")
+    ",  MK(LSFT, LCTL, LEFT), HOME,   UP,  PGUP,  MK(LSFT, LCTL, RIGHT),                , ,     UP,   ,      , ,\
+        INS,  MK(LSFT, LEFT), LEFT, DOWN, RIGHT, MK(LSFT, RIGHT),                       , LEFT, DOWN, RIGHT, , ,\
+        LSFT, MK(LCTL, LEFT),  END, DOWN,  PGDN, MK(LCTL, RIGHT),                       , LEFT, DOWN, RIGHT, , RSFT,\
+                                      ,     ,      ,                                RSFT,     , ")
 
 $butterstick_cols("MOVE",
     ", ,     ,     ,     ,       ,           ,     ,     , , ,\
@@ -167,19 +167,19 @@ $butterstick_rows("GAME",
     "TAB,  Q, W, F, P, G,         J, L, U, Y, ;, RCTL,\
      ESC,   ,  ,  ,  ,  ,          ,  ,  ,  ,  , DF(COLEMAK),\
      LSFT, A, R, S, T, D,         H, N, E, I, O, DEL,\
-    MO(GAME2), SPC, LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
+    MO(GAME2), SPC, LSFT,         KM(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 $butterstick_rows("GAME2",
     "TAB,  1, 2, 3, 4, 5,         6, 7, 8, 9, 0, RCTL,\
      ESC,   ,  ,  ,  ,  ,          ,  ,  ,  ,  , DF(COLEMAK),\
      LSFT, Z, X, C, V, B,         K, M, ,, ., /, DEL,\
-      MO(NUM), SPC, LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
+      MO(NUM), SPC, LSFT,         KM(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 $butterstick_rows("QWERTY",
               "TAB,  Q, W, E, R, T,         Y, U, I, O, P, RCTL,\
                ESC,  A, S, D, F, G,         H, J, K, L, ;, RGUI,\
                LSFT, Z, X, C, V, B,         N, M, ,, ., /, DEL,\
-KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KK(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
+KL(BSPC, SYM), KL(SPC, NUM), LSFT,         KM(ENTER, RSFT), KL(SPC, NUM), KL(BSPC, SYM)")
 
 $butterstick_cols("QWERTY",
     ",    ,     ,     ,     ,       ,           ,     ,     , , ,\
