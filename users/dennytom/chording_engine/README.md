@@ -12,7 +12,7 @@ This engine therefore has a python parser that translates a JSON definition of k
 python3 parser.py keymap.json keymap.c
 ```
 
-The rest of the document explains how the whole thing works, if you want just want to dive in, take a look at my JSON files and read the "Supported keycodes" subsection.
+The rest of the document explains how the whole thing works, if you want just want to dive in, take a look at JSON files in my butterstick or georgi keymaps and read the "Supported keycodes" subsection.
 
 ## Features Overview
 
@@ -72,22 +72,7 @@ in `keymap.json`. This creates a single keymap layer with new keycodes.
 
 *The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down. This means you can mix this custom chording engine and your keyboard's default processing, you will have to manually modify the resulting `keymap.c`.
-
-If you want to add more QMK layers or have a mixed layer, you will also have to write it manually. To make that easier, you can set `custom_keymaps_array` to `True` and define your own `keymaps[]` array. Your `keymap.c` then should look something like this:
-
-```c
-...
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_butter (TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP0, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT0),
-    [1] = LAYOUT_butter (KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_ENT, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, TO(0))
-};
-...
-```
-
-This would be useful for a gaming layer (even though my chording engine has pretty low latency), or when you want to send advanced keycodes.
-
-I provide a `TO()` macro that mimics QMK's layer switching `TO()` macro. I would not recommend implementing more complicated QMK layer switching functions unless necessary.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down.
 
 ### Chords
 
@@ -141,6 +126,28 @@ The chords change states based on external and internal events. Anytime a chord'
 ### Keyboard parameters
 
 All timings, maximum lengths for macros, command mode and leader function are defined in `keyboard_parameters` field.
+
+### Layers
+
+My keyboards are small, so I only use the engine, but you might want to use layers that combine chord-able keys and traditional QMK keys or layers with advanced keycodes, for example for stenography. The array `layers` defines all the parser needs to know:
+
+```json
+"layers": [
+    {
+      "type": "auto"
+    },
+    {
+      "type": "manual",
+      "keycodes": ["KC_1", "KC_2", "KC_3", "KC_4", "KC_5", "KC_6", "KC_7", "KC_8", "KC_9", "KC_0",
+                   "KC_Q", "KC_W", "KC_E", "KC_R", "KC_T", "KC_Y", "KC_U", "KC_I", "KC_O", "KC_P"
+      ]
+    }
+  ]
+```
+
+This example defines 2 layers, one that is automatically populated with chording engine's internal keycodes, second that is populated with QMK's keycodes. The layers do not have names, you have to access them with `TO(1)` and `TO(0)`. 
+
+Some keyboards mangle the order of keycodes when registering them in the layers. For that fill up the `layout_function_name` with the name of function / macro. If your keyboard does not do it, leave that string empty.
 
 ### Pseudolayers
 
@@ -208,9 +215,9 @@ The array `chord_sets` lets you define a number of chords at the same time. You 
 
 You might notice that the code tries to do a few clever things when parsing keycodes:
 
-* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,` becomes `KC_COMMA`. This really works only for basic keycodes. 
+* If the keycode would be just a character basic keycode, it tries to allow the use of shortcuts. `Q` will get replaced with `KC_Q`, `,` becomes `KC_COMMA`. This *should* work for all KC_ keycodes unless I missed some. 
 * `MO()` and `DF()` macros work the same way for pseudolayers as they would for layers in pure QMK.
-* `O()` define a one shot key but it also supports pseudolayers!
+* `O()` is a shortcut for `OSK()` or `OSL()`.
 * `STR('...')` sends a string. Careful with quoting.
 * Special chords like Command mode have their own codes like `CMD`.
 * The empty strings `""` get ignored.
@@ -233,7 +240,7 @@ You might notice that the code tries to do a few clever things when parsing keyc
 
   * `KK(X, Y)`: Pulses code `X` on tap and code `Y` on hold.
   * `KL(X, Y)`: Pulses code `X` on tap and switches to pseudolayer `Y` on hold. If during the hold no key gets registered, the code `X` will get sent instead (similar to QMK's retro tapping). 
-  * `KM(X, Y)`: Same as `KK()` but meant for modifiers on hold. Instead of a timer to figure out tap-hold, uses retro tapping like behavior just like `KL()`.
+  * `KM(X, Y)`: Same as `KK()` but meant for modifiers on hold. Instead of a timer to figure out tap-hold, uses retro tapping like behavior just like `KL()`. This has issues with GUI and ALT as they often have a meaning.
   * The chording engine determines if you are holding a chord based on a *global* timer. If you start holding a tap-hold chord and very quickly start tapping other chords, the hold might not activate until a short moment *after the last* chord when the timer expires. If you are running into this, adjust timeouts or wait a brief moment after pressing the chord to make sure it switches into the hold state before pressing other chords.
 
 * Autoshift
@@ -241,9 +248,9 @@ You might notice that the code tries to do a few clever things when parsing keyc
   * `AS(X)`: Pulses code `X` on tap and Pulses left shift + `X` on hold. 
   * `AT` : Toggles autoshift for all autoshift chords. If off, all `AS` chords act like `KC` chords.
 
-* `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*.
+* `LOCK`: The lock key. Since tap-dances of chords are independent, it is possible to lock a chord *anywhere in it's dance if you time it right!*. If that happens, use the `CLEAR` chord or restart your keeb.
 
-* `CMD`: The command mode. The number of keycodes that can be buffered is defined in `keyboard.inc` in `COMMAND_MAX_LENGTH` (works but needs cleanup).
+* `CMD`: The command mode. The number of keycodes that can be buffered is defined in  in `command_max_length`.
 
 * `LEAD`: The leader key. The maximum length of the sequences needs to be defined in `keyboard_params`. You can use `leader_sequences` array to add sequences:
 
@@ -292,9 +299,9 @@ You might notice that the code tries to do a few clever things when parsing keyc
 
 * `MK(X1, X2, ...)`: Acts like `KC()` except it registers / unregisters all `X1`, `X2`, ... codes at the same time.
 
-* `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. Just like the `butterstick_rows` and `butterstick_cols` macros, it will try to expand shortened keycodes. Advanced keycodes are not *yet* supported.
+* `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. It will try to expand shortened keycodes. Advanced keycodes are not supported.
 
-* `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace. In `keyboard.inc` is defined macro `DYNAMIC_MACRO_MAX_LENGTH` that defines the maximum length of the macro to be recorded. You can increase it for the price of RAM. The example above requires 4 units of length to be saved (Ctrl, A, next, Backspace).
+* `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace. `dynamic_macro_max_length` defines the maximum length of the macro to be recorded. You can increase it for the price of RAM. The example above requires 4 units of length to be saved (Ctrl, A, next, Backspace).
 
 * `CLEAR_KB`: clears keyboard, sets all chords to the default state and switches the pseudolayer to the default one. Basically the emergency stop button.
 
