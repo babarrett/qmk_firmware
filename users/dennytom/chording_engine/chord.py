@@ -134,40 +134,50 @@ def expand_keycode_fnc(DEFINITION):
         DEFINITION = "DOT"
     elif DEFINITION == "/":
         DEFINITION = "SLASH"
-    elif DEFINITION == "*":
-        DEFINITION = "KC_ASTERISK"
-    elif DEFINITION == "+":
-        DEFINITION = "KC_PLUS"
-    elif DEFINITION == "{":
-        DEFINITION = "KC_LEFT_CURLY_BRACE"
-    elif DEFINITION == "}":
-        DEFINITION = "KC_RIGHT_CURLY_BRACE"
-    elif DEFINITION == "?":
-        DEFINITION = "KC_QUESTION"
     elif DEFINITION == "~":
-        DEFINITION = "KC_TILDE"
+        DEFINITION = "TILDE"
+    elif DEFINITION == "*":
+        DEFINITION = "ASTERISK"
+    elif DEFINITION == "+":
+        DEFINITION = "PLUS"
+    elif DEFINITION == "(":
+        DEFINITION = "LEFT_PAREN"
+    elif DEFINITION == ")":
+        DEFINITION = "RIGHT_PAREN"
+    elif DEFINITION == "<":
+        DEFINITION = "LEFT_ANGLE_BRACKET"
+    elif DEFINITION == ">":
+        DEFINITION = "RIGHT_ANGLE_BRACKET"
+    elif DEFINITION == "{":
+        DEFINITION = "LEFT_CURLY_BRACE"
+    elif DEFINITION == "}":
+        DEFINITION = "RIGHT_CURLY_BRACE"
+    elif DEFINITION == "?":
+        DEFINITION = "QUESTION"
+    elif DEFINITION == "~":
+        DEFINITION = "TILDE"
     elif DEFINITION == ":":
-        DEFINITION = "KC_COLON"
+        DEFINITION = "COLON"
     elif DEFINITION == "_":
-        DEFINITION = "KC_UNDERSCORE"
+        DEFINITION = "UNDERSCORE"
     elif DEFINITION == '"':
-        DEFINITION = "KC_DOUBLE_QUOTE"
+        DEFINITION = "DOUBLE_QUOTE"
     elif DEFINITION == "@":
-        DEFINITION = "KC_AMPERSAND"
+        DEFINITION = "AT"
     elif DEFINITION == "#":
-        DEFINITION = "KC_HASH"
+        DEFINITION = "HASH"
     elif DEFINITION == "$":
-        DEFINITION = "KC_DOLLAR"
+        DEFINITION = "DOLLAR"
     elif DEFINITION == "!":
-        DEFINITION = "KC_EXCLAIM"
+        DEFINITION = "EXCLAIM"
     elif DEFINITION == "%":
-        DEFINITION = "KC_PERCENT"
+        DEFINITION = "PERCENT"
     elif DEFINITION == "^":
-        DEFINITION = "KC_CIRCUMFLEX"
+        DEFINITION = "CIRCUMFLEX"
     elif DEFINITION == "&":
-        DEFINITION = "KC_AMPERSAND"
+        DEFINITION = "AMPERSAND"
     elif DEFINITION == "|":
-        DEFINITION = "KC_PIPE"
+        DEFINITION = "PIPE"
     
     if DEFINITION in [
         "A", "a", "B", "b", "C", "c", "D", "d", "E", "e",
@@ -182,8 +192,16 @@ def expand_keycode_fnc(DEFINITION):
         "F23", "F24", "ENTER", "ENT", "ESCAPE", "ESC",
         "BSPACE", "BSPC", "TAB", "SPACE", "SPC", "NONUS_HASH",
         "NUHS", "NONUS_BSLASH", "NUBS", "COMMA", "COMM",
-        "DOT", "SLASH", "SLSH", "SCOLON", "SCLN", "QUOTE",
-        "QUOT", "LBRACKET", "LBRC", "RBRACKET", "RBRC",
+        "DOT", "SLASH", "SLSH", "TILDE", "TILD", "EXCLAIM",
+        "EXLM", "AT", "HASH", "DOLLAR", "DLR", "PERCENT",
+        "PERC", "CIRCUMFLEX", "CIRC", "AMPERSAND", "AMPR",
+        "ASTERISK", "ASTR", "LEFT_PAREN", "LPRN", "RIGHT_PAREN",
+        "RPRN", "UNDERSCORE", "UNDS", "PLUS", "LEFT_CURLY_BRACE",
+        "LCBR", "RIGHT_CURLY_BRACE", "RCBR", "PIPE", "COLON",
+        "COLN", "DOUBLE_QUOTE", "DQUO", "DQT",
+        "LEFT_ANGLE_BRACKET", "LABK", "LT", "RIGHT_ANGLE_BRACKET",
+        "RABK", "GT", "QUESTION", "QUES", "SCOLON", "SCLN",
+        "QUOTE", "QUOT", "LBRACKET", "LBRC", "RBRACKET", "RBRC",
         "BSLASH", "BSLS", "MINUS", "MINS", "EQUAL", "EQL",
         "GRAVE", "GRV", "ZKHK", "CAPSLOCK", "CLCK", "CAPS",
         "SCROLLOCK", "SLCK", "BRMD", "NUMLOCK", "NLCK",
