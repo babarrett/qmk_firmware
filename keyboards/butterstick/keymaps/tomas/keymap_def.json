@@ -15,6 +15,11 @@
     "long_press_multiplier": 3,
     "default_pseudolayer": "QWERTY"
   },
+  "layers": [
+    {
+      "type": "auto"
+    }
+  ],
   "chord_sets": [
     {
       "name": "rows",

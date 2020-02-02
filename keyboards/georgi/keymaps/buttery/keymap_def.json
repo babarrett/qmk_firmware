@@ -359,5 +359,5 @@
   ],
   "leader_sequences": [],
   "extra_code": "",
-  "extra_dependencies": ["keymap_steno.c"]
+  "extra_dependencies": ["keymap_steno.h"]
 }

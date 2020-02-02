@@ -7,5 +7,5 @@ This keymap is using a custom chording engine by DennyTom. Head out to DennyTom'
 To make a real keymap from the JSON file, run 
 
 ```sh
-python3 parser.py keymap.json keymap.c
+python3 parser.py keymap_def.json keymap.c
 ```
