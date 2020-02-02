@@ -228,7 +228,6 @@ void tap_key(int16_t keycode) {
     wait_ms(TAP_TIMEOUT);
     key_out(keycode);
 }
-
 void single_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -1324,7 +1323,7 @@ void process_command(void) {
 void process_leader(void) {
     in_leader_mode = false;
     for (int i = 0; i < NUMBER_OF_LEADER_COMBOS; i++) {
-        uint16_t trigger[5];
+        uint16_t trigger[LEADER_MAX_LENGTH];
         memcpy_P(trigger, leader_triggers[i], LEADER_MAX_LENGTH * sizeof(uint16_t));
         
         if (identical(leader_buffer, trigger)) {

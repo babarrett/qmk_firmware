@@ -57,7 +57,7 @@ enum pseudolayers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_georgi(TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10, TOP11, TOP12, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT10, BOT11, BOT12, THU1, THU2, THU3, THU4, THU5, THU6),
-    [1] = LAYOUT_georgi( TO(0), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1, STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR, STN_FN, STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2, STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,  STN_A,  STN_O,  STN_N1,  STN_N2,  STN_E,  STN_U)
+    [1] = LAYOUT_georgi( TO(0), STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1, STN_ST3, STN_FR, STN_PR, STN_LR, STN_TR, STN_DR, STN_FN, STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2, STN_ST4, STN_RR, STN_BR, STN_GR, STN_SR, STN_ZR,  STN_A,  STN_O,  STN_N1,  STN_N2,  STN_E,  STN_U),
 };
 size_t keymapsCount = 2;
 
@@ -240,7 +240,6 @@ void tap_key(int16_t keycode) {
     wait_ms(TAP_TIMEOUT);
     key_out(keycode);
 }
-
 void single_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -1700,7 +1699,7 @@ void process_command(void) {
 void process_leader(void) {
     in_leader_mode = false;
     for (int i = 0; i < NUMBER_OF_LEADER_COMBOS; i++) {
-        uint16_t trigger[5];
+        uint16_t trigger[LEADER_MAX_LENGTH];
         memcpy_P(trigger, leader_triggers[i], LEADER_MAX_LENGTH * sizeof(uint16_t));
         
         if (identical(leader_buffer, trigger)) {

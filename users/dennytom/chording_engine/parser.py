@@ -11,12 +11,12 @@ output_filepath = sys.argv[2]
 
 comma_separator = (lambda x, y: str(x) + ", " + str(y))
 string_sum = (lambda x, y: str(x) + " + " + str(y))
+newline_separator = (lambda x, y: str(x) + "\n" + str(y))
 
 number_of_keys = 0
 hash_type = ""
 output_buffer = ""
 number_of_chords = 0
-list_of_leader_combos = []
 
 with open(input_filepath, "r") as read_file:
     data = json.load(read_file)
@@ -33,7 +33,8 @@ with open(input_filepath, "r") as read_file:
         else:
             raise Exception("The engine currently supports only up to 64 keys.")
         
-        output_buffer += "#include QMK_KEYBOARD_H\n"
+        if not ("do_not_include_QMK" in data["parameters"] and data["parameters"]["do_not_include_QMK"] == True):
+            output_buffer += "#include QMK_KEYBOARD_H\n"
         if len(data["extra_dependencies"]) > 0:
             for dependecy in data["extra_dependencies"]:
                 output_buffer += '#include "' + dependecy + '"\n'
@@ -79,9 +80,6 @@ with open(input_filepath, "r") as read_file:
         output_buffer += "size_t keymapsCount = " + str(len(data["layers"])) + ";\n"
         output_buffer += "\n"
         
-        if len(data["extra_code"]) > 0:
-            output_buffer += data["extra_code"] + "\n"
-        
         output_buffer += "uint8_t keycodes_buffer_array[] = {\n"
         output_buffer += "    " + reduce(comma_separator, ["0"] * len(data["keys"])) + "\n"
         output_buffer += "};\n"
@@ -106,6 +104,13 @@ with open(input_filepath, "r") as read_file:
             output_buffer += file.read()
         output_buffer += "\n"
         
+        if len(data["extra_code"]) > 0:
+            output_buffer += data["extra_code"] + "\n"
+        
+        with open("engine.part.2", "r") as file:
+            output_buffer += file.read()
+        output_buffer += "\n"
+        
         for pseudolayer in data["pseudolayers"]:
             name = pseudolayer["name"]
             for chord_set in pseudolayer["chord_sets"]:
@@ -126,12 +131,14 @@ with open(input_filepath, "r") as read_file:
         output_buffer += "};\n"
         output_buffer += "\n"
         
-        if len(list_of_leader_combos) > 0:
-            output_buffer += "const uint16_t leader_triggers[" + str((len(list_of_leader_combos))) + "][LEADER_MAX_LENGTH] PROGMEM = {\n"
-            output_buffer += "    " + reduce(comma_separator, [list_of_leader_combos[i][0] for i in + range(0, len(list_of_leader_combos))]) + "\n"
+        if len(data["leader_sequences"]) > 0:
+            output_buffer += reduce(newline_separator, [sequence["function"] for sequence in data["leader_sequences"]]) + "\n\n"
+            output_buffer += "const uint16_t leader_triggers[][LEADER_MAX_LENGTH] PROGMEM = {\n"
+            for sequence in data["leader_sequences"]:
+                output_buffer += "    {" + reduce(comma_separator, sequence["sequence"] + ["0"] * (data["parameters"]["leader_max_length"] - len(sequence["sequence"]))) + "},\n"
             output_buffer += "};\n\n"
             output_buffer += "void (*leader_functions[]) (void) = {\n"
-            output_buffer += "    " + reduce(comma_separator, [list_of_leader_combos[i][1] for i in range(0, len(list_of_leader_combos))]) + "\n"
+            output_buffer += "    " + reduce(comma_separator, ["&" + sequence["name"] for sequence in data["leader_sequences"]]) + "\n"
             output_buffer += "};\n"
         else:
             output_buffer += "const uint16_t** const leader_triggers PROGMEM = NULL;\n"
@@ -139,10 +146,10 @@ with open(input_filepath, "r") as read_file:
         output_buffer += "\n"
         
         output_buffer += "#define NUMBER_OF_CHORDS " + str(number_of_chords) + "\n"
-        output_buffer += "#define NUMBER_OF_LEADER_COMBOS " + str(len(list_of_leader_combos)) + "\n"
+        output_buffer += "#define NUMBER_OF_LEADER_COMBOS " + str(len(data["leader_sequences"])) + "\n"
         output_buffer += "\n"
         
-        with open("engine.part.2", "r") as file:
+        with open("engine.part.3", "r") as file:
             output_buffer += file.read()
         
         write_file.write(output_buffer)

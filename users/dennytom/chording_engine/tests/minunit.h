@@ -4,21 +4,10 @@
             return message; \
         } \
     } while (0)
-        
-#define mu_run_test(test) \
-    do { \
-        char *message = test(); \
-        tests_run++; \
-        if (message) { \
-            return message; \
-        } \
-    } while (0)
 
 #define RED "\033[0;31m"
 #define GREEN "\033[0;32m"
 #define NC "\033[0m"
-
-int tests_run = 0;
 
 enum ASSERT_TYPES {
     UINT,
@@ -33,16 +22,18 @@ char buffer[BUFF_SIZE];
         if (actual != expected) { \
             switch (type) { \
                 case UINT: \
-                    snprintf(buffer, BUFF_SIZE, "%s "RED"FAILED"NC"\nline %d\nvar %s\nactual = %u\nexpected = %u\n", name, __LINE__, #actual, actual, expected); \
+                    snprintf(buffer, BUFF_SIZE, "\nline %d\nvar %s\nactual = %u\nexpected = %u\n", __LINE__, #actual, actual, expected); \
                     break; \
                 case INT: \
-                    snprintf(buffer, BUFF_SIZE, "%s "RED"FAILED"NC"\nline %d\nvar %s\nactual = %d\nexpected = %d\n", name, __LINE__, #actual, actual, expected); \
+                    snprintf(buffer, BUFF_SIZE, "\nline %d\nvar %s\nactual = %d\nexpected = %d\n", __LINE__, #actual, actual, expected); \
                     break; \
                 default: \
-                    snprintf(buffer, BUFF_SIZE, "%s "RED"FAILED"NC"\nline %d\nunsupported ASSERT_EQ type\n", name, __LINE__); \
+                    snprintf(buffer, BUFF_SIZE, "\nline %d\nunsupported ASSERT_EQ type\n", __LINE__); \
                     break; \
             } \
-            return buffer; \
+            printf("%s\n", buffer); \
+            passed = false; \
+            all_passed = false; \
         } \
     } while (0)
 
@@ -54,7 +45,7 @@ char buffer[BUFF_SIZE];
 
 #define MATRIX_ROWS 2
 #define MATRIX_COLS 10
-#define LAYOUT_butter( 										\
+#define LAYOUT_test( 										\
     k09, k08, k07, k06, k05, k04, k03, k02, k01, k00,		\
 	k19, k18, k17, k16, k15, k14, k13, k12, k11, k10		\
 ) { 														\
@@ -198,10 +189,11 @@ enum keycodes {
     SAFE_RANGE
 };
 
-$py(HISTORY = 20)
+#define HISTORY 20
+
 int16_t current_time;
-uint8_t keyboard_history[$(HISTORY)][SAFE_RANGE-1];
-int16_t time_history[$(HISTORY)];
+uint8_t keyboard_history[HISTORY][SAFE_RANGE-1];
+int16_t time_history[HISTORY];
 uint8_t history_index;
 
 void register_code(int16_t keycode) {
@@ -250,61 +242,47 @@ void pause_ms(uint16_t ms) {
     }
 };
 
-$py(ALL_TESTS = [])
-
-$macro(TEST, NAME)
-    $nonlocal(ALL_TESTS)
-    $nonlocal(HISTORY)
-    $py(ALL_TESTS.append(NAME))
-    static char * test_$(NAME)() { \
-    char name[] = "$(NAME)"; \
-    
-    do {
-        uint8_t clear_state = ACTIVATED;
-        struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear};
-        clear_chord.function(&clear_chord);
-    } while (0);
-    
-    current_time = 0;
-    history_index = 0;
-    
-    for (int j = 0; j < SAFE_RANGE-1; j++) {
-        keyboard_history[0][j] = 0;
-    }
-    time_history[0] = 0;
-    for (int i = 1; i < $(HISTORY); i++) {
-        for (int j = 0; j < SAFE_RANGE-1; j++) {
-            keyboard_history[i][j] = -1;
+#define TEST(name) \
+    do { \
+        printf("%s\n", name); \
+        passed = true; \
+        do { \
+            uint8_t clear_state = ACTIVATED; \
+            struct Chord clear_chord PROGMEM = {0, QWERTY, &clear_state, NULL, 0, 0, clear}; \
+            clear_chord.function(&clear_chord); \
+        } while (0); \
+        current_time = 0; \
+        history_index = 0; \
+        for (int j = 0; j < SAFE_RANGE-1; j++) { \
+            keyboard_history[0][j] = 0; \
+        } \
+        time_history[0] = 0; \
+        for (int i = 1; i < HISTORY; i++) { \
+            for (int j = 0; j < SAFE_RANGE-1; j++) { \
+                keyboard_history[i][j] = -1; \
+            } \
+            time_history[i] = -1; \
         }
-        time_history[i] = -1;
-    }
-$endmacro
 
-$macro(END_TEST)
-    printf("%s "GREEN"PASSED"NC"\n", name);
-    return 0;
+#define END_TEST \
+        if (passed) { \
+            printf(GREEN"PASSED"NC"\n"); \
+        } else { \
+            printf(RED"FAILED"NC"\n"); \
+        } \
+    } while(0);
+
+#define MAIN \
+int main(int argc, char **argv) { \
+    bool passed = true; \
+    bool all_passed = true;
+
+#define END \
+    printf("\n"); \
+    if (all_passed) { \
+        printf(GREEN"ALL TESTS PASSED"NC"\n"); \
+    } else { \
+        printf(RED"TESTS FAILED"NC"\n"); \
+    } \
+    return 1 - all_passed; \
 }
-$endmacro
-
-$macro(runner)
-$nonlocal(ALL_TESTS)
-static char * all_tests() {
-    $for(TEST in ALL_TESTS)\
-    mu_run_test(test_$(TEST));
-    $endfor
-    return 0;
-}
-
-int main(int argc, char **argv) {
-    char *result = all_tests();
-    if (result != 0) {
-        printf("%s\n", result);
-    }
-    else {
-        printf("\n"GREEN"ALL TESTS PASSED"NC"\n");
-    }
-    printf("Tests run: %d / %d\n", tests_run, $(len(ALL_TESTS)));
-
-    return result != 0;
-}
-$endmacro
