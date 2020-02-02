@@ -34,6 +34,9 @@ with open(input_filepath, "r") as read_file:
             raise Exception("The engine currently supports only up to 64 keys.")
         
         output_buffer += "#include QMK_KEYBOARD_H\n"
+        if len(data["extra_dependencies"]) > 0:
+            for dependecy in data["extra_dependencies"]:
+                output_buffer += '#include "' + dependecy + '"\n'
         output_buffer += "\n"
         
         output_buffer += "#define CHORD_TIMEOUT " + str(data["parameters"]["chord_timeout"]) + "\n"
@@ -67,18 +70,17 @@ with open(input_filepath, "r") as read_file:
         output_buffer += "\n"
         
         output_buffer += "const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {\n"
-        output_buffer += "    [0] = " + data["parameters"]["layout_function_name"] + "(" + reduce(comma_separator, [key for key in data["keys"]]) + ")\n"
+        for layer, counter in zip(data["layers"], range(0,len(data["layers"]))):
+            if layer["type"] == "auto":
+                output_buffer += "    [" + str(counter) + "] = " + data["parameters"]["layout_function_name"] + "(" + reduce(comma_separator, [key for key in data["keys"]]) + "),\n"
+            else:
+                output_buffer += "    [" + str(counter) + "] = " + data["parameters"]["layout_function_name"] + "(" + reduce(comma_separator, [key for key in layer["keycodes"]]) + "),\n"
         output_buffer += "};\n"
-        output_buffer += "size_t keymapsCount = 1;\n"
+        output_buffer += "size_t keymapsCount = " + str(len(data["layers"])) + ";\n"
         output_buffer += "\n"
         
         if len(data["extra_code"]) > 0:
             output_buffer += data["extra_code"] + "\n"
-        
-        if len(data["extra_dependencies"]) > 0:
-            for dependecy in data["extra_dependencies"]:
-                output_buffer += '#include "' + dependecy + '"\n'
-            output_buffer += "\n"
         
         output_buffer += "uint8_t keycodes_buffer_array[] = {\n"
         output_buffer += "    " + reduce(comma_separator, ["0"] * len(data["keys"])) + "\n"

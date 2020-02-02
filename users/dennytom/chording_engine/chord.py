@@ -134,6 +134,40 @@ def expand_keycode_fnc(DEFINITION):
         DEFINITION = "DOT"
     elif DEFINITION == "/":
         DEFINITION = "SLASH"
+    elif DEFINITION == "*":
+        DEFINITION = "KC_ASTERISK"
+    elif DEFINITION == "+":
+        DEFINITION = "KC_PLUS"
+    elif DEFINITION == "{":
+        DEFINITION = "KC_LEFT_CURLY_BRACE"
+    elif DEFINITION == "}":
+        DEFINITION = "KC_RIGHT_CURLY_BRACE"
+    elif DEFINITION == "?":
+        DEFINITION = "KC_QUESTION"
+    elif DEFINITION == "~":
+        DEFINITION = "KC_TILDE"
+    elif DEFINITION == ":":
+        DEFINITION = "KC_COLON"
+    elif DEFINITION == "_":
+        DEFINITION = "KC_UNDERSCORE"
+    elif DEFINITION == '"':
+        DEFINITION = "KC_DOUBLE_QUOTE"
+    elif DEFINITION == "@":
+        DEFINITION = "KC_AMPERSAND"
+    elif DEFINITION == "#":
+        DEFINITION = "KC_HASH"
+    elif DEFINITION == "$":
+        DEFINITION = "KC_DOLLAR"
+    elif DEFINITION == "!":
+        DEFINITION = "KC_EXCLAIM"
+    elif DEFINITION == "%":
+        DEFINITION = "KC_PERCENT"
+    elif DEFINITION == "^":
+        DEFINITION = "KC_CIRCUMFLEX"
+    elif DEFINITION == "&":
+        DEFINITION = "KC_AMPERSAND"
+    elif DEFINITION == "|":
+        DEFINITION = "KC_PIPE"
     
     if DEFINITION in [
         "A", "a", "B", "b", "C", "c", "D", "d", "E", "e",
@@ -174,7 +208,7 @@ def expand_keycode_fnc(DEFINITION):
         "PWR", "SYSTEM_SLEEP", "SLEP", "SYSTEM_WAKE", "WAKE",
         "AUDIO_MUTE", "MUTE", "AUDIO_VOL_UP", "VOLU",
         "AUDIO_VOL_DOWN", "VOLD", "MEDIA_NEXT_TRACK", "MNXT",
-        "MEDIA_PREV_TRACK", "CPRV", "MEDIA_STOP", "MSTP",
+        "MEDIA_PREV_TRACK", "MPRV", "CPRV", "MEDIA_STOP", "MSTP",
         "MEDIA_PLAY_PAUSE", "MPLY", "MEDIA_SELECT", "MSEL",
         "MEDIA_EJECT", "EJCT", "MAIL", "CALCULATOR", "CALC",
         "MY_COMPUTER", "MYCM", "WWW_SEARCH", "WSCH", "WWW_HOME",
@@ -201,27 +235,27 @@ def expand_keycode_fnc(DEFINITION):
         return DEFINITION
 
 def MK(on_pseudolayer, keycodes_hash, definition, output_buffer, index):
-    l = len(DEFINITION.split(', '))
+    l = len(definition.split(', '))
     output_buffer += "void function_" + str(index) + "(const struct Chord* self) {\n"
     output_buffer += "    switch (*self->state) {\n"
     output_buffer += "        case ACTIVATED:\n"
     for i in range(0, l):
         val = definition.split(',')[i].strip()
         code = expand_keycode_fnc(val)
-        output_buffer += "            key_in(" + code + "):\n"
+        output_buffer += "            key_in(" + code + ");\n"
     output_buffer += "            break;\n"
     output_buffer += "        case DEACTIVATED:\n"
     for i in range(0, l):
         val = definition.split(',')[i].strip()
         code = expand_keycode_fnc(val)
-        output_buffer += "            key_out(" + code + "):\n"
+        output_buffer += "            key_out(" + code + ");\n"
     output_buffer += "            *self->state = IDLE;\n"
     output_buffer += "            break;\n"
     output_buffer += "        case RESTART:\n"
     for i in range(0, l):
         val = definition.split(',')[i].strip()
         code = expand_keycode_fnc(val)
-        output_buffer += "            key_out(" + code + "):\n"
+        output_buffer += "            key_out(" + code + ");\n"
     output_buffer += "            break;\n"
     output_buffer += "        default:\n"
     output_buffer += "            break;\n"
