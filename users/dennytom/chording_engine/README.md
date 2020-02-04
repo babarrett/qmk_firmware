@@ -2,17 +2,19 @@
 
 ## About
 
-This is a custom chording engine. See butterstick:tomas keymap for an example use.
+This is a custom chording engine. See butterstick:dennytom keymap for an example use.
 
 Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
 This engine therefore has a python parser that translates a JSON definition of keyboard specific information and keymap definition and produces `keymap.c`. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long and I do not encourage you to edit it. All you should have to edit is the JSON file. To produce the keymap file, run
 
 ```sh
-python3 parser.py keymap.json keymap.c
+python3 parser.py keymap_def.json keymap.c
 ```
 
 The rest of the document explains how the whole thing works, if you want just want to dive in, take a look at JSON files in my butterstick or georgi keymaps and read the "Supported keycodes" subsection.
+
+Watch out, you can not name your JSON file `keymap.json` if you place in the keymap folder. QMK creates `keymap.json` as a part of compilation process and if you already have one, it gets confused.
 
 ## Features Overview
 
@@ -68,11 +70,11 @@ I do not have experience with stenography, so the the steno keycodes are hard fo
  "keys": ["TOP1", "TOP2", "TOP3", ...]
 ```
 
-in `keymap.json`. This creates a single keymap layer with new keycodes.
+in `keymap.json`. This creates a single keymap layer with new keycodes. You can name these however you like as long as they do not crash with QMK's keycodes.
 
 *The chording engine in it's current implementation can handle up to 64 keys. If you need to support more, contact me (email or u/DennyTom at Reddit).*
 
-When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down.
+When `process_record_user()` gets one of the internal keycodes, it returns `true`, completely bypassing keyboard's and QMK's `process_record` functions. *All other* keycodes get passed down to QMK's standard processing.
 
 ### Chords
 
@@ -145,7 +147,7 @@ My keyboards are small, so I only use the engine, but you might want to use laye
   ]
 ```
 
-This example defines 2 layers, one that is automatically populated with chording engine's internal keycodes, second that is populated with QMK's keycodes. The layers do not have names, you have to access them with `TO(1)` and `TO(0)`. 
+This example defines 2 layers, one that is automatically populated with chording engine's internal keycodes, second that is populated with QMK's keycodes. The layers do not have names, you have to access them with `TO(1)` and `TO(0)`.
 
 Some keyboards mangle the order of keycodes when registering them in the layers. For that fill up the `layout_function_name` with the name of function / macro. If your keyboard does not do it, leave that string empty.
 
@@ -158,15 +160,6 @@ Array `pseudolayers` defines the keymap per pseudolayer. Each field has to conta
   {        
     "name": "QWERTY",
 	"chords": [
-      {
-        "type": "chord_set",
-        "set": "rows",
-        "keycodes": [
-          "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", 
-          "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
-          "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"
-        ]
-      },
       {
         "type": "simple",
         "keycode": "SPACE",
@@ -188,13 +181,22 @@ Array `pseudolayers` defines the keymap per pseudolayer. Each field has to conta
           [" ", "X", "X", "TAB"],
           ["X", "X", "X", "ENTER"]
         ]
+      },
+      {
+        "type": "chord_set",
+        "set": "rows",
+        "keycodes": [
+          "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", 
+          "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
+          "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"
+        ]
       }
     ]
   }
 ]
 ```
 
-The array `chord` defines chords. You can either use simple chord and list all the keys that have to pressed at the same time, or use the visual chord and place `"X"` over keys that will be part of the chord. You can also use `visual_array` to define a number of chords on a subset of keys. Finally, you can use `chord_set` to define a number of chords following a pattern that was set in the `chord_sets` array in the root object like this:
+The array `chord` defines chords. You can either use simple chord and list all the keys that have to pressed at the same time, or use the visual chord and place `"X"` over keys that will be part of the chord. You can also use `visual_array` to define a number of chords in a visual way on a subset of keys defined in the `keys` array. Finally, you can use `chord_set` to define a number of chords following a pattern that was set in the `chord_sets` array in the root object like this:
 
 ```json
 "chord_sets": [
@@ -226,7 +228,7 @@ You might notice that the code tries to do a few clever things when parsing keyc
 * `O()` is a shortcut for `OSK()` or `OSL()`.
 * `STR('...')` sends a string. Careful with quoting.
 * Special chords like Command mode have their own codes like `CMD`.
-* The empty strings `""` get ignored.
+* The empty strings get ignored.
 
 ### Supported keycodes
 
