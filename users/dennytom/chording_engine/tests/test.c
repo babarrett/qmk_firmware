@@ -77,22 +77,22 @@ END_TEST
 
 // KC
 TEST("single_dance_held_states")
-    ASSERT_EQ(UINT, state_0, IDLE);
+    ASSERT_EQ(UINT, state_1, IDLE);
     process_record_user(TOP1, &pressed);
     pause_ms(CHORD_TIMEOUT);
-    ASSERT_EQ(UINT, state_0, IDLE);
+    ASSERT_EQ(UINT, state_1, IDLE);
     pause_ms(1);
-    ASSERT_EQ(UINT, state_0, ACTIVATED);
+    ASSERT_EQ(UINT, state_1, ACTIVATED);
     pause_ms(DANCE_TIMEOUT);
-    ASSERT_EQ(UINT, state_0, ACTIVATED);
+    ASSERT_EQ(UINT, state_1, ACTIVATED);
     pause_ms(1);
-    ASSERT_EQ(UINT, state_0, PRESS_FROM_ACTIVE);
+    ASSERT_EQ(UINT, state_1, PRESS_FROM_ACTIVE);
     pause_ms(DANCE_TIMEOUT);
-    ASSERT_EQ(UINT, state_0, PRESS_FROM_ACTIVE);
+    ASSERT_EQ(UINT, state_1, PRESS_FROM_ACTIVE);
     pause_ms(1);
-    ASSERT_EQ(UINT, state_0, FINISHED_FROM_ACTIVE);
+    ASSERT_EQ(UINT, state_1, FINISHED_FROM_ACTIVE);
     process_record_user(TOP1, &depressed);
-    ASSERT_EQ(UINT, state_0, IDLE);
+    ASSERT_EQ(UINT, state_1, IDLE);
 END_TEST
 
 TEST("single_dance_held_codes")
@@ -115,14 +115,14 @@ TEST("single_dance_held_codes")
 END_TEST
 
 TEST("single_dance_tapped_states")
-    ASSERT_EQ(UINT, state_0, IDLE);
+    ASSERT_EQ(UINT, state_1, IDLE);
     process_record_user(TOP1, &pressed);
     pause_ms(CHORD_TIMEOUT);
-    ASSERT_EQ(UINT, state_0, IDLE);
+    ASSERT_EQ(UINT, state_1, IDLE);
     pause_ms(1);
-    ASSERT_EQ(UINT, state_0, ACTIVATED);
+    ASSERT_EQ(UINT, state_1, ACTIVATED);
     process_record_user(TOP1, &depressed);
-    ASSERT_EQ(UINT, state_0, IDLE);
+    ASSERT_EQ(UINT, state_1, IDLE);
 END_TEST
 
 TEST("single_dance_tapped_codes")
@@ -196,6 +196,39 @@ TEST("momentary_layer_reset")
     pause_ms(1);
     process_record_user(BOT8, &depressed);
     ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+END_TEST
+
+TEST("momentary_layer_alt")
+    ASSERT_EQ(UINT, current_pseudolayer, QWERTY);
+    
+    process_record_user(TOP8, &pressed);
+    pause_ms(1);
+    process_record_user(TOP9, &pressed);
+    pause_ms(1);
+    process_record_user(TOP0, &pressed);
+    pause_ms(1);
+    process_record_user(BOT8, &pressed);
+    pause_ms(1);
+    process_record_user(BOT9, &pressed);
+    pause_ms(1);
+    process_record_user(BOT0, &pressed);
+    pause_ms(CHORD_TIMEOUT + 1);
+    
+    ASSERT_EQ(UINT, current_pseudolayer, NUM);
+    
+    process_record_user(TOP8, &depressed);
+    pause_ms(1);
+    process_record_user(TOP9, &depressed);
+    pause_ms(1);
+    process_record_user(TOP0, &depressed);
+    pause_ms(1);
+    process_record_user(BOT8, &depressed);
+    pause_ms(1);
+    process_record_user(BOT9, &depressed);
+    pause_ms(1);
+    process_record_user(BOT0, &depressed);
+    
+    ASSERT_EQ(UINT, current_pseudolayer, FNC);
 END_TEST
 
 // DF

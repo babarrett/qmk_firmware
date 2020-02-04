@@ -36,8 +36,7 @@
   "pseudolayers": [
     {
       "name": "ALWAYS_ON",
-      "chord_sets": [],
-      "single_chords": [
+      "chords": [
         {
           "type": "visual",
           "chord": [
@@ -60,24 +59,38 @@
     },
     {
       "name": "QWERTY",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
-            "KL(ESC, NAV)", "Q",           "W",           "E",            "R",           "T",        "Y",           "U",            "I",           "O",           "P", "\\", 
-                     "INS", "A", "KK(S, LALT)", "KM(D, LCTL)",  "KM(F, LSFT)", "KK(G, LGUI)",        "KK(H, RGUI)", "KM(J, RSFT)",  "KM(K, RCTL)", "KK(L, RALT)", ";", " ",
-             "KL(TAB, MS)", "Z",           "X",           "C",            "V",           "B",        "N",           "M",            ",",           ".",           "/", "'",
-                                                      "ENTER", "KL(SPC, NUM)",        "BSPC",        "DEL",         "KL(SPC, FNC)", "ENTER"
+            "ESC", "Q",           "W",           "E",            "R",           "T",        "Y",           "U",            "I",           "O",           "P", "\\", 
+            "INS", "A", "KK(S, LALT)", "KM(D, LCTL)",  "KM(F, LSFT)", "KK(G, LGUI)",        "KK(H, RGUI)", "KM(J, RSFT)",  "KM(K, RCTL)", "KK(L, RALT)", ";", " ",
+            "TAB", "Z",           "X",           "C",            "V",           "B",        "N",           "M",            ",",           ".",           "/", "'",
+                                           "","","","","",""
+          ]
+        },
+        {
+          "type": "visual_array",
+          "keys": ["THU1", "THU2", "THU3", "THU4", "THU5", "THU6"],
+          "dictionary": [
+            ["X", " ", " ", " ", " ", " ", "ENTER"],
+            [" ", "X", " ", " ", " ", " ", "KL(SPC, NUM)"],
+            [" ", " ", "X", " ", " ", " ", "KL(BSPC, NAV)"],
+            [" ", " ", " ", "X", " ", " ", "DEL"],
+            [" ", " ", " ", " ", "X", " ", "KL(SPC, FNC)"],
+            [" ", " ", " ", " ", " ", "X", "ENTER"],
+            [" ", "X", "X", " ", " ", " ", "MO(MOUSE)"]
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
       "name": "NUM",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "`", "1",    "2",    "3",    "4",    "5",        "6",    "7",    "8",    "9",    "0", "-", 
             " ", " ", "LALT", "LCTL", "LSFT", "LGUI",        "RGUI", "RSFT", "RCTL", "RALT", " ", " ",
@@ -85,14 +98,14 @@
                                          " ",    " ",        " ",    " ",    " ",    " "
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
       "name": "FNC",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             " ", "F1",   "F2",   "F3",   "F4",   "F5",        "F6",   "F7",   "F8",   "F9",   "F10", "F11", 
             " ",  " ", "LALT", "LCTL", "LSFT", "LGUI",        "RGUI", "RSFT", "RCTL", "RALT", " ",   " ",
@@ -100,14 +113,14 @@
                                   " ",    " ",    " ",        " ",    " ",    " "
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
       "name": "NAV",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             " ", " ",    " ",    " ",    " ",    " ",        " ", "HOME", "UP",   "END",   "PGUP", " ", 
             " ", " ", "LALT", "LCTL", "LSFT", "LGUI",        " ", " ",    " ",    " ",     " ",    " ",
@@ -115,14 +128,14 @@
                                  " ",    " ",    " ",        " ", " ",    " "
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
-      "name": "MS",
-      "chord_sets": [
+      "name": "MOUSE",
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             " ", " ",    " ",    " ",    " ",    " ",        " ", "BTN1", "MS_U", "BTN2", "WH_U", " ", 
             " ", " ", "LALT", "LCTL", "LSFT", "LGUI",        " ", " ",    " ",    " ",    " ",    " ",
@@ -130,8 +143,7 @@
                                  " ",    " ",    " ",        " ", " ",    " "
           ]
         }
-      ],
-      "single_chords": []
+      ]
     }
   ],
   "leader_sequences": [],

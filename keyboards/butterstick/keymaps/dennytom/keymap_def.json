@@ -54,17 +54,16 @@
   "pseudolayers": [
     {
       "name": "ALWAYS_ON",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "cols",
+          "type": "chord_set",
+          "set": "cols",
           "keycodes": [
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
             "LOCK", "  AT", "    ", "    ", " CMD", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    "
           ]
-        }
-      ],
-      "single_chords": [
+        },
         {
           "type": "visual",
           "chord": [
@@ -77,9 +76,10 @@
     },
     {
       "name": "QWERTY",
-        "chord_sets": [
+        "chords": [
           {
-            "chord_set": "rows",
+            "type": "chord_set",
+            "set": "rows",
             "keycodes": [
               "AS(Q)", "AS(W)", "AS(E)", "AS(R)", "AS(T)", "AS(Y)", "AS(U)", "AS(I)", "AS(O)", "AS(P)",
               "AS(A)", "AS(S)", "AS(D)", "AS(F)", "AS(G)", "AS(H)", "AS(J)", "AS(K)", "AS(L)", "AS(;)",
@@ -87,15 +87,14 @@
             ]
           },
           {
-            "chord_set": "cols",
+            "type": "chord_set",
+            "set": "cols",
               "keycodes": [
                 "    ESC", "MO(MOV)", "    TAB", "      ", "O(RGUI)", "      ", "    INS", "    DEL", "   BSPC",
                 "       ", "       ", "       ", "      ", "       ", "      ", "       ", "       ", "  ENTER",
                 "O(LSFT)", "O(LCTL)", "O(LALT)", "O(NUM)", "O(LGUI)", "O(NUM)", "O(RALT)", "O(RCTL)", "O(RSFT)"
               ]
-          }
-        ],
-        "single_chords": [
+          },
           {
             "type": "simple",
             "chord": ["BOT1", "BOT0"],
@@ -121,9 +120,10 @@
     },
     {
       "name": "NUM",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "AS(1)", "AS(2)", "AS(3)", "AS(4)", "AS(5)",  "AS(6)", "AS(7)", "AS(8)", "AS(9)", "AS(0)",
             "   F1", "   F2", "   F3", "   F4", "   F5",  "   F6", "   F7", "   F8", "   F9", "  F10",
@@ -131,15 +131,14 @@
           ]
         },
         {
-          "chord_set": "cols",
+          "type": "chord_set",
+          "set": "cols",
           "keycodes": [
             "    ESC", "       ", "    TAB", "      ", "O(RGUI)", "      ", "    INS", "    DEL", "    BSPC",
             "       ", "       ", "       ", "      ", "       ", "      ", "       ", "       ", "   ENTER",
             "O(LSFT)", "O(LCTL)", "O(LALT)", "      ", "O(LGUI)", "      ", "O(RALT)", "O(RCTL)", " O(RSFT)"
           ]
-        }
-      ],
-      "single_chords": [
+        },
         {
           "type": "simple",
           "chord": ["BOT1", "BOT0"],
@@ -149,37 +148,38 @@
     },
     {
       "name": "MOV",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "     ", "     ", "     ", "     ", "     ", "     ", " HOME", "   UP", "  END", " PGUP",
             "     ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "     ",
             "     ", "     ", " LSFT", " LCTL", " LALT", " LGUI", " LEFT", " DOWN", "RIGHT", " PGDN"
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
       "name": "MOUSE",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "     ", "     ", "     ", "     ", "     ", "     ", " BTN1", " MS_U", " BTN2", " WH_U",
             "     ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "     ",
             "     ", "     ", " LSFT", " LCTL", " LALT", " LGUI", " MS_L", " MS_D", " MS_R", " WH_D"
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
       "name": "ASETNIOP",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "asetniop",
+          "type": "chord_set",
+          "set": "asetniop",
           "keycodes": [
             "A", "S", "E", "T", "N", "I", "O", "P",
             "W", "D", "R", "B", "H", "L", ";",
@@ -192,7 +192,8 @@
           ]
         },
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "    ", "    ", "    ", "    ", " ESC", " DEL", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
@@ -200,15 +201,14 @@
           ]
         },
         {
-          "chord_set": "cols",
+          "type": "chord_set",
+          "set": "cols",
           "keycodes": [
             "    ", "    ", "    ", "    ", "LGUI", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    "
           ]
-        }
-      ],
-      "single_chords": [
+        },
         {
           "type": "visual",
           "chord": [
@@ -229,9 +229,10 @@
     },
     {
       "name": "ASETNIOP_123",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "asetniop",
+          "type": "chord_set",
+          "set": "asetniop",
           "keycodes": [
             "1", "2", "3", "4", "7",  "8", "9", "0",
             " ", " ", "5", "=", "6", "\\", ";",
@@ -244,7 +245,8 @@
           ]
         },
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "    ", "    ", "    ", "    ", " ESC", " DEL", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
@@ -252,21 +254,22 @@
           ]
         },
         {
-          "chord_set": "cols",
+          "type": "chord_set",
+          "set": "cols",
           "keycodes": [
             "    ", "    ", "    ", "    ", "LGUI", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    "
           ]
         }
-      ],
-      "single_chords": []
+      ]
     },
     {
       "name": "ASETNIOP_FN",
-      "chord_sets": [
+      "chords": [
         {
-          "chord_set": "asetniop",
+          "type": "chord_set",
+          "set": "asetniop",
           "keycodes": [
             "HOME", "PGDN", "PGUP", " END", "LEFT", "DOWN", "  UP", "RIGHT",
             "  F1", "  F2", "  F3", "  F4", "  F5", "  F6", "  F7",
@@ -279,7 +282,8 @@
           ]
         },
         {
-          "chord_set": "rows",
+          "type": "chord_set",
+          "set": "rows",
           "keycodes": [
             "    ", "    ", "    ", "    ", " ESC", " DEL", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
@@ -287,15 +291,15 @@
           ]
         },
         {
-          "chord_set": "cols",
+          "type": "chord_set",
+          "set": "cols",
           "keycodes": [
             "    ", "    ", "    ", "    ", "LGUI", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ",
             "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    ", "    "
           ]
         }
-      ],
-      "single_chords": []
+      ]
     }
   ],
   "leader_sequences": [],

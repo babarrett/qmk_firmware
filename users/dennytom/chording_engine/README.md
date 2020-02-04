@@ -157,17 +157,16 @@ Array `pseudolayers` defines the keymap per pseudolayer. Each field has to conta
 "pseudolayers": [
   {        
     "name": "QWERTY",
-	"chord_sets": [
+	"chords": [
       {
-        "chord_set": "rows",
+        "type": "chord_set",
+        "set": "rows",
         "keycodes": [
           "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", 
           "A", "S", "D", "F", "G", "H", "J", "K", "L", ";",
           "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"
         ]
-      }
-    ],
-    "single_chords": [
+      },
       {
         "type": "simple",
         "keycode": "SPACE",
@@ -180,15 +179,22 @@ Array `pseudolayers` defines the keymap per pseudolayer. Each field has to conta
           "X", "", "", "", "", "", "", "", "", "X",
           "X", "", "", "", "", "", "", "", "", "X",
         ]
+      },
+      {
+        "type": "visual_array",
+        "keys": ["TOP1", "TOP2", "TOP3"],
+        "dictionary": [
+          ["X", "X", " ", "ESC"],
+          [" ", "X", "X", "TAB"],
+          ["X", "X", "X", "ENTER"]
+        ]
       }
     ]
   }
 ]
 ```
 
-The array `single_chords` defines chords one by one. You can either use simple chord and list all the keys that have to pressed at the same time or use the visual chord and place `"X"` over keys that will be part of the chord.
-
-The array `chord_sets` lets you define a number of chords at the same time. You have to define each chord set in the `chord_sets` in the root object like this:
+The array `chord` defines chords. You can either use simple chord and list all the keys that have to pressed at the same time, or use the visual chord and place `"X"` over keys that will be part of the chord. You can also use `visual_array` to define a number of chords on a subset of keys. Finally, you can use `chord_set` to define a number of chords following a pattern that was set in the `chord_sets` array in the root object like this:
 
 ```json
 "chord_sets": [
@@ -229,6 +235,8 @@ You might notice that the code tries to do a few clever things when parsing keyc
 * `STR("X")`: Send string "x" on each activation of the chord. Once again, watch out for quoting and escaping characters. If you want special characters (especially quotes) in your string, look up Python reference for string literals and experiment. Also, because of how the string gets parsed, it is not possible to use `(` in the string. 
 
 * `MO(X)`: Temporary switch to pseudolayer `X`. Because only one pseudolayer can be active at any moment, this works by switching back to the pseudolayer the chord lives on on deactivation. If you chain `MO()`s on multiple pseudolayers and deactivate them in a random order, you might end up stranded on a pseudolayer. I recommend adding `CLEAR` somewhere on `ALWAYS_ON` pseudolayer just in case.
+
+* `MO(X,Y)`: Temporary switch to pseudolayer `Y`. Switches to pseudolayer `X` on deactivation. Especially useful when you want to put the `MO()` chord on `ALWAYS_ON`.
 
 * `DF(X)`: Permanent switch to pseudolayer `X`.
 

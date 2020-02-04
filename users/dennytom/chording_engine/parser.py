@@ -113,17 +113,18 @@ with open(input_filepath, "r") as read_file:
         
         for pseudolayer in data["pseudolayers"]:
             name = pseudolayer["name"]
-            for chord_set in pseudolayer["chord_sets"]:
-                keycodes = reduce(comma_separator, [word for word in chord_set["keycodes"]])
-                [output_buffer, number_of_chords] = add_chord_set(name, keycodes, chord_set["chord_set"], data, output_buffer, number_of_chords)
-            
-            for single_chord in pseudolayer["single_chords"]:
-                if single_chord["type"] == "visual":
-                    keycodes = reduce(comma_separator, [word for word in single_chord["chord"]])
-                    [output_buffer, number_of_chords] = secret_chord(name, single_chord["keycode"], keycodes, data, output_buffer, number_of_chords)
-                elif single_chord["type"] == "simple":
-                    keycodes = reduce(string_sum, ["H_" + word for word in single_chord["chord"]])
-                    [output_buffer, number_of_chords] = add_key(name, keycodes, single_chord["keycode"], output_buffer, number_of_chords)
+            for chord in pseudolayer["chords"]:
+                if chord["type"] == "chord_set":
+                    keycodes = reduce(comma_separator, [word for word in chord["keycodes"]])
+                    [output_buffer, number_of_chords] = add_chord_set(name, keycodes, chord["set"], data, output_buffer, number_of_chords)
+                if chord["type"] == "visual_array":
+                    [output_buffer, number_of_chords] = add_dictionary(name, chord["keys"], chord["dictionary"], output_buffer, number_of_chords)
+                if chord["type"] == "visual":
+                    keycodes = reduce(comma_separator, [word for word in chord["chord"]])
+                    [output_buffer, number_of_chords] = secret_chord(name, chord["keycode"], keycodes, data, output_buffer, number_of_chords)
+                elif chord["type"] == "simple":
+                    keycodes = reduce(string_sum, ["H_" + word for word in chord["chord"]])
+                    [output_buffer, number_of_chords] = add_key(name, keycodes, chord["keycode"], output_buffer, number_of_chords)
         output_buffer += "\n"
         
         output_buffer += "const struct Chord* const list_of_chords[] PROGMEM = {\n"

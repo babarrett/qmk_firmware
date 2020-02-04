@@ -60,6 +60,9 @@ def KM(on_pseudolayer, keycodes_hash, keycode, to_pseudolayer, output_buffer, in
 def MO(on_pseudolayer, keycodes_hash, to_pseudolayer, output_buffer, index):
     return new_chord(on_pseudolayer, keycodes_hash, False, to_pseudolayer, 0, "temp_pseudolayer", output_buffer, index)
 
+def MO_alt(on_pseudolayer, keycodes_hash, from_pseudolayer, to_pseudolayer, output_buffer, index):
+    return new_chord(on_pseudolayer, keycodes_hash, False, to_pseudolayer, from_pseudolayer, "temp_pseudolayer_alt", output_buffer, index)
+
 def LOCK(on_pseudolayer, keycodes_hash, output_buffer, index):
     return new_chord(on_pseudolayer, keycodes_hash, False, 0, 0, "lock", output_buffer, index)
 
@@ -405,7 +408,12 @@ def add_key(PSEUDOLAYER, KEYCODES_HASH, DEFINITION, output_buffer, index):
                 code = expand_keycode_fnc(val)
                 [output_buffer, index] = AS(PSEUDOLAYER, KEYCODES_HASH, code, output_buffer, index)
             elif type == "MO":
-                [output_buffer, index] = MO(PSEUDOLAYER, KEYCODES_HASH, val, output_buffer, index)
+                if not ',' in val:
+                    [output_buffer, index] = MO(PSEUDOLAYER, KEYCODES_HASH, val, output_buffer, index)
+                else:
+                    val1 = val.split(',')[0].strip()
+                    val2 = val.split(',')[1].strip()
+                    [output_buffer, index] = MO_alt(PSEUDOLAYER, KEYCODES_HASH, val1, val2, output_buffer, index)
             elif type == "DF":
                 [output_buffer, index] = DF(PSEUDOLAYER, KEYCODES_HASH, val, output_buffer, index)
             elif type == "TO":
@@ -428,6 +436,18 @@ def add_chord_set(PSEUDOLAYER, INPUT_STRING, TYPE, data, output_buffer, index):
     for word, chord in zip(separated_string, chord_set):
         chord_hash = reduce((lambda x, y: str(x) + " + " + str(y)), ["H_" + key for key in chord])
         [output_buffer, index] = add_key(PSEUDOLAYER, chord_hash, word, output_buffer, index)
+    
+    return [output_buffer, index]
+
+def add_dictionary(PSEUDOLAYER, keycodes, array, output_buffer, index):
+    for chord in array:
+        hash = ""
+        for word, key in zip(chord[:-1], keycodes):
+            if word == "X":
+                hash = hash + " + H_" + key
+        hash = hash[3:]
+        if hash != "":
+            [output_buffer, index] = add_key(PSEUDOLAYER, hash, chord[-1], output_buffer, index)
     
     return [output_buffer, index]
 

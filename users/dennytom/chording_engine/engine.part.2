@@ -135,6 +135,23 @@ void temp_pseudolayer(const struct Chord* self) {
     }
 }
 
+void temp_pseudolayer_alt(const struct Chord* self) {
+    switch (*self->state) {
+        case ACTIVATED:
+            current_pseudolayer = self->value1;
+            break;
+        case DEACTIVATED:
+            current_pseudolayer = self->value2;
+            *self->state = IDLE;
+            break;
+        case RESTART:
+            current_pseudolayer = self->value2;
+            break;
+        default:
+            break;
+    }
+}
+
 void perm_pseudolayer(const struct Chord* self) {
     if (*self->state == ACTIVATED) {
         current_pseudolayer = self->value1;
