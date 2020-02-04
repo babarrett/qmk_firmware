@@ -59,19 +59,3 @@ void encoder_update_kb(uint8_t index, bool clockwise) {
         } else encoder_two_update(clockwise);
     }
 }
-
-__attribute__((weak)) void encoder_one_update(bool clockwise) {
-    if (clockwise) {
-        tap_code(KC_PGDN);
-    } else {
-        tap_code(KC_PGUP);
-    }
-}
-
-__attribute__((weak)) void encoder_two_update(bool clockwise) {
-    if (clockwise) {
-        tap_code(KC_VOLU);
-    } else {
-        tap_code(KC_VOLD);
-    }
-}

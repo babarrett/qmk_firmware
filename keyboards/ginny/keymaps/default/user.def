@@ -1,0 +1,48 @@
+/* Welcome to ASETNIOP
+ *
+ * This file contains your personal chords, the  basic layout, symbols and 
+ * layers are in different files. Refer to dicts.def for their locations!
+ *
+ * This is a very different layout based off this table
+ * http://asetniop.com/ 
+ *
+ * Unlike standard Asetniop there are a few concessions that must be
+ * made. Namely we don't do partials and if a chord has multiple left/
+ * right words we go with the most common of the two.
+ *
+ * Also note, All Combos _must_ be done through Command Mode! If you
+ * use a combo enough add it to your dictionary in the USR section!
+ *
+ * Two 'layers' are avalible, CMD and USR. Just add these into a chord. 
+ * You'll enter/exit these layers with SET_STICKY(CMD) and SET_STICKY(0)
+ *
+ * Note: The engine optimizes for the longest chord it can find, every
+ * now and again this makes conflicts! If you have a better dictionary
+ * or come up with improvements, please submit a PR!
+ */
+
+
+// You can use the following aliases in your chords
+// AA, AS, AE, AT, AN, AI, AO, AP, AL, AR (Left/Right thumb)
+// NUM, USR and CMD are also avalible
+
+// User defs
+SUBS(USR | AA,											"undefined User ")
+SUBS(USR | AS,											"undefined User ")
+SUBS(USR | AE,											"undefined User ")
+SUBS(USR | AT,											"undefined User ")
+SUBS(USR | AN,											"undefined User ")
+SUBS(USR | AI,											"undefined User ")
+SUBS(USR | AO,											"undefined User ")
+SUBS(USR | AP,											"undefined User ")
+SUBS(USR | AR,											"undefined User ")
+SUBS(USR | AL,											"undefined User ")
+
+// Quick Fires
+SUBS(AR | AA | AS,									"Undefined Quick Fire")
+SUBS(AR | AS | AE,									"Undefined Quick Fire")
+SUBS(AR | AE | AT,									"Undefined Quick Fire")
+SUBS(AR | AT | AN,									"Undefined Quick Fire")
+SUBS(AR | AN | AI,									"Undefined Quick Fire")
+SUBS(AR | AI | AO,									"Undefined Quick Fire")
+SUBS(AR | AO | AP,									"Undefined Quick Fire")

@@ -2,7 +2,7 @@
 MCU = atmega32a
 
 # Processor frequency
-F_CPU = 16000000
+F_USB = 16000000
 
 # Bootloader selection
 #   Teensy       halfkay

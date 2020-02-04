@@ -21,6 +21,7 @@ void led_set_kb(uint8_t usb_led) {
         writePinHigh(B0);
     } else {
         setPinInput(B0);
+        writePinLow(B0);
     }
 
     led_set_user(usb_led);

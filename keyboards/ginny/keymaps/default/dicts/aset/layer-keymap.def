@@ -1,0 +1,24 @@
+	// Thumb Keys
+	PRES(AL,														KC_LSFT)
+	PRES(AR,														KC_SPC)
+	
+// TODO: THIS
+/*
+	// Layer Switches 
+	// To Number
+	PRES(			AA | AT | AN | AP,																SET_STICKY(NUM)
+	PRES(NUM | AA | AT | AN | AP,																SET_STICKY(0)
+	PRES(CMD | AA | AT | AN | AP,																SET_STICKY(NUM)
+	PRES(USR | AA | AT | AN | AP,																SET_STICKY(NUM)
+	
+	// To Command
+	PRES(			AS | AE | AI | AO,																SET_STICKY(CMD)
+	PRES(NUM | AS | AE | AI | AO,																SET_STICKY(CMD)
+	PRES(CMD | AS | AE | AI | AO,																SET_STICKY(0)
+	PRES(USR | AS | AE | AI | AO,																SET_STICKY(CMD)
+
+	// To User
+	PRES(			AA | AS | AE | AT | AN | AI | AO | AP | AL | AR,	SET_STICKY(USR)
+	PRES(NUM | AA | AS | AE | AT | AN | AI | AO | AP | AL | AR,	SET_STICKY(USR)
+	PRES(CMD | AA | AS | AE | AT | AN | AI | AO | AP | AL | AR,  SET_STICKY(USR)
+	PRES(USR | AA | AS | AE | AT | AN | AI | AO | AP | AL | AR,  SET_STICKY(0)*/

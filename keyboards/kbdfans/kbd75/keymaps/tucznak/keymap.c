@@ -85,5 +85,6 @@ void led_set_user(uint8_t usb_led) {
         writePinLow(B2);
     } else {
         setPinInput(B2);
+        writePinLow(B2);
     }
 }
