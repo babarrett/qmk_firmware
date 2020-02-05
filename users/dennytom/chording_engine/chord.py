@@ -1,5 +1,8 @@
 from functools import reduce
 
+strings = []
+number_of_strings = -1
+
 def top_level_split(s):
     """
     Split `s` by top-level commas only. Commas within parentheses are ignored.
@@ -102,13 +105,9 @@ def CLEAR(on_pseudolayer, keycodes_hash, output_buffer, index):
 def RESET(on_pseudolayer, keycodes_hash, output_buffer, index):
     return new_chord(on_pseudolayer, keycodes_hash, False, 0, 0, "reset", output_buffer, index)
 
-def STR(on_pseudolayer, keycodes_hash, string_input, output_buffer, index):
-    output_buffer += "void str_" + str(index) + "(const struct Chord* self) {\n"
-    output_buffer += "    if (*self->state == ACTIVATED) {\n"
-    output_buffer += '        SEND_STRING("' + string_input + '");\n'
-    output_buffer += "    }\n"
-    output_buffer += "}\n"
-    return new_chord(on_pseudolayer, keycodes_hash, False, 0, 0, "str_" + str(index), output_buffer, index)
+def STR(on_pseudolayer, keycodes_hash, string_input, output_buffer, index, number_of_strings, strings):
+    [a, b] = new_chord(on_pseudolayer, keycodes_hash, False, number_of_strings, 0, "string_in", output_buffer, index)
+    return [a, b, number_of_strings + 1, strings + [string_input]]
     
 
 def M(on_pseudolayer, keycodes_hash, value1, value2, fnc, output_buffer, index):
@@ -343,9 +342,9 @@ def O(on_pseudolayer, keycodes_hash, DEFINITION, output_buffer, index):
     else:
         return OSL(on_pseudolayer, keycodes_hash, DEFINITION, output_buffer, index)
 
-def add_key(PSEUDOLAYER, KEYCODES_HASH, DEFINITION, output_buffer, index):
+def add_key(PSEUDOLAYER, KEYCODES_HASH, DEFINITION, output_buffer, index, number_of_strings, strings):
     if(DEFINITION == ""):
-        return [output_buffer, index]
+        return [output_buffer, index, number_of_strings, strings]
     else:
         split = DEFINITION.split("(")
         type = split[0].strip()
@@ -419,13 +418,13 @@ def add_key(PSEUDOLAYER, KEYCODES_HASH, DEFINITION, output_buffer, index):
             elif type == "TO":
                 [output_buffer, index] = TO(PSEUDOLAYER, KEYCODES_HASH, val, output_buffer, index)
             elif type == "STR":
-                [output_buffer, index] = STR(PSEUDOLAYER, KEYCODES_HASH, val, output_buffer, index)
-    return [output_buffer, index]
+                [output_buffer, index, number_of_strings, strings] = STR(PSEUDOLAYER, KEYCODES_HASH, val, output_buffer, index, number_of_strings, strings)
+    return [output_buffer, index, number_of_strings, strings]
 
 def add_leader_combo(DEFINITION, FUNCTION):
     return list_of_leader_combos.append([DEFINITION, FUNCTION])
 
-def add_chord_set(PSEUDOLAYER, INPUT_STRING, TYPE, data, output_buffer, index):
+def add_chord_set(PSEUDOLAYER, INPUT_STRING, TYPE, data, output_buffer, index, number_of_strings, strings):
     chord_set = {}
     for set in data["chord_sets"]:
         if set["name"] == TYPE:
@@ -435,11 +434,11 @@ def add_chord_set(PSEUDOLAYER, INPUT_STRING, TYPE, data, output_buffer, index):
     separated_string = top_level_split(INPUT_STRING)
     for word, chord in zip(separated_string, chord_set):
         chord_hash = reduce((lambda x, y: str(x) + " + " + str(y)), ["H_" + key for key in chord])
-        [output_buffer, index] = add_key(PSEUDOLAYER, chord_hash, word, output_buffer, index)
+        [output_buffer, index, number_of_strings, strings] = add_key(PSEUDOLAYER, chord_hash, word, output_buffer, index, number_of_strings, strings)
     
-    return [output_buffer, index]
+    return [output_buffer, index, number_of_strings, strings]
 
-def add_dictionary(PSEUDOLAYER, keycodes, array, output_buffer, index):
+def add_dictionary(PSEUDOLAYER, keycodes, array, output_buffer, index, number_of_strings, strings):
     for chord in array:
         hash = ""
         for word, key in zip(chord[:-1], keycodes):
@@ -447,11 +446,11 @@ def add_dictionary(PSEUDOLAYER, keycodes, array, output_buffer, index):
                 hash = hash + " + H_" + key
         hash = hash[3:]
         if hash != "":
-            [output_buffer, index] = add_key(PSEUDOLAYER, hash, chord[-1], output_buffer, index)
+            [output_buffer, index, number_of_strings, strings] = add_key(PSEUDOLAYER, hash, chord[-1], output_buffer, index, number_of_strings, strings)
     
-    return [output_buffer, index]
+    return [output_buffer, index, number_of_strings, strings]
 
-def secret_chord(PSEUDOLAYER, ACTION, INPUT_STRING, data, output_buffer, index):
+def secret_chord(PSEUDOLAYER, ACTION, INPUT_STRING, data, output_buffer, index, number_of_strings, strings):
     separated_string = top_level_split(INPUT_STRING)
     hash = ""
     for word, key in zip(separated_string, data["keys"]):
@@ -460,4 +459,4 @@ def secret_chord(PSEUDOLAYER, ACTION, INPUT_STRING, data, output_buffer, index):
     
     hash = hash[3:]
     if hash != "":
-        return add_key(PSEUDOLAYER, hash, ACTION, output_buffer, index)
+        return add_key(PSEUDOLAYER, hash, ACTION, output_buffer, index, number_of_strings, strings)
