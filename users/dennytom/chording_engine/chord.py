@@ -1,4 +1,5 @@
 from functools import reduce
+import re
 
 strings = []
 number_of_strings = -1
@@ -108,7 +109,6 @@ def RESET(on_pseudolayer, keycodes_hash, output_buffer, index):
 def STR(on_pseudolayer, keycodes_hash, string_input, output_buffer, index, number_of_strings, strings):
     [a, b] = new_chord(on_pseudolayer, keycodes_hash, False, number_of_strings, 0, "string_in", output_buffer, index)
     return [a, b, number_of_strings + 1, strings + [string_input]]
-    
 
 def M(on_pseudolayer, keycodes_hash, value1, value2, fnc, output_buffer, index):
     return new_chord(on_pseudolayer, keycodes_hash, True, value1, value2, fnc, output_buffer, index)
@@ -343,7 +343,11 @@ def O(on_pseudolayer, keycodes_hash, DEFINITION, output_buffer, index):
         return OSL(on_pseudolayer, keycodes_hash, DEFINITION, output_buffer, index)
 
 def add_key(PSEUDOLAYER, KEYCODES_HASH, DEFINITION, output_buffer, index, number_of_strings, strings):
-    if(DEFINITION == ""):
+    if "= {" + KEYCODES_HASH + ", " + PSEUDOLAYER in output_buffer:
+        KEYCODES_HASH = re.sub('H_', '', KEYCODES_HASH)
+        raise Exception("You are trying to register a chord that you already registered (" + KEYCODES_HASH + ", " + PSEUDOLAYER + ")")
+    
+    if DEFINITION == "":
         return [output_buffer, index, number_of_strings, strings]
     else:
         split = DEFINITION.split("(")

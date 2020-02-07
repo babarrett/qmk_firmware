@@ -1,17 +1,5 @@
 #include QMK_KEYBOARD_H
 
-#define CHORD_TIMEOUT 100
-#define DANCE_TIMEOUT 200
-#define LEADER_TIMEOUT 750
-#define TAP_TIMEOUT 50
-#define LONG_PRESS_MULTIPLIER 3
-#define DYNAMIC_MACRO_MAX_LENGTH 20
-#define COMMAND_MAX_LENGTH 5
-#define LEADER_MAX_LENGTH 5
-#define HASH_TYPE uint32_t
-#define NUMBER_OF_KEYS 30
-#define DEFAULT_PSEUDOLAYER QWERTY
-
 #define H_TOP1 ((HASH_TYPE) 1 << 0)
 #define H_TOP2 ((HASH_TYPE) 1 << 1)
 #define H_TOP3 ((HASH_TYPE) 1 << 2)
@@ -53,6 +41,19 @@ enum internal_keycodes {
 enum pseudolayers {
     ALWAYS_ON, QWERTY, NUM, FNC, NAV, MOUSE
 };
+
+#define CHORD_TIMEOUT 100
+#define DANCE_TIMEOUT 200
+#define LEADER_TIMEOUT 750
+#define TAP_TIMEOUT 50
+#define LONG_PRESS_MULTIPLIER 3
+#define DYNAMIC_MACRO_MAX_LENGTH 20
+#define COMMAND_MAX_LENGTH 5
+#define STRING_MAX_LENGTH 16
+#define LEADER_MAX_LENGTH 5
+#define HASH_TYPE uint32_t
+#define NUMBER_OF_KEYS 30
+#define DEFAULT_PSEUDOLAYER QWERTY
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_georgi(TOP1, TOP2, TOP3, TOP4, TOP5, TOP6, TOP7, TOP8, TOP9, TOP10, TOP11, TOP12, BOT1, BOT2, BOT3, BOT4, BOT5, BOT6, BOT7, BOT8, BOT9, BOT10, BOT11, BOT12, THU1, THU2, THU3, THU4, THU5, THU6),
@@ -238,6 +239,9 @@ void tap_key(int16_t keycode) {
     wait_ms(TAP_TIMEOUT);
     key_out(keycode);
 }
+const char * const strings[] PROGMEM = {
+
+};
 void single_dance(const struct Chord* self) {
     switch (*self->state) {
         case ACTIVATED:
@@ -369,6 +373,23 @@ void temp_pseudolayer(const struct Chord* self) {
             break;
         case RESTART:
             current_pseudolayer = self->pseudolayer;
+            break;
+        default:
+            break;
+    }
+}
+
+void temp_pseudolayer_alt(const struct Chord* self) {
+    switch (*self->state) {
+        case ACTIVATED:
+            current_pseudolayer = self->value1;
+            break;
+        case DEACTIVATED:
+            current_pseudolayer = self->value2;
+            *self->state = IDLE;
+            break;
+        case RESTART:
+            current_pseudolayer = self->value2;
             break;
         default:
             break;
@@ -517,6 +538,14 @@ void dynamic_macro_play(const struct Chord* self) {
             send_keyboard_report();
         }
         *self->state = IDLE;
+    }
+}
+
+void string_in(const struct Chord* self) {
+    if (*self->state == ACTIVATED) {
+        char buffer[STRING_MAX_LENGTH];
+        strcpy_P(buffer, (char*)pgm_read_word(&(strings[self->value1])));
+        send_string(buffer);
     }
 }
 

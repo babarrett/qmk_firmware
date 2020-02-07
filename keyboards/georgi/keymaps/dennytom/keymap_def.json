@@ -13,6 +13,7 @@
     "command_max_length": 5,
     "leader_max_length": 5,
     "dynamic_macro_max_length": 20,
+    "string_max_length": 16,
     "long_press_multiplier": 3,
     "default_pseudolayer": "QWERTY"
   },
