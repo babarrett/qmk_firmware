@@ -6,31 +6,33 @@ This is a custom chording engine. See butterstick:dennytom keymap for an example
 
 Pure QMK combos were not sufficient as they do not really support overlapping combos. For example. if you define 3 combos `(KC_Q, KC_W)`, `(KC_Z, KC_X)` and `(KC_Q, KC_W, KC_Z, KC_X)` and press Q, W, Z and X at the same time, all three combos will activate. The default butterstick keymap solves this by relying on modified stenografic engine. However, this doesn't allow for comfortable typing in the traditional way. The steno chord activates only when *all* keys are lifted and makes it difficult to implement some advanced features.
 
-This engine therefore has a python parser that translates a JSON definition of keyboard specific information and keymap definition and produces `keymap.c`. Every function on this keymap is a chord (combo). Meaning you have to follow syntax similar to pure QMK combos. Furthermore you can not use functions to generate these since you want to store them in PROGMEM. The resulting keymap file is long and I do not encourage you to edit it. All you should have to edit is the JSON file. To produce the keymap file, run
+This engine therefore has a python parser that translates a JSON definition of keyboard specific information and keymap definition and produces `keymap.c`. Every function on this keymap is a chord (combo). The resulting keymap file is long and I do not encourage you to edit it. All you should have to edit is the JSON file. To produce the keymap file, run
 
 ```sh
-python3 parser.py keymap_def.json keymap.c
+./parser.py keymap_def.json keymap.c
 ```
 
 The rest of the document explains how the whole thing works, if you want just want to dive in, take a look at JSON files in my butterstick or georgi keymaps and read the "Supported keycodes" subsection.
 
 Watch out, you can not name your JSON file `keymap.json` if you place in the keymap folder. QMK creates `keymap.json` as a part of compilation process and if you already have one, it gets confused.
 
+To help you write a proper keymap definition, I provided a JSON schema and the parser notices a few basic mistakes like trying to register the same chord twice.
+
 ## Features Overview
 
-The chording engine completely sidesteps QMK's key event processing. Most of QMK's features are reimplemented. A list with short description follow, examples and further details follow later in this README.
+The chording engine completely sidesteps QMK's key event processing. Most of QMK's features are reimplemented.
 
 ### Chords
 
-Once again, *everything* on this keymap is a chord. Even sending `KC_Q` is done by pressing a single key chord. Chord gets activated after all it's keys get pressed. Only the longest chord gets activated. The order of the pressed keys *does not matter*, only the fact they have been pressed within the same time frame. An active chord gets deactivated if *any* of it's keys gets depressed. To activate the same single chord again, *all* it's keys have to be depressed and pressed again. With a few exceptions chords are independent of each other. No matter if some chords are currently active and some not, others can be activated or deactivated without affecting each other's state.
+Once again, *everything* on this keymap is a chord. Even sending `KC_Q` is done by pressing a single key chord. Chord gets activated after all it's keys get pressed. Only the longest chord gets activated. The order of the pressed keys *does not matter*, only the fact they have been pressed within the same time frame. An active chord gets deactivated if *any* of it's keys gets depressed. To activate the same single chord again, *all* it's keys have to be depressed and pressed again. With a few exceptions chords are independent of each other. No matter if some chords are currently active and some not, others can be activated or deactivated without affecting each other's state. *If you press keys to belonging to multiple different, non-overlapping chords, all get activated in the order they are defined in the keymap.*
 
 ### Tap-Dance
 
-To make it even stranger, all chords are tap-dance chords. They are relatively simple state machines that execute a specific function every time they change state. For simplicity and optimization purposes, there are a few prewritten functions that implement common features like "send a single key" or "lock". Any number of chords can be "in dance" at any given moment without affecting each other's state. Custom dances can be easily added.
+To make it even stranger, all chords are technically tap-dance chords. They are relatively simple state machines that execute a specific function every time they change state. For simplicity and optimization purposes, there are a few prewritten functions that implement common features like "send a single key" or "lock". Any number of chords can be "in dance" at any given moment without affecting each other's state. Custom dances can be easily added. Check out the `state_machine.png` to see all the states any chord can be in.
 
 ### Pseudolayers
 
-Only one QMK layer is used. Following the butterstick's default keymap's example, the chording engine is using pseudolayers. The main difference to QMK's layers is that only one pseudolayer can be active at each time (meaning you can not use `KC_TRANS`, I actually don't know what will happen). Chords can be activated only if they are on the currently active pseudolayer. Chords that are currently active do not get deactivated if the pseudolayer changes and will deactivate if any of their keys gets depressed even no matter the current pseudolayer. Locked chords (see below) and chords on the `ALWAYS_ON` pseudolayer can be activated anytime.
+Only one QMK layer is used. Following the butterstick's default keymap's example, the chording engine is using pseudolayers. The main difference to QMK's layers is that only one pseudolayer can be active at each time (meaning you can not use `KC_TRANS`, I actually don't know what will happen if you do). Chords can be activated only if they are on the currently active pseudolayer. Chords that are currently active do not get deactivated if the pseudolayer changes and will deactivate if any of their keys gets depressed even no matter the current pseudolayer. Locked chords (see below) and chords on the `ALWAYS_ON` pseudolayer can be activated anytime.
 
 ### Lock
 
@@ -232,7 +234,7 @@ You might notice that the code tries to do a few clever things when parsing keyc
 
 ### Supported keycodes
 
-* `KC_X`: Send code `KC_X` just like a normal keyboard. Often the parser will be able to deal even without the `KC_` at the beginning. Basic keycodes and US ANSI shifted keycodes are supported. Most quantum and advanced keycodes *do not*. I will be adding these as needed.
+* `X` or `KC_X`: Send code `KC_X` just like a normal keyboard. 
 
 * `STR("X")`: Send string "x" on each activation of the chord. Once again, watch out for quoting and escaping characters. If you want special characters (especially quotes) in your string, look up Python reference for string literals and experiment. Also, because of how the string gets parsed, it is not possible to use `(` in the string. 
 
@@ -309,7 +311,7 @@ You might notice that the code tries to do a few clever things when parsing keyc
 
 * `MK(X1, X2, ...)`: Acts like `KC()` except it registers / unregisters all `X1`, `X2`, ... codes at the same time.
 
-* `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* recognize between tapping and holding to register different keycodes (however holding will result in repeat). You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. It will try to expand shortened keycodes. Advanced keycodes are not supported.
+* `D(X1, X2, ...)`: A basic keycode dance. If tapped (or held), registers `X1`. If tapped and then tapped again (or held), registers `X2`, ... It *cannot* be combined with tap-hold, however holding will result in repeat. You can put in as many basic keycodes as you want, but the macro will break if you go beyond 256. It will try to expand shortened keycodes. Advanced keycodes are not supported.
 
 * `DM_RECORD`, `DM_NEXT`, `DM_END`, `DM_PLAY`: Start recording a dynamic macro. Once you start recording, basic keycodes will get stored. When replaying the macro, all keys you press before `DM_NEXT` or `DM_END` will get pressed at the same time. For example the sequence `DM_RECORD`, `KC_CTRL`, `KC_A`, `DM_NEXT`, `KC_BSPC`, `DM_END` will record a macro that when played will execute the sequence Ctrl+a, Backspace. `dynamic_macro_max_length` defines the maximum length of the macro to be recorded. You can increase it for the price of RAM. The example above requires 4 units of length to be saved (Ctrl, A, next, Backspace).
 
